@@ -127,7 +127,7 @@
                 var overlappingPairCache = new Ammo.btDbvtBroadphase();
                 var solver = new Ammo.btSequentialImpulseConstraintSolver();
                 dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-                dynamicsWorld.setGravity(new Ammo.btVector3(0, -9.8, 0));
+                dynamicsWorld.setGravity(new Ammo.btVector3(0, -3.8203, 21.6658));
 			}
 
 			function addTriangleMesh(original) {
@@ -333,7 +333,7 @@
 
 				THREE.AnimationHandler.update( clock.getDelta() );
 
-				dynamicsWorld.stepSimulation(delta, 2);
+				dynamicsWorld.stepSimulation(1.0 / 150.0, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
 					callback();
 				});
