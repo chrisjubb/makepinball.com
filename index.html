@@ -226,12 +226,11 @@
 			function addFlipper(original) {
 				var shape = new Ammo.btConvexHullShape();
 
-				var mesh = original.children[0];
+				var child = original.children[0]; // should be the first one
+				var mesh = child;
 				var geometry = mesh.geometry;
-				_.each(geometry.faces, function(face) {
-					addToConvexHull(shape, geometry.vertices[face.a]);
-					addToConvexHull(shape, geometry.vertices[face.b]);
-					addToConvexHull(shape, geometry.vertices[face.c]);
+				_.each(geometry.vertices, function(vertex) {
+					addToConvexHull(shape, vertex);
 				});
 
 				var transform = new Ammo.btTransform();
