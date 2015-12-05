@@ -55,6 +55,8 @@
 			var camera, scene, renderer, objects;
 			var dae;
 			var cameras = [];
+			var leftButtonDown = false;
+			var rightButtonDown = false;
 
 			// physics
 			var dynamicsWorld;
@@ -66,6 +68,7 @@
             var ballBodies = [];
             var flipperBodies = [];
             var ballStartingPositions = [];
+            var flipperConstraints = [];
 
             var groupPlane = 1;
             var groupTriangleMesh = 2;
@@ -100,7 +103,7 @@
 					dae = collada.scene;
 
 					dae.traverse( function ( child ) {
-						console.log(child.name + " - " + dpos(child.position));
+						//console.log(child.name + " - " + dpos(child.position));
 
 						if(child.name == "Plane") {
 							planes.push(child);
@@ -322,6 +325,8 @@
                 dynamicsWorld.addConstraint(hinge);
                 addPhysicsCallback(original, body, transform);
 
+                flipperConstraints.push(hinge);
+
                 return body;
 			}
 
@@ -391,7 +396,23 @@
 							body.setAngularVelocity(new Ammo.btVector3(0,0,0));
 						});
 					}
+					else if(evt.keyCode == 65) { // 'A'
+						leftButtonDown = false;
+					}
+					else if(evt.keyCode == 76) { // 'L'
+						rightButtonDown = false;
+					}
 				}, false );
+
+				window.addEventListener( 'keydown', function(evt) {
+					//console.log(evt.keyCode);
+					if(evt.keyCode == 65) { // 'A'
+						leftButtonDown = true;
+					}
+					else if(evt.keyCode == 76) { // 'L'
+						rightButtonDown = true;
+					}
+				});
 
 
 			}
@@ -423,6 +444,15 @@
 				var delta = clock.getDelta();
 
 				THREE.AnimationHandler.update( delta );
+
+				_.each(flipperBodies, function(flipperBody) {
+					flipperBody.forceActivationState(true);
+				});
+				_.each(flipperConstraints, function(flipperConstraint) {
+					var targetVelocity = leftButtonDown ? 500.0 : -5.0;
+					var maxMotorImpulse = 10.0;
+					flipperConstraint.enableAngularMotor(true, targetVelocity, maxMotorImpulse);
+				});
 
 				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
