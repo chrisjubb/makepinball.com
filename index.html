@@ -80,6 +80,8 @@
             // flipper -> ball
             var maskFlipper = groupBall;
 
+            // BLENDER -> THREE
+            // XYZ     -> +X +Z -Y
 
 			function start() {
 				var loader = new THREE.ColladaLoader();
@@ -133,7 +135,7 @@
 					});
 
 					_.each(balls, function(child) {
-						console.log("[!] Adding ball - " + dpos(child.position));
+						console.log("[!] Adding ball (" + child.name + ") - " + dpos(child.position));
 						ballBodies.push(addBall(child));
 						ballStartingPositions.push(child.position.clone());
 					});
@@ -291,7 +293,7 @@
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 2.0;
+                var mass = 1;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
@@ -414,9 +416,9 @@
 
 				var delta = clock.getDelta();
 
-				THREE.AnimationHandler.update( clock.getDelta() );
+				THREE.AnimationHandler.update( delta );
 
-				dynamicsWorld.stepSimulation(1.0 / 150.0, 2);
+				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
 					callback();
 				});
