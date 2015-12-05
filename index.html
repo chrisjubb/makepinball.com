@@ -70,7 +70,7 @@
 					dae = collada.scene;
 
 					dae.traverse( function ( child ) {
-						console.log(child.name + " - " + dpos(child.position));
+						// console.log(child.name + " - " + dpos(child.position));
 
 						if(child.name[0] == 'P' && child.name[1] == '_') {
 							//console.log(child.name);
@@ -78,7 +78,13 @@
 						}
 
 						if(child.name == "BALL") {
+							console.log("[!] Adding ball");
 							addBall(child);
+						}
+
+						if(child.name == "Plane") {
+							console.log("[!] Adding plane");
+							addPlane(child);
 						}
 
 						if ( child instanceof THREE.SkinnedMesh ) {
@@ -135,23 +141,33 @@
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body);
-
                 body.activate();
 
                 pos.negate();
 
-                //var dir = pos.addSelf(controls.target);
-                //dir.multiplyScalar(200); // speed of launch
-                //body.applyCentralForce(new Ammo.btVector3(dir.x, dir.y, dir.z));
-
-                // var object = new THREE.Mesh( new THREE.CubeGeometry( 10, 10, 10, 1, 1, 1 ), bulletMaterial );
-                // object.position.set(pos.x, pos.y, pos.z);
-                // object.useQuaternion = true;
-                // scene.add(object);
-
                 addPhysicsCallback(original, body, transform);
 
                 return body;
+			}
+
+			function addPlane(original) {
+				var pos = original.position.clone();
+
+				var shape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(0, 1, 0), 0);
+
+				var transform = new Ammo.btTransform();
+                transform.setIdentity();
+                transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+
+                var mass = 0;
+                var localInertia = new Ammo.btVector3(0, 0, 0);
+                shape.calculateLocalInertia(mass, localInertia);
+
+                var motionState = new Ammo.btDefaultMotionState(transform);
+                var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
+                var body = new Ammo.btRigidBody(rigidBodyInfo);
+                dynamicsWorld.addRigidBody(body);
+                body.activate();
 			}
 
 			function addPhysicsCallback(object, body, transform) {
@@ -173,11 +189,11 @@
 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 1.0 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.001, 1.0 );
 				var d = 0.02;
-				camera.position.x = d * 0.3;
-				camera.position.y = d;
-				camera.position.z = d * 0.8;
+				camera.position.x = d * 0.9;
+				camera.position.y = d * 0.2;
+				camera.position.z = d * 0.2;
 				camera.lookAt( scene.position );
 
 				// Grid
