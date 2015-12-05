@@ -60,6 +60,13 @@
             var bulletMaterial;
             var physicsMeshCallbacks = [];
 
+            var planeBodies = [];
+            var triangleMeshBodies = [];
+            var ballBodies = [];
+            var flipperBodies = [];
+
+            var ballStartingPosition;
+
 			function start() {
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
@@ -102,22 +109,23 @@
 
 					_.each(planes, function(child) {
 						console.log("[!] Adding plane");
-						addPlane(child);
+						planeBodies.push(addPlane(child));
 					});
 
 					_.each(triangleMeshes, function(child) {
 						child.visible = false;
-						addTriangleMesh(child);
+						triangleMeshBodies.push(addTriangleMesh(child));
 					});
 
 					_.each(balls, function(child) {
 						console.log("[!] Adding ball - " + dpos(child.position));
-						addBall(child);
+						ballBodies.push(addBall(child));
+						ballStartingPosition = child.position.clone();
 					});
 
 					_.each(flippers, function(child) {
 						console.log("[!] Adding flipper");
-						addFlipper(child);
+						flipperBodies.push(addFlipper(child));
 					});
 
 					dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
@@ -148,7 +156,6 @@
 			}
 
 			function addTriangleMesh(original) {
-
 				var physicsMesh = new Ammo.btTriangleMesh();
 
 				original.updateMatrixWorld();
@@ -187,6 +194,8 @@
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body);
                 body.activate();
+
+                return body;
 			}
 
 			function addBall(original) {
@@ -273,12 +282,15 @@
                 hingeTransform.setIdentity();
                 hingeTransform.setOrigin(new Ammo.btVector3(0,0,0));
                 var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-                hingeQuaternion.setEulerZYX(0.0, 0.0, 0.0);
+                hingeQuaternion.setEulerZYX(0.0, 0.0, 90.0);
+                hingeQuaternion.normalize();
                 hingeTransform.setRotation(hingeQuaternion);
 				var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
 
                 dynamicsWorld.addConstraint(hinge);
                 addPhysicsCallback(original, body, transform);
+
+                return body;
 			}
 
 			function addPhysicsCallback(object, body, transform) {
@@ -303,7 +315,7 @@
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.001, 1.0 );
 				camera.position.x = 0.01;
 				camera.position.y = 0.012;
-				camera.position.z = 0.015;
+				camera.position.z = 0.01;
 				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 0.002) );
 
 				// Add the COLLADA
@@ -334,6 +346,20 @@
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
+
+				window.addEventListener( 'keyup', function(evt) {
+					if(evt.keyCode == 82) { // R
+						_.each(ballBodies, function(body) {
+							var transform = new Ammo.btTransform();
+                			transform.setIdentity();
+                			transform.setOrigin(new Ammo.btVector3(ballStartingPosition.x, ballStartingPosition.y, ballStartingPosition.z));
+							body.setWorldTransform(transform);
+							body.setLinearVelocity(new Ammo.btVector3(0,0,0));
+							body.setAngularVelocity(new Ammo.btVector3(0,0,0));
+						});
+					}
+				}, false );
+
 
 			}
 
