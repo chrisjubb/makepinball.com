@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - collada</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+
+			}
+
+			a { color: skyblue }
+		</style>
+	</head>
+	<body>
+		<div id="info">
+			pinball
+		</div>
+
+		<script src="lib/three.min.js"></script>
+
+		<script src="lib/ammo.js"></script>
+
+		<script src="lib/underscore-min.js"></script>
+
+		<script src="js/loaders/collada/Animation.js"></script>
+		<script src="js/loaders/collada/AnimationHandler.js"></script>
+		<script src="js/loaders/collada/KeyFrameAnimation.js"></script>
+
+		<script src="js/loaders/ColladaLoader.js"></script>
+
+		<script src="js/Detector.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+
+			var camera, scene, renderer, objects;
+			var dae;
+
+			// physics
+			var dynamicsWorld;
+            var bulletMaterial;
+            var physicsMeshCallbacks = [];
+
+			function start() {
+				var loader = new THREE.ColladaLoader();
+				loader.options.convertUpAxis = true;
+				loader.load( 'wire_forms.dae', function ( collada ) {
+
+					initPhysics();
+
+					dae = collada.scene;
+
+					dae.traverse( function ( child ) {
+						console.log(child.name + " - " + dpos(child.position));
+
+						if(child.name[0] == 'P' && child.name[1] == '_') {
+							//console.log(child.name);
+							child.visible = false;
+						}
+
+						if(child.name == "BALL") {
+							addBall(child);
+						}
+
+						if ( child instanceof THREE.SkinnedMesh ) {
+
+							var animation = new THREE.Animation( child, child.geometry.animation );
+							animation.play();
+
+						}
+
+					} );
+
+					dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
+					dae.updateMatrix();
+
+					initScene();
+					animate();
+
+				} );
+			}
+
+			function dpos(pos) {
+			if(pos) {
+					return "[ " + pos.x + ", " + pos.y + ", " + pos.z + " ]";
+				}
+				else {
+					return '[not valid]';
+				}
+			}
+
+			function initPhysics() {
+				var collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
+                var dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
+                var overlappingPairCache = new Ammo.btDbvtBroadphase();
+                var solver = new Ammo.btSequentialImpulseConstraintSolver();
+                dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+                dynamicsWorld.setGravity(new Ammo.btVector3(0, -9.8, 0));
+			}
+
+			function addBall(original) {
+				var pos = original.position.clone();
+                var rot = new THREE.Quaternion();
+                rot.setFromEuler(original.rotation);
+
+                var shape = new Ammo.btSphereShape(0.135);
+                var transform = new Ammo.btTransform();
+                transform.setIdentity();
+                transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+
+                var mass = 1;
+                var localInertia = new Ammo.btVector3(0, 0, 0);
+                shape.calculateLocalInertia(mass, localInertia);
+
+                var motionState = new Ammo.btDefaultMotionState(transform);
+                var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
+                var body = new Ammo.btRigidBody(rigidBodyInfo);
+                dynamicsWorld.addRigidBody(body);
+
+                body.activate();
+
+                pos.negate();
+
+                //var dir = pos.addSelf(controls.target);
+                //dir.multiplyScalar(200); // speed of launch
+                //body.applyCentralForce(new Ammo.btVector3(dir.x, dir.y, dir.z));
+
+                // var object = new THREE.Mesh( new THREE.CubeGeometry( 10, 10, 10, 1, 1, 1 ), bulletMaterial );
+                // object.position.set(pos.x, pos.y, pos.z);
+                // object.useQuaternion = true;
+                // scene.add(object);
+
+                addPhysicsCallback(original, body, transform);
+
+                return body;
+			}
+
+			function addPhysicsCallback(object, body, transform) {
+				physicsMeshCallbacks.push(function() {
+                    body.getMotionState().getWorldTransform(transform);
+
+                    var origin = transform.getOrigin();
+                    object.position.set(origin.x(), origin.y(), origin.z());
+
+                    var rotation = transform.getRotation();
+                    object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+                });
+			}
+
+			function initScene() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 1.0 );
+				var d = 0.02;
+				camera.position.x = d * 0.3;
+				camera.position.y = d;
+				camera.position.z = d * 0.8;
+				camera.lookAt( scene.position );
+
+				// Grid
+
+				var size = 14, step = 1;
+
+				var geometry = new THREE.Geometry();
+				var material = new THREE.LineBasicMaterial( { color: 0x303030 } );
+
+				for ( var i = - size; i <= size; i += step ) {
+
+					geometry.vertices.push( new THREE.Vector3( - size, - 0.04, i ) );
+					geometry.vertices.push( new THREE.Vector3(   size, - 0.04, i ) );
+
+					geometry.vertices.push( new THREE.Vector3( i, - 0.04, - size ) );
+					geometry.vertices.push( new THREE.Vector3( i, - 0.04,   size ) );
+
+				}
+
+				var line = new THREE.LineSegments( geometry, material );
+				scene.add( line );
+
+				// Add the COLLADA
+
+				scene.add( dae );
+
+				// Lights
+
+				scene.add( new THREE.AmbientLight( 0x050505 ) );
+
+				var directionalLight = new THREE.DirectionalLight(0x050505 );
+				directionalLight.position.x = Math.random() - 0.5;
+				directionalLight.position.y = Math.random() - 0.5;
+				directionalLight.position.z = Math.random() - 0.5;
+				directionalLight.position.normalize();
+				scene.add( directionalLight );
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+
+			}
+
+			var clock = new THREE.Clock();
+
+			function render() {
+
+				var delta = clock.getDelta();
+
+				THREE.AnimationHandler.update( clock.getDelta() );
+
+				dynamicsWorld.stepSimulation(delta, 2);
+				_.each(physicsMeshCallbacks, function(callback) {
+					callback();
+				});
+
+				renderer.render( scene, camera );
+
+			}
+
+			start();
+
+		</script>
+	</body>
+</html>
