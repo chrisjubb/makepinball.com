@@ -75,6 +75,7 @@
 						if(child.name[0] == 'P' && child.name[1] == '_') {
 							//console.log(child.name);
 							child.visible = false;
+							addTriangleMesh(child);
 						}
 
 						if(child.name == "BALL") {
@@ -84,7 +85,7 @@
 
 						if(child.name == "Plane") {
 							console.log("[!] Adding plane");
-							addPlane(child);
+							//addPlane(child);
 						}
 
 						if ( child instanceof THREE.SkinnedMesh ) {
@@ -121,6 +122,36 @@
                 var solver = new Ammo.btSequentialImpulseConstraintSolver();
                 dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
                 dynamicsWorld.setGravity(new Ammo.btVector3(0, -9.8, 0));
+			}
+
+			var triPos = [
+				new Ammo.btVector3(4.6, 0, -3.0),
+				new Ammo.btVector3(4.6, 0, 3.3),
+				new Ammo.btVector3(0.2, 0, 3.3)
+			];
+
+			function addTriangleMesh(original) {
+
+				var mesh = new Ammo.btTriangleMesh();
+
+				// in blender XZY
+				mesh.addTriangle(triPos[0], triPos[1], triPos[2]);
+
+				var shape = new Ammo.btBvhTriangleMeshShape(mesh, true, true);
+
+				var transform = new Ammo.btTransform();
+                transform.setIdentity();
+                transform.setOrigin(new Ammo.btVector3(0, 0, 0));
+
+                var mass = 0;
+                var localInertia = new Ammo.btVector3(0, 0, 0);
+                shape.calculateLocalInertia(mass, localInertia);
+
+                var motionState = new Ammo.btDefaultMotionState(transform);
+                var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
+                var body = new Ammo.btRigidBody(rigidBodyInfo);
+                dynamicsWorld.addRigidBody(body);
+                body.activate();
 			}
 
 			function addBall(original) {
