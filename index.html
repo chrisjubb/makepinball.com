@@ -234,14 +234,14 @@
 					//console.log(vertex);
 				});
 
-				// original.children[0].visible = false;
+				original.children[0].visible = false;
 
 				var pos = original.position.clone();
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 1;
+                var mass = 0;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
@@ -250,8 +250,6 @@
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body);
                 body.activate();
-
-                pos.negate();
 			}
 
 			function addPhysicsCallback(object, body, transform) {
