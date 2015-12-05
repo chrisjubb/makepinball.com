@@ -54,6 +54,7 @@
 
 			var camera, scene, renderer, objects;
 			var dae;
+			var cameras = [];
 
 			// physics
 			var dynamicsWorld;
@@ -99,7 +100,7 @@
 					dae = collada.scene;
 
 					dae.traverse( function ( child ) {
-						// console.log(child.name + " - " + dpos(child.position));
+						console.log(child.name + " - " + dpos(child.position));
 
 						if(child.name == "Plane") {
 							planes.push(child);
@@ -115,6 +116,10 @@
 
 						if(child.name == "FLIPPER") {
 							flippers.push(child);
+						}
+
+						if(child.name == "Camera") {
+							cameras.push(child);
 						}
 
 						if ( child instanceof THREE.SkinnedMesh ) {
@@ -145,7 +150,7 @@
 						flipperBodies.push(addFlipper(child));
 					});
 
-					dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
+					dae.scale.x = dae.scale.y = dae.scale.z = 1.0;
 					dae.updateMatrix();
 
 					initScene();
@@ -229,17 +234,20 @@
                 rot.setFromEuler(original.rotation);
 
                 var shape = new Ammo.btSphereShape(0.135);
+                shape.setMargin(0.04);
                 var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 1;
+                var mass = 5;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
+                body.setDamping(0.04, 0.1);
+               	body.setFriction(0.5);
                 dynamicsWorld.addRigidBody(body, groupBall, maskBall);
                 body.activate();
 
@@ -338,11 +346,11 @@
 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.001, 1.0 );
-				camera.position.x = 0.01;
-				camera.position.y = 0.012;
-				camera.position.z = 0.012;
-				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 0.002) );
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000.0 );
+				camera.position.x = 5.4;
+				camera.position.y = 5.5;
+				camera.position.z = 7.0;
+				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 0) );
 
 				// Add the COLLADA
 
