@@ -86,7 +86,7 @@
 						if(child.name == "Plane") {
 							console.log("[!] Adding plane");
 							// child.visible = false;
-							// addPlane(child);
+							addPlane(child);
 						}
 
 						if ( child instanceof THREE.SkinnedMesh ) {
@@ -125,20 +125,32 @@
                 dynamicsWorld.setGravity(new Ammo.btVector3(0, -9.8, 0));
 			}
 
-			var triPos = [
-				new Ammo.btVector3(4.6, 0, -3.0),
-				new Ammo.btVector3(4.6, 0, 3.3),
-				new Ammo.btVector3(0.2, 0, 3.3)
-			];
-
 			function addTriangleMesh(original) {
 
-				var mesh = new Ammo.btTriangleMesh();
+				var physicsMesh = new Ammo.btTriangleMesh();
 
-				// in blender XZY
-				mesh.addTriangle(triPos[0], triPos[1], triPos[2]);
+				original.updateMatrixWorld();
 
-				var shape = new Ammo.btBvhTriangleMeshShape(mesh, true, true);
+				var mesh = original.children[0];
+				var geometry = mesh.geometry;
+				_.each(geometry.faces, function(face) {
+
+					var localV0 = geometry.vertices[face.a];
+					var localV1 = geometry.vertices[face.b];
+					var localV2 = geometry.vertices[face.c];
+
+					var worldV0 = original.localToWorld(localV0.clone());
+					var worldV1 = original.localToWorld(localV1.clone());
+					var worldV2 = original.localToWorld(localV2.clone());
+
+					physicsMesh.addTriangle(
+									new Ammo.btVector3(worldV0.x, worldV0.y, worldV0.z),
+									new Ammo.btVector3(worldV1.x, worldV1.y, worldV1.z),
+									new Ammo.btVector3(worldV2.x, worldV2.y, worldV2.z)
+									);
+				});
+
+				var shape = new Ammo.btBvhTriangleMeshShape(physicsMesh, true, true);
 
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
