@@ -231,11 +231,15 @@
 				var geometry = mesh.geometry;
 				_.each(geometry.vertices, function(vertex) {
 					addToConvexHull(shape, vertex);
+					//console.log(vertex);
 				});
 
+				// original.children[0].visible = false;
+
+				var pos = original.position.clone();
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
-                transform.setOrigin(new Ammo.btVector3(original.position.x, original.position.y, original.position.z));
+                transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
                 var mass = 1;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
@@ -246,6 +250,8 @@
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body);
                 body.activate();
+
+                pos.negate();
 			}
 
 			function addPhysicsCallback(object, body, transform) {
