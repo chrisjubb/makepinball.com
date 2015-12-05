@@ -251,8 +251,6 @@
                 dynamicsWorld.addRigidBody(body, groupBall, maskBall);
                 body.activate();
 
-                pos.negate();
-
                 addPhysicsCallback(original, body, transform);
 
                 return body;
@@ -348,9 +346,9 @@
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000.0 );
 				camera.position.x = 5.4;
-				camera.position.y = 5.5;
-				camera.position.z = 7.0;
-				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 0) );
+				camera.position.y = 5.0;
+				camera.position.z = 6.0;
+				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 1) );
 
 				// Add the COLLADA
 
