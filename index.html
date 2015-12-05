@@ -64,8 +64,22 @@
             var triangleMeshBodies = [];
             var ballBodies = [];
             var flipperBodies = [];
+            var ballStartingPositions = [];
 
-            var ballStartingPosition;
+            var groupPlane = 1;
+            var groupTriangleMesh = 2;
+            var groupBall = 4;
+            var groupFlipper = 8;
+
+            // plane -> ball only
+            var maskPlane = groupBall;
+            // triangle mesh -> ball only
+            var maskTriangleMesh = groupBall;
+            // ball -> plane, triangle mesh, flipper
+            var maskBall = groupPlane + groupTriangleMesh + groupFlipper;
+            // flipper -> ball
+            var maskFlipper = groupBall;
+
 
 			function start() {
 				var loader = new THREE.ColladaLoader();
@@ -93,7 +107,7 @@
 							triangleMeshes.push(child);
 						}
 
-						if(child.name == "BALL") {
+						if(child.name.indexOf("BALL") == 0) {
 							balls.push(child);
 						}
 
@@ -113,6 +127,7 @@
 					});
 
 					_.each(triangleMeshes, function(child) {
+						console.log("[!] Adding triangle mesh - " + child.name);
 						child.visible = false;
 						triangleMeshBodies.push(addTriangleMesh(child));
 					});
@@ -120,7 +135,7 @@
 					_.each(balls, function(child) {
 						console.log("[!] Adding ball - " + dpos(child.position));
 						ballBodies.push(addBall(child));
-						ballStartingPosition = child.position.clone();
+						ballStartingPositions.push(child.position.clone());
 					});
 
 					_.each(flippers, function(child) {
@@ -192,7 +207,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                dynamicsWorld.addRigidBody(body);
+                dynamicsWorld.addRigidBody(body, groupTriangleMesh, maskTriangleMesh);
                 body.activate();
 
                 return body;
@@ -215,7 +230,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                dynamicsWorld.addRigidBody(body);
+                dynamicsWorld.addRigidBody(body, groupBall, maskBall);
                 body.activate();
 
                 pos.negate();
@@ -241,7 +256,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                dynamicsWorld.addRigidBody(body);
+                dynamicsWorld.addRigidBody(body, groupPlane, maskPlane);
                 body.activate();
 
                 return body;
@@ -275,14 +290,14 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                dynamicsWorld.addRigidBody(body);
+                dynamicsWorld.addRigidBody(body, groupFlipper, maskFlipper);
                 body.activate();
 
 				var hingeTransform = new Ammo.btTransform();
                 hingeTransform.setIdentity();
                 hingeTransform.setOrigin(new Ammo.btVector3(0,0,0));
                 var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-                hingeQuaternion.setEulerZYX(0.0, 0.0, 90.0);
+                hingeQuaternion.setEulerZYX(0.0, 90.0, 0.0);
                 hingeQuaternion.normalize();
                 hingeTransform.setRotation(hingeQuaternion);
 				var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
@@ -349,10 +364,11 @@
 
 				window.addEventListener( 'keyup', function(evt) {
 					if(evt.keyCode == 82) { // R
-						_.each(ballBodies, function(body) {
+						_.each(ballBodies, function(body, i) {
 							var transform = new Ammo.btTransform();
                 			transform.setIdentity();
-                			transform.setOrigin(new Ammo.btVector3(ballStartingPosition.x, ballStartingPosition.y, ballStartingPosition.z));
+                			var pos = ballStartingPositions[i];
+                			transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 							body.setWorldTransform(transform);
 							body.setLinearVelocity(new Ammo.btVector3(0,0,0));
 							body.setAngularVelocity(new Ammo.btVector3(0,0,0));
