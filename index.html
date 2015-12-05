@@ -63,6 +63,12 @@
 			function start() {
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
+
+				var planes = [];
+				var triangleMeshes = [];
+				var balls = [];
+				var flippers = [];
+
 				loader.load( 'wire_forms.dae', function ( collada ) {
 
 					initPhysics();
@@ -72,36 +78,47 @@
 					dae.traverse( function ( child ) {
 						// console.log(child.name + " - " + dpos(child.position));
 
+						if(child.name == "Plane") {
+							planes.push(child);
+						}
+
 						if(child.name[0] == 'P' && child.name[1] == '_') {
-							//console.log(child.name);
-							child.visible = false;
-							addTriangleMesh(child);
+							triangleMeshes.push(child);
 						}
 
 						if(child.name == "BALL") {
-							console.log("[!] Adding ball - " + dpos(child.position));
-							addBall(child);
-						}
-
-						if(child.name == "Plane") {
-							console.log("[!] Adding plane");
-							// child.visible = false;
-							addPlane(child);
+							balls.push(child);
 						}
 
 						if(child.name == "FLIPPER") {
-							console.log("[!] Adding flipper");
-							addFlipper(child);
+							flippers.push(child);
 						}
 
 						if ( child instanceof THREE.SkinnedMesh ) {
-
 							var animation = new THREE.Animation( child, child.geometry.animation );
 							animation.play();
-
 						}
-
 					} );
+
+					_.each(planes, function(child) {
+						console.log("[!] Adding plane");
+						addPlane(child);
+					});
+
+					_.each(triangleMeshes, function(child) {
+						child.visible = false;
+						addTriangleMesh(child);
+					});
+
+					_.each(balls, function(child) {
+						console.log("[!] Adding ball - " + dpos(child.position));
+						addBall(child);
+					});
+
+					_.each(flippers, function(child) {
+						console.log("[!] Adding flipper");
+						addFlipper(child);
+					});
 
 					dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
 					dae.updateMatrix();
@@ -217,6 +234,8 @@
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body);
                 body.activate();
+
+                return body;
 			}
 
 			function addToConvexHull(shape, threePosition) {
@@ -231,17 +250,16 @@
 				var geometry = mesh.geometry;
 				_.each(geometry.vertices, function(vertex) {
 					addToConvexHull(shape, vertex);
-					//console.log(vertex);
 				});
 
-				original.children[0].visible = false;
+				// original.children[0].visible = false;
 
 				var pos = original.position.clone();
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 0;
+                var mass = 2.0;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
@@ -250,6 +268,17 @@
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body);
                 body.activate();
+
+				var hingeTransform = new Ammo.btTransform();
+                hingeTransform.setIdentity();
+                hingeTransform.setOrigin(new Ammo.btVector3(0,0,0));
+                var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
+                hingeQuaternion.setEulerZYX(0.0, 0.0, 0.0);
+                hingeTransform.setRotation(hingeQuaternion);
+				var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
+
+                dynamicsWorld.addConstraint(hinge);
+                addPhysicsCallback(original, body, transform);
 			}
 
 			function addPhysicsCallback(object, body, transform) {
@@ -274,7 +303,7 @@
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.001, 1.0 );
 				camera.position.x = 0.01;
 				camera.position.y = 0.012;
-				camera.position.z = 0.01;
+				camera.position.z = 0.015;
 				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 0.002) );
 
 				// Add the COLLADA
