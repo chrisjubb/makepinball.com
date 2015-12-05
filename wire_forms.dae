@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-05T20:14:00</created>
-    <modified>2015-12-05T20:14:00</modified>
+    <created>2015-12-05T20:20:09</created>
+    <modified>2015-12-05T20:20:09</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -708,7 +708,7 @@
         </instance_geometry>
       </node>
       <node id="FLIPPER" name="FLIPPER" type="NODE">
-        <matrix sid="transform">1 0 0 4.755501 0 1 0 -3.579642 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 4.755501 0 1 0 -3.600357 0 0 1 0 0 0 0 1</matrix>
         <instance_geometry url="#collision-mesh" name="FLIPPER">
           <bind_material>
             <technique_common>

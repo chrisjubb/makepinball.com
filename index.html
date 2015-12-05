@@ -75,8 +75,8 @@
             var maskPlane = groupBall;
             // triangle mesh -> ball only
             var maskTriangleMesh = groupBall;
-            // ball -> plane, triangle mesh, flipper
-            var maskBall = groupPlane + groupTriangleMesh + groupFlipper;
+            // ball -> plane, triangle mesh, flipper, other balls
+            var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall;
             // flipper -> ball
             var maskFlipper = groupBall;
 
@@ -159,6 +159,14 @@
 				else {
 					return '[not valid]';
 				}
+			}
+
+			function radians(degrees) {
+			  return degrees * Math.PI / 180;
+			}
+
+			function degrees(radians) {
+			  return radians * 180 / Math.PI;
 			}
 
 			function initPhysics() {
@@ -297,10 +305,11 @@
                 hingeTransform.setIdentity();
                 hingeTransform.setOrigin(new Ammo.btVector3(0,0,0));
                 var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-                hingeQuaternion.setEulerZYX(0.0, 90.0, 0.0);
+                hingeQuaternion.setEulerZYX(0.0, 0.0, 90.0);
                 hingeQuaternion.normalize();
                 hingeTransform.setRotation(hingeQuaternion);
 				var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
+				hinge.setLimit(radians(-30.0), radians(40.0), 0.001, 0.01, 0.1);
 
                 dynamicsWorld.addConstraint(hinge);
                 addPhysicsCallback(original, body, transform);
@@ -330,7 +339,7 @@
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.001, 1.0 );
 				camera.position.x = 0.01;
 				camera.position.y = 0.012;
-				camera.position.z = 0.01;
+				camera.position.z = 0.012;
 				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 0.002) );
 
 				// Add the COLLADA
