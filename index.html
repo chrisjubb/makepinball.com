@@ -71,7 +71,7 @@
             var flipperBodies = [];
             var ballStartingPositions = [];
             var flipperConstraints = [];
-            var ghostBodies = [];
+            var switchBodies = [];
 
             var groupPlane = 1;
             var groupTriangleMesh = 2;
@@ -128,15 +128,15 @@
 							balls.push(child);
 						}
 
-						if(child.name == "POINT_FLIPPER") {
+						if(child.name.indexOf("POINT_FLIPPER_") == 0) {
 							pointFlippers.push(child);
 						}
 
-						if(child.name == "FLIPPER") {
+						if(child.name.indexOf("FLIPPER_") == 0) {
 							flippers.push(child);
 						}
 
-						if(child.name == "GHOST") {
+						if(child.name.indexOf("SWITCH_") == 0) {
 							ghosts.push(child);
 						}
 
@@ -179,7 +179,7 @@
 
 					_.each(ghosts, function(child) {
 						console.log("[!] Adding ghost");
-						ghostBodies.push(addGhost(child));
+						switchBodies.push(addSwitch(child));
 					});
 
 					dae.scale.x = dae.scale.y = dae.scale.z = 1.0;
@@ -402,7 +402,7 @@
                 return body;
 			}
 
-			function addGhost(original) {
+			function addSwitch(original) {
 				var pos = original.position.clone();
                 var rot = new THREE.Quaternion();
                 rot.setFromEuler(original.rotation);
@@ -570,7 +570,7 @@
 					// A ghost object
 					if(manifold.getBody1().getCollisionFlags() == 4) {
 						// todo - make a lookup, ghost.ptr -> switch id
-						_.each(ghostBodies, function(ghost) {
+						_.each(switchBodies, function(ghost) {
 							if(manifold.getBody1().ptr == ghost.ptr) {
 								console.log("ghost - " + ghost);
 							}

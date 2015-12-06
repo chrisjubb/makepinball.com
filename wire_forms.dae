@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-06T15:52:01</created>
-    <modified>2015-12-06T15:52:01</modified>
+    <created>2015-12-06T17:42:14</created>
+    <modified>2015-12-06T17:42:14</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -852,9 +852,9 @@
           </bind_material>
         </instance_geometry>
       </node>
-      <node id="FLIPPER" name="FLIPPER" type="NODE">
+      <node id="FLIPPER_001" name="FLIPPER_001" type="NODE">
         <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
-        <instance_geometry url="#collision-mesh" name="FLIPPER">
+        <instance_geometry url="#collision-mesh" name="FLIPPER_001">
           <bind_material>
             <technique_common>
               <instance_material symbol="PHYSICS_RUBBER-material" target="#PHYSICS_RUBBER-material"/>
@@ -923,12 +923,12 @@
         <matrix sid="transform">0.3049639 0 0 5.449128 0 0.3049639 0 -3.944424 0 0 0.3049639 4.89371 0 0 0 1</matrix>
         <instance_geometry url="#Cube_004-mesh" name="Cube"/>
       </node>
-      <node id="POINT_FLIPPER" name="POINT_FLIPPER" type="NODE">
+      <node id="POINT_FLIPPER_001" name="POINT_FLIPPER_001" type="NODE">
         <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
       </node>
-      <node id="GHOST" name="GHOST" type="NODE">
+      <node id="SWITCH_001" name="SWITCH_001" type="NODE">
         <matrix sid="transform">0.2905322 0 0 3.156523 0 0.2905322 0 0.2957717 0 0 0.2905322 0.7434804 0 0 0 1</matrix>
-        <instance_geometry url="#Cube_003-mesh" name="GHOST">
+        <instance_geometry url="#Cube_003-mesh" name="SWITCH_001">
           <bind_material>
             <technique_common>
               <instance_material symbol="GHOSTS-material" target="#GHOSTS-material"/>
