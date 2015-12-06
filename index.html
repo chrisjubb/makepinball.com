@@ -58,6 +58,8 @@
 			var leftButtonDown = false;
 			var rightButtonDown = false;
 
+			var leftButtonTimeDeactivate = 0.0;
+
 			// physics
 			var dynamicsWorld;
             var bulletMaterial;
@@ -239,6 +241,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
+                body.setRestitution(0.0);
                 dynamicsWorld.addRigidBody(body, groupTriangleMesh, maskTriangleMesh);
                 body.activate();
 
@@ -263,6 +266,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
+                body.setRestitution(0.6);
                 body.setDamping(0.04, 0.1);
                	body.setFriction(0.5);
                 dynamicsWorld.addRigidBody(body, groupBall, maskBall);
@@ -339,13 +343,14 @@
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 2;
+                var mass = 5;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
+                body.setRestitution(1.2);
                 dynamicsWorld.addRigidBody(body, groupFlipper, maskFlipper);
 
 				var hingeTransform = new Ammo.btTransform();
@@ -462,6 +467,9 @@
 				window.addEventListener( 'keydown', function(evt) {
 					//console.log(evt.keyCode);
 					if(evt.keyCode == 65) { // 'A'
+						if(leftButtonDown == false) {
+							leftButtonTimeDeactivate = clock.elapsedTime + 0.25;
+						}
 						leftButtonDown = true;
 					}
 					else if(evt.keyCode == 76) { // 'L'
@@ -504,8 +512,16 @@
 					flipperBody.forceActivationState(true);
 				});
 				_.each(flipperConstraints, function(flipperConstraint) {
-					var targetVelocity = leftButtonDown ? 5000.0 : -5.0;
-					var maxMotorImpulse = 10.0;
+					var upImpulse = 500.0;
+					var downImpulse = -500.0;
+
+					var targetVelocity = downImpulse;
+
+					if(leftButtonDown || (clock.elapsedTime < leftButtonTimeDeactivate)) {
+						targetVelocity = upImpulse;
+					}
+
+					var maxMotorImpulse = upImpulse * 5.0;
 					flipperConstraint.enableAngularMotor(true, targetVelocity, maxMotorImpulse);
 				});
 
