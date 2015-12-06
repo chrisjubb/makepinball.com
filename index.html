@@ -58,11 +58,12 @@
 			var leftButtonDown = false;
 			var rightButtonDown = false;
 
-			var leftButtonTimeDeactivate = 0.0;
-
 			// physics
 			var dynamicsWorld;
             var physicsMeshCallbacks = [];
+
+            var flipperLimitsMin = [-30,  -40 ];
+            var flipperLimitsMax = [ 40,   30 ];
 
             var planeBodies = [];
             var triangleMeshBodies = [];
@@ -383,7 +384,7 @@
                 hingeTransform.setIdentity();
                 hingeTransform.setOrigin(new Ammo.btVector3(0,0.0,0));
                 var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-                hingeQuaternion.setEulerZYX(0.0, 90.0, 90.0);
+                hingeQuaternion.setEulerZYX(0.0, 180.0, 90.0);
                 hingeQuaternion.normalize();
                 hingeTransform.setRotation(hingeQuaternion);
 
@@ -402,7 +403,7 @@
                 dof.setAngularUpperLimit(new Ammo.btVector3(0,0,0));
 
 				var springyness = 0.9;
-				hinge.setLimit(radians(-30.0), radians(40.0), 0.001, springyness, 1.0);
+				hinge.setLimit(radians(flipperLimitsMin[flipperIndex]), radians(flipperLimitsMax[flipperIndex]), 0.001, springyness, 1.0);
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
@@ -513,9 +514,6 @@
 				window.addEventListener( 'keydown', function(evt) {
 					//console.log(evt.keyCode);
 					if(evt.keyCode == 65) { // 'A'
-						if(leftButtonDown == false) {
-							leftButtonTimeDeactivate = clock.elapsedTime + 0.25;
-						}
 						leftButtonDown = true;
 					}
 					else if(evt.keyCode == 76) { // 'L'
@@ -546,6 +544,20 @@
 
 			}
 
+			function processFlipper(flipperConstraint, buttonDown, multiplier) {
+				var upImpulse = 500.0;
+				var downImpulse = -500.0;
+
+				var targetVelocity = downImpulse;
+
+				if(buttonDown) {
+					targetVelocity = upImpulse;
+				}
+
+				var maxMotorImpulse = upImpulse * 5.0;
+				flipperConstraint.enableAngularMotor(true, targetVelocity * multiplier, maxMotorImpulse);
+			}
+
 			var clock = new THREE.Clock();
 
 			function render() {
@@ -557,19 +569,9 @@
 				_.each(flipperBodies, function(flipperBody) {
 					flipperBody.forceActivationState(true);
 				});
-				_.each(flipperConstraints, function(flipperConstraint) {
-					var upImpulse = 500.0;
-					var downImpulse = -500.0;
 
-					var targetVelocity = downImpulse;
-
-					if(leftButtonDown || (clock.elapsedTime < leftButtonTimeDeactivate)) {
-						targetVelocity = upImpulse;
-					}
-
-					var maxMotorImpulse = upImpulse * 5.0;
-					flipperConstraint.enableAngularMotor(true, targetVelocity, maxMotorImpulse);
-				});
+				processFlipper(flipperConstraints[0], leftButtonDown, 1);
+				processFlipper(flipperConstraints[1], rightButtonDown, -1);
 
 				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
