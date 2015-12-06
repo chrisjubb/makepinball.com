@@ -2,7 +2,7 @@ import bge
 import mathutils
 import math
 
-table_angle = 10
+table_angle = 7
 
 eul = mathutils.Euler((math.radians(table_angle), 0.0, 0.0), 'XYZ')
 vec = mathutils.Vector((0.0, -22.0, 0.0))

@@ -62,7 +62,6 @@
 
 			// physics
 			var dynamicsWorld;
-            var bulletMaterial;
             var physicsMeshCallbacks = [];
 
             var planeBodies = [];
@@ -72,23 +71,27 @@
             var flipperBodies = [];
             var ballStartingPositions = [];
             var flipperConstraints = [];
+            var ghostBodies = [];
 
             var groupPlane = 1;
             var groupTriangleMesh = 2;
             var groupBall = 4;
             var groupFlipper = 8;
             var groupFlipperPoint = 16;
+            var groupGhost = 32;
 
             // plane -> ball only
             var maskPlane = groupBall;
             // triangle mesh -> ball only
             var maskTriangleMesh = groupBall;
             // ball -> plane, triangle mesh, flipper, other balls
-            var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall;
+            var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall + groupGhost;
             // flipper -> ball
             var maskFlipper = groupBall;
             // flipper point -> nothing
             var maskFlipperPoint = 0;
+            // ghost -> ball
+            var maskGhost = groupBall;
 
             // BLENDER -> THREE
             // XYZ     -> +X +Z -Y
@@ -102,6 +105,7 @@
 				var balls = [];
 				var pointFlippers = [];
 				var flippers = [];
+				var ghosts = [];
 
 				loader.load( 'wire_forms.dae', function ( collada ) {
 
@@ -130,6 +134,10 @@
 
 						if(child.name == "FLIPPER") {
 							flippers.push(child);
+						}
+
+						if(child.name == "GHOST") {
+							ghosts.push(child);
 						}
 
 						if(child.name == "Camera") {
@@ -169,6 +177,11 @@
 						flipperBodies.push(addFlipper(child));
 					});
 
+					_.each(ghosts, function(child) {
+						console.log("[!] Adding ghost");
+						ghostBodies.push(addGhost(child));
+					});
+
 					dae.scale.x = dae.scale.y = dae.scale.z = 1.0;
 					dae.updateMatrix();
 
@@ -201,7 +214,7 @@
                 var overlappingPairCache = new Ammo.btDbvtBroadphase();
                 var solver = new Ammo.btSequentialImpulseConstraintSolver();
                 dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-                dynamicsWorld.setGravity(new Ammo.btVector3(0, -3.8203, 21.6658));
+                dynamicsWorld.setGravity(new Ammo.btVector3(0, -2.6811, 21.8360));
 			}
 
 			function addTriangleMesh(original) {
@@ -364,7 +377,6 @@
                 var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
 
                 var pointFlipperBody = pointFlipperBodies[0];
-                console.log(pointFlipperBody);
                 var tA = new Ammo.btTransform();
                 tA.setIdentity();
                 var tB = new Ammo.btTransform();
@@ -385,6 +397,28 @@
 
                 flipperConstraints.push(hinge);
 
+                body.activate();
+
+                return body;
+			}
+
+			function addGhost(original) {
+				var pos = original.position.clone();
+                var rot = new THREE.Quaternion();
+                rot.setFromEuler(original.rotation);
+
+                var size = 0.5;
+                var shape = new Ammo.btBoxShape(new Ammo.btVector3(size,size,size));//todo
+                var transform = new Ammo.btTransform();
+                transform.setIdentity();
+                transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+
+                var body = new Ammo.btGhostObject();
+                body.setCollisionShape(shape);
+                body.setWorldTransform(transform);
+                body.setCollisionFlags(4); // no collision response
+
+                dynamicsWorld.addCollisionObject(body, groupGhost, maskGhost);
                 body.activate();
 
                 return body;
@@ -529,6 +563,23 @@
 				_.each(physicsMeshCallbacks, function(callback) {
 					callback();
 				});
+
+				var dispatcher = dynamicsWorld.getDispatcher();
+				for(var i = 0, n = dispatcher.getNumManifolds(); i < n; ++i) {
+					var manifold = dispatcher.getManifoldByIndexInternal(i);
+
+					// A ghost object
+					if(manifold.getBody1().getCollisionFlags() == 4) {
+						// todo - make a lookup, ghost.ptr -> switch id
+						_.each(ghostBodies, function(ghost) {
+							if(manifold.getBody1().ptr == ghost.ptr) {
+								console.log("ghost - " + ghost);
+							}
+						});
+					}
+
+
+				}
 
 				renderer.render( scene, camera );
 
