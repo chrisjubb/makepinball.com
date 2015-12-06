@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-06T11:12:43</created>
-    <modified>2015-12-06T11:12:43</modified>
+    <created>2015-12-06T11:31:42</created>
+    <modified>2015-12-06T11:31:42</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -714,7 +714,7 @@
         </instance_geometry>
       </node>
       <node id="visual_inlane" name="visual_inlane" type="NODE">
-        <matrix sid="transform">0.00999999 0 0 2.97956 0 0.00999999 0 -1.98815 0 0 0.00999999 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.00999999 0 0 2.97956 0 0.00999999 0 -1.98815 0 0 0.00999999 -0.09590868 0 0 0 1</matrix>
         <instance_geometry url="#Cube_002-mesh" name="visual_inlane">
           <bind_material>
             <technique_common>
@@ -743,10 +743,6 @@
           </bind_material>
         </instance_geometry>
       </node>
-      <node id="flipper_visual" name="flipper_visual" type="NODE">
-        <matrix sid="transform">1 -1.07288e-8 0 4.7555 1.07288e-8 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
-        <instance_geometry url="#_0__flipper_t1_limpio_m-mesh" name="flipper_visual"/>
-      </node>
       <node id="FLIPPER" name="FLIPPER" type="NODE">
         <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
         <instance_geometry url="#collision-mesh" name="FLIPPER">
@@ -756,6 +752,10 @@
             </technique_common>
           </bind_material>
         </instance_geometry>
+        <node id="flipper_visual" name="flipper_visual" type="NODE">
+          <matrix sid="transform">1 -1.07288e-8 0 0 1.07288e-8 1 0 4.76837e-7 0 0 1 0 0 0 0 1</matrix>
+          <instance_geometry url="#_0__flipper_t1_limpio_m-mesh" name="flipper_visual"/>
+        </node>
         <extra>
           <technique profile="blender">
             <hinge_constraint>
@@ -807,7 +807,7 @@
         </instance_geometry>
       </node>
       <node id="P_left_inlane" name="P_left_inlane" type="NODE">
-        <matrix sid="transform">0.00999999 0 0 2.969354 0 0.00999999 0 -1.98815 0 0 0.00999999 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.00999999 0 0 2.969354 0 0.00999999 0 -1.98815 0 0 0.00999999 -0.09587892 0 0 0 1</matrix>
         <instance_geometry url="#Cube_001-mesh" name="P_left_inlane">
           <bind_material>
             <technique_common>

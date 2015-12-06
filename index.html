@@ -256,7 +256,7 @@
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 5;
+                var mass = 1;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
@@ -331,16 +331,15 @@
 					addToConvexHull(shape, vertex);
 				});
 
-				// original.children[0].visible = false;
-
-				console.log("flipper - " + dpos(original.position) + ", " + dpos(original.rotation));
+				// hide physics mesh
+				original.children[0].visible = false;
 
 				var pos = original.position.clone();
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 0.9;
+                var mass = 2;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
@@ -505,7 +504,7 @@
 					flipperBody.forceActivationState(true);
 				});
 				_.each(flipperConstraints, function(flipperConstraint) {
-					var targetVelocity = leftButtonDown ? 500.0 : -5.0;
+					var targetVelocity = leftButtonDown ? 5000.0 : -5.0;
 					var maxMotorImpulse = 10.0;
 					flipperConstraint.enableAngularMotor(true, targetVelocity, maxMotorImpulse);
 				});
