@@ -66,6 +66,7 @@
             var planeBodies = [];
             var triangleMeshBodies = [];
             var ballBodies = [];
+            var pointFlipperBodies = [];
             var flipperBodies = [];
             var ballStartingPositions = [];
             var flipperConstraints = [];
@@ -74,6 +75,7 @@
             var groupTriangleMesh = 2;
             var groupBall = 4;
             var groupFlipper = 8;
+            var groupFlipperPoint = 16;
 
             // plane -> ball only
             var maskPlane = groupBall;
@@ -83,6 +85,8 @@
             var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall;
             // flipper -> ball
             var maskFlipper = groupBall;
+            // flipper point -> nothing
+            var maskFlipperPoint = 0;
 
             // BLENDER -> THREE
             // XYZ     -> +X +Z -Y
@@ -94,6 +98,7 @@
 				var planes = [];
 				var triangleMeshes = [];
 				var balls = [];
+				var pointFlippers = [];
 				var flippers = [];
 
 				loader.load( 'wire_forms.dae', function ( collada ) {
@@ -115,6 +120,10 @@
 
 						if(child.name.indexOf("BALL") == 0) {
 							balls.push(child);
+						}
+
+						if(child.name == "POINT_FLIPPER") {
+							pointFlippers.push(child);
 						}
 
 						if(child.name == "FLIPPER") {
@@ -146,6 +155,11 @@
 						console.log("[!] Adding ball (" + child.name + ") - " + dpos(child.position));
 						ballBodies.push(addBall(child));
 						ballStartingPositions.push(child.position.clone());
+					});
+
+					_.each(pointFlippers, function(child) {
+						console.log("[!] Adding point flipper");
+						pointFlipperBodies.push(addFlipperPoint(child));
 					});
 
 					_.each(flippers, function(child) {
@@ -285,6 +299,28 @@
 				shape.addPoint(new Ammo.btVector3(threePosition.x, threePosition.y, threePosition.z));
 			}
 
+			function addFlipperPoint(original) {
+				var pos = original.position.clone();
+
+				var shape = new Ammo.btSphereShape(0.00001);
+
+				var transform = new Ammo.btTransform();
+                transform.setIdentity();
+                transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+
+                var mass = 0;
+                var localInertia = new Ammo.btVector3(0, 0, 0);
+                shape.calculateLocalInertia(mass, localInertia);
+
+                var motionState = new Ammo.btDefaultMotionState(transform);
+                var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
+                var body = new Ammo.btRigidBody(rigidBodyInfo);
+                dynamicsWorld.addRigidBody(body, groupFlipperPoint, maskFlipperPoint);
+                body.activate();
+
+                return body;
+			}
+
 			function addFlipper(original) {
 				var shape = new Ammo.btConvexHullShape();
 
@@ -297,12 +333,14 @@
 
 				// original.children[0].visible = false;
 
+				console.log("flipper - " + dpos(original.position) + ", " + dpos(original.rotation));
+
 				var pos = original.position.clone();
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
-                var mass = 1;
+                var mass = 0.9;
                 var localInertia = new Ammo.btVector3(0, 0, 0);
                 shape.calculateLocalInertia(mass, localInertia);
 
@@ -310,22 +348,40 @@
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 dynamicsWorld.addRigidBody(body, groupFlipper, maskFlipper);
-                body.activate();
 
 				var hingeTransform = new Ammo.btTransform();
                 hingeTransform.setIdentity();
-                hingeTransform.setOrigin(new Ammo.btVector3(0,0,0));
+                hingeTransform.setOrigin(new Ammo.btVector3(0,0.0,0));
                 var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
                 hingeQuaternion.setEulerZYX(0.0, 0.0, 90.0);
                 hingeQuaternion.normalize();
                 hingeTransform.setRotation(hingeQuaternion);
-				var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
-				hinge.setLimit(radians(-30.0), radians(40.0), 0.001, 0.01, 0.1);
 
+                var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
+
+                var pointFlipperBody = pointFlipperBodies[0];
+                console.log(pointFlipperBody);
+                var tA = new Ammo.btTransform();
+                tA.setIdentity();
+                var tB = new Ammo.btTransform();
+                tB.setIdentity();
+                var dof = new Ammo.btGeneric6DofConstraint(body, pointFlipperBody,
+                		tA, tB, true);
+                dof.setLinearLowerLimit(new Ammo.btVector3(0,0,0));
+                dof.setLinearUpperLimit(new Ammo.btVector3(0,0,0));
+                dof.setAngularLowerLimit(new Ammo.btVector3(0,1,0));
+                dof.setAngularUpperLimit(new Ammo.btVector3(0,0,0));
+
+				var springyness = 0.9;
+				hinge.setLimit(radians(-30.0), radians(40.0), 0.001, springyness, 1.0);
+
+                dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
                 addPhysicsCallback(original, body, transform);
 
                 flipperConstraints.push(hinge);
+
+                body.activate();
 
                 return body;
 			}

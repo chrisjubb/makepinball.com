@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-06T10:47:03</created>
-    <modified>2015-12-06T10:47:03</modified>
+    <created>2015-12-06T11:12:43</created>
+    <modified>2015-12-06T11:12:43</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -743,6 +743,10 @@
           </bind_material>
         </instance_geometry>
       </node>
+      <node id="flipper_visual" name="flipper_visual" type="NODE">
+        <matrix sid="transform">1 -1.07288e-8 0 4.7555 1.07288e-8 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
+        <instance_geometry url="#_0__flipper_t1_limpio_m-mesh" name="flipper_visual"/>
+      </node>
       <node id="FLIPPER" name="FLIPPER" type="NODE">
         <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
         <instance_geometry url="#collision-mesh" name="FLIPPER">
@@ -752,13 +756,6 @@
             </technique_common>
           </bind_material>
         </instance_geometry>
-        <node id="visual_object" name="visual_object" type="NODE">
-          <matrix sid="transform">1 1.90735e-8 0 -0.004941463 -1.90735e-8 1 0 -0.002812147 0 0 1 0 0 0 0 1</matrix>
-          <node id="visual" name="visual" type="NODE">
-            <matrix sid="transform">1 -2.98023e-8 0 0.004941463 -8.3447e-9 1 0 0.002812624 0 0 1 1.49012e-8 0 0 0 1</matrix>
-            <instance_geometry url="#_0__flipper_t1_limpio_m-mesh" name="visual"/>
-          </node>
-        </node>
         <extra>
           <technique profile="blender">
             <hinge_constraint>
@@ -827,8 +824,8 @@
         <matrix sid="transform">0.3049639 0 0 5.449128 0 0.3049639 0 -3.944424 0 0 0.3049639 4.89371 0 0 0 1</matrix>
         <instance_geometry url="#Cube_004-mesh" name="Cube"/>
       </node>
-      <node id="HINGEPOINT" name="HINGEPOINT" type="NODE">
-        <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0 0 0 0 1</matrix>
+      <node id="POINT_FLIPPER" name="POINT_FLIPPER" type="NODE">
+        <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
       </node>
     </visual_scene>
   </library_visual_scenes>
