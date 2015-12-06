@@ -96,6 +96,16 @@
             // BLENDER -> THREE
             // XYZ     -> +X +Z -Y
 
+            function getNameIndex(child, stringIdent) {
+            	if(child.name.indexOf(stringIdent) == 0) {
+            		var idString = child.name.substring(stringIdent.length);
+            		var id = parseInt(idString);
+            		return {id: id, child: child};
+            	}
+
+            	return undefined;
+            }
+
 			function start() {
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
@@ -113,7 +123,7 @@
 
 					dae = collada.scene;
 
-					dae.traverse( function ( child ) {
+					dae.traverse( function (child) {
 						//console.log(child.name + " - " + dpos(child.position));
 
 						if(child.name == "Plane") {
@@ -128,23 +138,26 @@
 							balls.push(child);
 						}
 
-						if(child.name.indexOf("POINT_FLIPPER_") == 0) {
-							pointFlippers.push(child);
+						var pointFlipper = getNameIndex(child, "POINT_FLIPPER_");
+						if(pointFlipper) {
+							pointFlippers[pointFlipper.id] = pointFlipper.child;
 						}
 
-						if(child.name.indexOf("FLIPPER_") == 0) {
-							flippers.push(child);
+						var flipper = getNameIndex(child, "FLIPPER_");
+						if(flipper) {
+							flippers[flipper.id] = flipper.child;
 						}
 
-						if(child.name.indexOf("SWITCH_") == 0) {
-							switches.push(child);
+						var switchObject = getNameIndex(child, "SWITCH_")
+						if(switchObject) {
+							switches[switchObject.id] = switchObject.child;
 						}
 
 						if(child.name == "Camera") {
 							cameras.push(child);
 						}
 
-						if ( child instanceof THREE.SkinnedMesh ) {
+						if(child instanceof THREE.SkinnedMesh) {
 							var animation = new THREE.Animation( child, child.geometry.animation );
 							animation.play();
 						}

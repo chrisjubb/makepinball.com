@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-06T17:42:14</created>
-    <modified>2015-12-06T17:42:14</modified>
+    <created>2015-12-06T17:54:45</created>
+    <modified>2015-12-06T17:54:45</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -100,6 +100,32 @@
   </library_lights>
   <library_images/>
   <library_effects>
+    <effect id="GHOSTS_001-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.007311543 0.04835875 0.64 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="invisble_001-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -278,6 +304,9 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="GHOSTS_001-material" name="GHOSTS_001">
+      <instance_effect url="#GHOSTS_001-effect"/>
+    </material>
     <material id="invisble_001-material" name="invisble_001">
       <instance_effect url="#invisble_001-effect"/>
     </material>
@@ -301,6 +330,39 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Cube_000-mesh" name="Cube.000">
+      <mesh>
+        <source id="Cube_000-mesh-positions">
+          <float_array id="Cube_000-mesh-positions-array" count="24">-1 -1 -1 -1 -1 1 -1 1 -1 -1 1 1 1 -1 -1 1 -1 1 1 1 -1 1 1 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_000-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_000-mesh-normals">
+          <float_array id="Cube_000-mesh-normals-array" count="18">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_000-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_000-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_000-mesh-positions"/>
+        </vertices>
+        <polylist material="GHOSTS_001-material" count="12">
+          <input semantic="VERTEX" source="#Cube_000-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_000-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>3 0 2 0 0 0 7 1 6 1 2 1 5 2 4 2 6 2 1 3 0 3 4 3 2 4 6 4 4 4 7 5 3 5 1 5 1 0 3 0 0 0 3 1 7 1 2 1 7 2 5 2 6 2 5 3 1 3 4 3 0 4 2 4 4 4 5 5 7 5 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Mesh_003-mesh" name="Mesh.003">
       <mesh>
         <source id="Mesh_003-mesh-positions">
@@ -788,6 +850,16 @@
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="SWITCH_001" name="SWITCH_001" type="NODE">
+        <matrix sid="transform">2.666046 0 0 5.476018 0 0.2905322 0 -5.417966 0 0 0.2905322 0.2100679 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_000-mesh" name="SWITCH_001">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="GHOSTS_001-material" target="#GHOSTS_001-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="visual_ramp2" name="visual_ramp2" type="NODE">
         <matrix sid="transform">1.178923 1.239416 0 8.385796 -1.239416 1.178923 0 -0.5509489 0 0 3.421117 -0.006618489 0 0 0 1</matrix>
         <instance_geometry url="#Mesh_003-mesh" name="visual_ramp2"/>
@@ -802,9 +874,9 @@
           </bind_material>
         </instance_geometry>
       </node>
-      <node id="BALL_3" name="BALL_3" type="NODE">
+      <node id="BALL_0" name="BALL_0" type="NODE">
         <matrix sid="transform">1 0 0 3.241431 0 1 0 1.151896 0 0 1 0.829729 0 0 0 1</matrix>
-        <instance_geometry url="#Sphere_001-mesh" name="BALL_3">
+        <instance_geometry url="#Sphere_001-mesh" name="BALL_0">
           <bind_material>
             <technique_common>
               <instance_material symbol="BALL-material" target="#BALL-material"/>
@@ -852,9 +924,9 @@
           </bind_material>
         </instance_geometry>
       </node>
-      <node id="FLIPPER_001" name="FLIPPER_001" type="NODE">
+      <node id="FLIPPER_000" name="FLIPPER_000" type="NODE">
         <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
-        <instance_geometry url="#collision-mesh" name="FLIPPER_001">
+        <instance_geometry url="#collision-mesh" name="FLIPPER_000">
           <bind_material>
             <technique_common>
               <instance_material symbol="PHYSICS_RUBBER-material" target="#PHYSICS_RUBBER-material"/>
@@ -923,12 +995,12 @@
         <matrix sid="transform">0.3049639 0 0 5.449128 0 0.3049639 0 -3.944424 0 0 0.3049639 4.89371 0 0 0 1</matrix>
         <instance_geometry url="#Cube_004-mesh" name="Cube"/>
       </node>
-      <node id="POINT_FLIPPER_001" name="POINT_FLIPPER_001" type="NODE">
+      <node id="POINT_FLIPPER_000" name="POINT_FLIPPER_000" type="NODE">
         <matrix sid="transform">1 0 0 4.7555 0 1 0 -3.60036 0 0 1 0.1394603 0 0 0 1</matrix>
       </node>
-      <node id="SWITCH_001" name="SWITCH_001" type="NODE">
+      <node id="SWITCH_000" name="SWITCH_000" type="NODE">
         <matrix sid="transform">0.2905322 0 0 3.156523 0 0.2905322 0 0.2957717 0 0 0.2905322 0.7434804 0 0 0 1</matrix>
-        <instance_geometry url="#Cube_003-mesh" name="SWITCH_001">
+        <instance_geometry url="#Cube_003-mesh" name="SWITCH_000">
           <bind_material>
             <technique_common>
               <instance_material symbol="GHOSTS-material" target="#GHOSTS-material"/>
