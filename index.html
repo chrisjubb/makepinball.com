@@ -78,20 +78,20 @@
             var groupBall = 4;
             var groupFlipper = 8;
             var groupFlipperPoint = 16;
-            var groupGhost = 32;
+            var groupSwitch = 32;
 
             // plane -> ball only
             var maskPlane = groupBall;
             // triangle mesh -> ball only
             var maskTriangleMesh = groupBall;
             // ball -> plane, triangle mesh, flipper, other balls
-            var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall + groupGhost;
+            var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall + groupSwitch;
             // flipper -> ball
             var maskFlipper = groupBall;
             // flipper point -> nothing
             var maskFlipperPoint = 0;
             // ghost -> ball
-            var maskGhost = groupBall;
+            var maskSwitch = groupBall;
 
             // BLENDER -> THREE
             // XYZ     -> +X +Z -Y
@@ -105,7 +105,7 @@
 				var balls = [];
 				var pointFlippers = [];
 				var flippers = [];
-				var ghosts = [];
+				var switches = [];
 
 				loader.load( 'wire_forms.dae', function ( collada ) {
 
@@ -137,7 +137,7 @@
 						}
 
 						if(child.name.indexOf("SWITCH_") == 0) {
-							ghosts.push(child);
+							switches.push(child);
 						}
 
 						if(child.name == "Camera") {
@@ -177,8 +177,8 @@
 						flipperBodies.push(addFlipper(child));
 					});
 
-					_.each(ghosts, function(child) {
-						console.log("[!] Adding ghost");
+					_.each(switches, function(child) {
+						console.log("[!] Adding switch");
 						switchBodies.push(addSwitch(child));
 					});
 
@@ -417,7 +417,7 @@
                 body.setWorldTransform(transform);
                 body.setCollisionFlags(4); // no collision response
 
-                dynamicsWorld.addCollisionObject(body, groupGhost, maskGhost);
+                dynamicsWorld.addCollisionObject(body, groupSwitch, maskSwitch);
                 body.activate();
 
                 return body;
@@ -570,9 +570,9 @@
 					// A ghost object
 					if(manifold.getBody1().getCollisionFlags() == 4) {
 						// todo - make a lookup, ghost.ptr -> switch id
-						_.each(switchBodies, function(ghost) {
-							if(manifold.getBody1().ptr == ghost.ptr) {
-								console.log("ghost - " + ghost);
+						_.each(switchBodies, function(body) {
+							if(manifold.getBody1().ptr == body.ptr) {
+								console.log("switch body - " + body);
 							}
 						});
 					}
