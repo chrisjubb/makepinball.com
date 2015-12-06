@@ -407,8 +407,7 @@
                 var rot = new THREE.Quaternion();
                 rot.setFromEuler(original.rotation);
 
-                var size = 0.5;
-                var shape = new Ammo.btBoxShape(new Ammo.btVector3(size,size,size));//todo
+                var shape = new Ammo.btBoxShape(new Ammo.btVector3(original.scale.x, original.scale.y, original.scale.y));
                 var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
