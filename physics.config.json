@@ -1,0 +1,4 @@
+[
+	{ "name": "test", "type": "float", "minimum": 0, "maximum": 10, "step": 0.1 },
+	{ "name": "test2", "type": "float", "minimum": 10, "maximum": 100, "step": 1.0 }
+]

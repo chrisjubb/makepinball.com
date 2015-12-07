@@ -32,10 +32,12 @@
 		</div>
 
 		<script src="lib/three.min.js"></script>
-
 		<script src="lib/ammo.js"></script>
-
 		<script src="lib/underscore-min.js"></script>
+		<script src="lib/jquery.js"></script>
+		<script src="lib/backbone.js"></script>
+
+		<script src="config/config.js"></script>
 
 		<script src="js/loaders/collada/Animation.js"></script>
 		<script src="js/loaders/collada/AnimationHandler.js"></script>
@@ -61,6 +63,10 @@
 			// physics
 			var dynamicsWorld;
             var physicsMeshCallbacks = [];
+
+            var physCfg = new Config("physics.config.json", "physics.settings.json");
+            var physCfgView = new ConfigView({ model: physCfg });
+            $("#info").html(physCfgView.render().el);
 
             var flipperLimitsMin = [-30,  -40 ];
             var flipperLimitsMax = [ 40,   30 ];
@@ -599,7 +605,7 @@
 
 			}
 
-			start();
+			//start();
 
 		</script>
 	</body>
