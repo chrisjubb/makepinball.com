@@ -64,7 +64,7 @@
 			var dynamicsWorld;
             var physicsMeshCallbacks = [];
 
-            var physCfg = new Config("physics.config.json", "physics.settings.json");
+            var physCfg = new Config().load("physics.config.json", "physics.settings.json");
             var physCfgView = new ConfigView({ model: physCfg });
             $("#info").html(physCfgView.render().el);
 
