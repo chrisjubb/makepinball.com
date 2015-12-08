@@ -34,6 +34,19 @@
 				background-color: white;
 			}
 
+			#configButtons {
+			}
+
+			#configScrollContainer {
+				height: 90%;
+			}
+
+			#config {
+				overflow: scroll;
+				width: 100%;
+				height: 100%;
+			}
+
 			#canvasContainer {
 				position: absolute;
 				left: 0;
@@ -50,8 +63,13 @@
 		</div>
 		<div id="canvasContainer"></div>
 		<div id="configContainer">
-			<button>Hide</button>
-			<div id="config"></div>
+			<div id="configButtons">
+				<div><button>Hide</button></div>
+				<div><button>UPDATE</button></div>
+			</div>
+			<div id="configScrollContainer">
+				<div id="config"></div>
+			</div>
 		</div>
 
 		<script src="lib/three.min.js"></script>
