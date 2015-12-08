@@ -28,7 +28,7 @@ var Config = Backbone.Model.extend({
 
 		var self = this;
 		_.each(this.readyCallbacks, function(callback) {
-			callback.call(this, self.configJson, self.settingsJson);
+			callback.call(self);
 		});
 		this.readyCallbacks = [];
 	},
@@ -47,7 +47,7 @@ var Config = Backbone.Model.extend({
 
 	ready: function(callback) {
 		if(this.configJson && this.settingsJson) {
-			callback(this.configJson, this.settingsJson);
+			callback.call(this);
 		}
 		else {
 			this.readyCallbacks.push(callback);
@@ -60,15 +60,31 @@ var ConfigView = Backbone.View.extend({
 		this.$el.empty();
 
 		var self = this;
-		this.model.ready(function(config, settings) {
-			var output = "<form>";
-			_.each(config, function(entry) {
-				output += "<input id='" + entry.name + "' value='" + entry.minimum + "'></input><br>";
-			});
-			output += "</form>";
+		this.model.ready(function() {
+			self.$el.append("<form></form>");
+			var $form = self.$el.find("form");
 
-			self.$el.html(output);
+			_.each(self.model.getConfig(), function(entry) {
+				var element = new ConfigViewElement({ model: entry, configAndSettings: self.model });
+				$form.append(element.render().el);
+			});
 		});
+
+		return this;
+	}
+});
+
+var ConfigViewElement = Backbone.View.extend({
+
+	initialize: function(params) {
+		this.model = params.model; // for the individual entry
+		this.configAndSettings = params.configAndSettings;
+	},
+
+	render: function() {
+		this.$el.empty();
+
+		this.$el.html("<input id='" + this.model.name + "' value='" + this.configAndSettings.get(this.model.name) + "'></input><br>");
 
 		return this;
 	}
