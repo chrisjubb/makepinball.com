@@ -84,7 +84,7 @@ var ConfigViewElement = Backbone.View.extend({
 	render: function() {
 		this.$el.empty();
 
-		this.$el.html("<input id='" + this.model.name + "' value='" + this.configAndSettings.get(this.model.name) + "'></input><br>");
+		this.$el.html("<div>" + this.model.name + ": <input id='" + this.model.name + "' value='" + this.configAndSettings.get(this.model.name) + "'></input></div><br>");
 
 		return this;
 	}
