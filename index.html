@@ -24,11 +24,34 @@
 			}
 
 			a { color: skyblue }
+
+			#configContainer {
+				position: absolute;
+				right: 0;
+				top: 0;
+				height: 100%;
+				width: 20%;
+				background-color: white;
+			}
+
+			#canvasContainer {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 80%;
+				height: 100%;
+				background-color: blue;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="info">
 			pinball
+		</div>
+		<div id="canvasContainer"></div>
+		<div id="configContainer">
+			<button>Hide</button>
+			<div id="config"></div>
 		</div>
 
 		<script src="lib/three.min.js"></script>
@@ -52,7 +75,7 @@
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-			var container, stats;
+			var stats;
 
 			var camera, scene, renderer, objects;
 			var dae;
@@ -66,7 +89,7 @@
 
             var physCfg = new Config().load("physics.config.json", "physics.settings.json");
             var physCfgView = new ConfigView({ model: physCfg });
-            $("#info").html(physCfgView.render().el);
+            $("#config").html(physCfgView.render().el);
 
             var flipperLimitsMin = [-30,  -40 ];
             var flipperLimitsMax = [ 40,   30 ];
@@ -457,12 +480,11 @@
 
 			function initScene() {
 
-				container = document.createElement( 'div' );
-				document.body.appendChild( container );
+				var container = getCanvasContainer();
 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000.0 );
+				camera = new THREE.PerspectiveCamera( 60, container.width() / container.height(), 0.1, 1000.0 );
 				camera.position.x = 5.4;
 				camera.position.y = 5.0;
 				camera.position.z = 6.0;
@@ -485,13 +507,13 @@
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
+				renderer.setSize( container.width(), container.height() );
+				container.append( renderer.domElement );
 
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
 				stats.domElement.style.top = '0px';
-				container.appendChild( stats.domElement );
+				container.append( stats.domElement );
 
 				//
 
@@ -526,28 +548,23 @@
 						rightButtonDown = true;
 					}
 				});
+			}
 
-
+			function getCanvasContainer() {
+				return $("#canvasContainer");
 			}
 
 			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
+				var container = getCanvasContainer();
+				camera.aspect = container.width() / container.height();
 				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
+				renderer.setSize( container.width(), container.height() );
 			}
 
-			//
-
 			function animate() {
-
 				requestAnimationFrame( animate );
-
 				render();
 				stats.update();
-
 			}
 
 			function processFlipper(flipperConstraint, buttonDown, multiplier) {
@@ -605,7 +622,7 @@
 
 			}
 
-			//start();
+			// start();
 
 		</script>
 	</body>
