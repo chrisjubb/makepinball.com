@@ -147,7 +147,9 @@
 
             // config related
             function configHide() {
-
+            	$("#configContainer").css("width", "0%");
+            	$("#canvasContainer").css("width", "100%");
+            	onWindowResize();
             }
 
             function configOutputJson() {
