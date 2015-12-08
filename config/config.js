@@ -67,12 +67,17 @@ var ConfigView = Backbone.View.extend({
 			_.each(self.model.getConfig(), function(entry) {
 				var element = new ConfigViewElement({ model: entry, configAndSettings: self.model });
 				$form.append(element.render().el);
+				element.update();
 			});
 		});
 
 		return this;
 	}
 });
+
+var configSliderUpdate = function(value, outputId) {
+	$("#" + outputId).html(value);
+}
 
 var ConfigViewElement = Backbone.View.extend({
 
@@ -84,8 +89,34 @@ var ConfigViewElement = Backbone.View.extend({
 	render: function() {
 		this.$el.empty();
 
-		this.$el.html("<div>" + this.model.name + ": <input id='" + this.model.name + "' value='" + this.configAndSettings.get(this.model.name) + "'></input></div><br>");
+		if(this.model.type == "float") {
+			this.$el.html("<div>" + this.model.name +
+						  ": <input type='range' min='" + this.model.min + "' max='" + this.model.max + "' step='" + this.model.step + "' " +
+						  "id='" + this.getInputId() + "' " +
+						  "value='" + this.getCurrentValue() + "' oninput='configSliderUpdate(value, \"" + this.getOutputId() + "\")'></input>" +
+						  "<output id='" + this.getOutputId() + "' for='" + this.getInputId() + "'></output>" +
+						  "</div><br>");
+		}
+		else {
+			this.$el.html("unsupported type: " + this.model.type);
+		}
 
 		return this;
+	},
+
+	getCurrentValue: function() {
+		return this.configAndSettings.get(this.model.name)
+	},
+
+	update: function() {
+		configSliderUpdate(this.getCurrentValue(), this.getOutputId());
+	},
+
+	getInputId: function() {
+		return "config_" + this.model.name;
+	},
+
+	getOutputId: function() {
+		return "config_output_" + this.model.name;
 	}
 });
