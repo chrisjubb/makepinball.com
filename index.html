@@ -64,8 +64,9 @@
 		<div id="canvasContainer"></div>
 		<div id="configContainer">
 			<div id="configButtons">
-				<div><button>Hide</button></div>
-				<div><button>UPDATE</button></div>
+				<div><button onclick="configHide();">Hide</button></div>
+				<div><button onclick="configOutputJson();">output json</button></div>
+				<div><button onclick="configUpdate();">UPDATE</button></div>
 			</div>
 			<div id="configScrollContainer">
 				<div id="config"></div>
@@ -144,6 +145,20 @@
             // BLENDER -> THREE
             // XYZ     -> +X +Z -Y
 
+            // config related
+            function configHide() {
+
+            }
+
+            function configOutputJson() {
+            	console.log(JSON.stringify(physCfg.getSettings()));
+            }
+
+            function configUpdate() {
+            	physCfgView.updateValues();
+            }
+
+            // blender export related
             function getNameIndex(child, stringIdent) {
             	if(child.name.indexOf(stringIdent) == 0) {
             		var idString = child.name.substring(stringIdent.length);

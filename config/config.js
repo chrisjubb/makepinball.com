@@ -37,6 +37,10 @@ var Config = Backbone.Model.extend({
 		return this.settingsJson[id];
 	},
 
+	setValue: function(id, value) {
+		this.settingsJson[id] = value;
+	},
+
 	getSettings: function() {
 		return this.settingsJson;
 	},
@@ -56,8 +60,11 @@ var Config = Backbone.Model.extend({
 });
 
 var ConfigView = Backbone.View.extend({
+	inputModels: [],
+
 	render: function() {
 		this.$el.empty();
+		this.inputModels = [];
 
 		var self = this;
 		this.model.ready(function() {
@@ -68,10 +75,17 @@ var ConfigView = Backbone.View.extend({
 				var element = new ConfigViewElement({ model: entry, configAndSettings: self.model });
 				$form.append(element.render().el);
 				element.update();
+				self.inputModels.push(element);
 			});
 		});
 
 		return this;
+	},
+
+	updateValues: function() {
+		_.each(this.inputModels, function(input) {
+			input.update();
+		});
 	}
 });
 
@@ -108,7 +122,18 @@ var ConfigViewElement = Backbone.View.extend({
 		return this.configAndSettings.get(this.model.name)
 	},
 
+	getOutputValue: function() {
+		var outputHTML = $("#" + this.getOutputId()).html();
+		if(outputHTML) {
+			return parseFloat(outputHTML);
+		}
+		else {
+			return this.getCurrentValue();
+		}
+	},
+
 	update: function() {
+		this.configAndSettings.setValue(this.model.name, this.getOutputValue());
 		configSliderUpdate(this.getCurrentValue(), this.getOutputId());
 	},
 
