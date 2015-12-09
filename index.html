@@ -115,7 +115,7 @@
 			var ssaoPass;
 			var group;
 			var depthScale = 1.0;
-			var postprocessing = { enabled : true, renderMode: 0 }; // renderMode: 0('framebuffer'), 1('onlyAO')
+			var ssaoEnabled = false;
 
 			// physics
 			var dynamicsWorld;
@@ -546,12 +546,12 @@
 
 				// Lights
 
-				scene.add( new THREE.AmbientLight( 0x050505 ) );
+				scene.add( new THREE.AmbientLight( 0x444444 ) );
 
-				var directionalLight = new THREE.DirectionalLight(0x050505 );
-				directionalLight.position.x = Math.random() - 0.5;
-				directionalLight.position.y = Math.random() - 0.5;
-				directionalLight.position.z = Math.random() - 0.5;
+				var directionalLight = new THREE.DirectionalLight(0x666666);
+				directionalLight.position.x = 0.5;
+				directionalLight.position.y = 0.5;
+				directionalLight.position.z = 0.5;
 				directionalLight.position.normalize();
 				scene.add( directionalLight );
 
@@ -624,7 +624,7 @@
 				ssaoPass.uniforms[ 'size' ].value.set( window.innerWidth, window.innerHeight );
 				ssaoPass.uniforms[ 'cameraNear' ].value = camera.near;
 				ssaoPass.uniforms[ 'cameraFar' ].value = camera.far;
-				ssaoPass.uniforms[ 'onlyAO' ].value = ( postprocessing.renderMode == 1 );
+				ssaoPass.uniforms[ 'onlyAO' ].value = false;
 				ssaoPass.uniforms[ 'aoClamp' ].value = 0.4;
 				ssaoPass.uniforms[ 'lumInfluence' ].value = 0.5;
 
@@ -713,12 +713,17 @@
 
 				}
 
-				// for post processing
-				scene.overrideMaterial = depthMaterial;
-				renderer.render( scene, camera, depthRenderTarget, true );
-				// Render renderPass and SSAO shaderPass
-				scene.overrideMaterial = null;
-				effectComposer.render();
+				if(ssaoEnabled) {
+					// for post processing
+					scene.overrideMaterial = depthMaterial;
+					renderer.render(scene, camera, depthRenderTarget, true );
+					// Render renderPass and SSAO shaderPass
+					scene.overrideMaterial = null;
+					effectComposer.render();
+				}
+				else {
+					renderer.render(scene, camera);
+				}
 			}
 
 			start();
