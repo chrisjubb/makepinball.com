@@ -486,7 +486,7 @@
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
-                addPhysicsCallback(original, body, transform);
+                addPhysicsCallbackLimited(original, body, transform, { rotation: [0, 0, 1], translation: [ 1,1,1] });
 
                 flipperConstraints.push(hinge);
 
@@ -525,6 +525,18 @@
 
                     var rotation = transform.getRotation();
                     object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+                });
+			}
+
+			function addPhysicsCallbackLimited(object, body, transform, limitsData) {
+				physicsMeshCallbacks.push(function() {
+                    body.getMotionState().getWorldTransform(transform);
+
+                    var origin = transform.getOrigin();
+                    object.position.set(origin.x() * limitsData.translation[0], origin.y() * limitsData.translation[1], origin.z() * limitsData.translation[2]);
+
+                    var rotation = transform.getRotation();
+                    object.quaternion.set(rotation.x() * limitsData.rotation[0], rotation.y() * limitsData.rotation[1], rotation.z() * limitsData.rotation[2], rotation.w());
                 });
 			}
 
