@@ -487,7 +487,7 @@
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
-                addPhysicsCallbackLimited(original, body, transform, { rotation: [0, 1, 0], translation: [1,1,1] });
+                addPhysicsCallback(original, body, transform, { rotation: [0, 1, 0], translation: [1,1,1] });
 
                 flipperConstraints.push(hinge);
 
@@ -517,27 +517,26 @@
                 return body;
 			}
 
-			function addPhysicsCallback(object, body, transform) {
+			function addPhysicsCallback(object, body, transform, limitsData) {
+
+				var translationLimit = [1,1,1];
+				if(limitsData && limitsData.translation) {
+					translationLimit = limitsData.translation;
+				}
+
+				var rotationLimit = [1,1,1];
+				if(limitsData && limitsData.rotation) {
+					rotationLimit = limitsData.rotation;
+				}
+
 				physicsMeshCallbacks.push(function() {
                     body.getMotionState().getWorldTransform(transform);
 
                     var origin = transform.getOrigin();
-                    object.position.set(origin.x(), origin.y(), origin.z());
+                    object.position.set(origin.x() * translationLimit[0], origin.y() * translationLimit[1], origin.z() * translationLimit[2]);
 
                     var rotation = transform.getRotation();
-                    object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
-                });
-			}
-
-			function addPhysicsCallbackLimited(object, body, transform, limitsData) {
-				physicsMeshCallbacks.push(function() {
-                    body.getMotionState().getWorldTransform(transform);
-
-                    var origin = transform.getOrigin();
-                    object.position.set(origin.x() * limitsData.translation[0], origin.y() * limitsData.translation[1], origin.z() * limitsData.translation[2]);
-
-                    var rotation = transform.getRotation();
-                    object.quaternion.set(rotation.x() * limitsData.rotation[0], rotation.y() * limitsData.rotation[1], rotation.z() * limitsData.rotation[2], rotation.w());
+                    object.quaternion.set(rotation.x() * rotationLimit[0], rotation.y() * rotationLimit[1], rotation.z() * rotationLimit[2], rotation.w());
                 });
 			}
 
