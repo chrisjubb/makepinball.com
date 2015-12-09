@@ -81,9 +81,17 @@
 
 		<script src="config/config.js"></script>
 
+		<!-- three js -->
 		<script src="js/loaders/collada/Animation.js"></script>
 		<script src="js/loaders/collada/AnimationHandler.js"></script>
 		<script src="js/loaders/collada/KeyFrameAnimation.js"></script>
+
+		<script src="js/shaders/SSAOShader.js"></script>
+		<script src="js/shaders/CopyShader.js"></script>
+		<script src="js/postprocessing/RenderPass.js"></script>
+		<script src="js/postprocessing/ShaderPass.js"></script>
+		<script src="js/postprocessing/MaskPass.js"></script>
+		<script src="js/postprocessing/EffectComposer.js"></script>
 
 		<script src="js/loaders/ColladaLoader.js"></script>
 
@@ -101,6 +109,13 @@
 			var cameras = [];
 			var leftButtonDown = false;
 			var rightButtonDown = false;
+
+			// effects
+			var depthMaterial, effectComposer, depthRenderTarget;
+			var ssaoPass;
+			var group;
+			var depthScale = 1.0;
+			var postprocessing = { enabled : true, renderMode: 0 }; // renderMode: 0('framebuffer'), 1('onlyAO')
 
 			// physics
 			var dynamicsWorld;
@@ -550,6 +565,8 @@
 				stats.domElement.style.top = '0px';
 				container.append( stats.domElement );
 
+				initPostprocessing();
+
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -585,6 +602,38 @@
 				});
 			}
 
+			function initPostprocessing() {
+				// Setup render pass
+				var renderPass = new THREE.RenderPass( scene, camera );
+
+				// Setup depth pass
+				var depthShader = THREE.ShaderLib[ "depthRGBA" ];
+				var depthUniforms = THREE.UniformsUtils.clone( depthShader.uniforms );
+
+				depthMaterial = new THREE.ShaderMaterial( { fragmentShader: depthShader.fragmentShader, vertexShader: depthShader.vertexShader,
+					uniforms: depthUniforms, blending: THREE.NoBlending } );
+
+				var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter };
+				depthRenderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, pars );
+
+				// Setup SSAO pass
+				ssaoPass = new THREE.ShaderPass( THREE.SSAOShader );
+				ssaoPass.renderToScreen = true;
+				//ssaoPass.uniforms[ "tDiffuse" ].value will be set by ShaderPass
+				ssaoPass.uniforms[ "tDepth" ].value = depthRenderTarget;
+				ssaoPass.uniforms[ 'size' ].value.set( window.innerWidth, window.innerHeight );
+				ssaoPass.uniforms[ 'cameraNear' ].value = camera.near;
+				ssaoPass.uniforms[ 'cameraFar' ].value = camera.far;
+				ssaoPass.uniforms[ 'onlyAO' ].value = ( postprocessing.renderMode == 1 );
+				ssaoPass.uniforms[ 'aoClamp' ].value = 0.4;
+				ssaoPass.uniforms[ 'lumInfluence' ].value = 0.5;
+
+				// Add pass to effect composer
+				effectComposer = new THREE.EffectComposer( renderer );
+				effectComposer.addPass( renderPass );
+				effectComposer.addPass( ssaoPass );
+			}
+
 			function getCanvasContainer() {
 				return $("#canvasContainer");
 			}
@@ -594,6 +643,15 @@
 				camera.aspect = container.width() / container.height();
 				camera.updateProjectionMatrix();
 				renderer.setSize( container.width(), container.height() );
+
+				// Resize renderTargets
+				ssaoPass.uniforms[ 'size' ].value.set( width, height );
+
+				var pixelRatio = renderer.getPixelRatio();
+				var newWidth  = Math.floor( width / pixelRatio ) || 1;
+				var newHeight = Math.floor( height / pixelRatio ) || 1;
+				depthRenderTarget.setSize( newWidth, newHeight );
+				effectComposer.setSize( newWidth, newHeight );
 			}
 
 			function animate() {
@@ -653,11 +711,15 @@
 
 				}
 
-				renderer.render( scene, camera );
-
+				// for post processing
+				scene.overrideMaterial = depthMaterial;
+				renderer.render( scene, camera, depthRenderTarget, true );
+				// Render renderPass and SSAO shaderPass
+				scene.overrideMaterial = null;
+				effectComposer.render();
 			}
 
-			// start();
+			start();
 
 		</script>
 	</body>
