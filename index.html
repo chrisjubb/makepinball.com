@@ -207,7 +207,10 @@
 					dae.traverse( function (child) {
 						//console.log(child.name + " - " + dpos(child.position));
 
+						var castShadow = true;
+
 						if(child.name == "Plane") {
+							castShadow = false; // no point
 							planes.push(child);
 						}
 
@@ -242,6 +245,9 @@
 							var animation = new THREE.Animation( child, child.geometry.animation );
 							animation.play();
 						}
+
+						child.castShadow = castShadow;
+					    child.receiveShadow = true;
 					} );
 
 					_.each(planes, function(child) {
@@ -560,16 +566,32 @@
 
 				scene.add( new THREE.AmbientLight( 0x444444 ) );
 
-				var directionalLight = new THREE.DirectionalLight(0x666666);
-				directionalLight.position.x = 0.5;
-				directionalLight.position.y = 0.5;
-				directionalLight.position.z = 0.5;
-				directionalLight.position.normalize();
+				var directionalLight = new THREE.DirectionalLight(0x555555);
+				directionalLight.position.x = 7.5;
+				directionalLight.position.y = 5.9;
+				directionalLight.position.z = 4.2;
+				directionalLight.rotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), 0.0);
+				directionalLight.castShadow = true;
+				directionalLight.shadowDarkness = 0.25;
+				directionalLight.shadowCameraNear = 0.5;
+				directionalLight.shadowCameraFar = 15;
+				directionalLight.shadowCameraLeft = -15;
+				directionalLight.shadowCameraRight = 15;
+				directionalLight.shadowCameraTop = 15;
+				directionalLight.shadowCameraBottom = -15;
 				scene.add( directionalLight );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( container.width(), container.height() );
+
+				renderer.shadowMapBias = 0.0039;
+				renderer.shadowMapWidth = 1024;
+				renderer.shadowMapHeight = 1024;
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMapEnabled = true;
+				renderer.shadowMap.cullFace = THREE.CullFaceBack;
+
 				container.append( renderer.domElement );
 
 				stats = new Stats();
