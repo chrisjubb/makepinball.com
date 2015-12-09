@@ -554,9 +554,9 @@
 
 				camera = new THREE.PerspectiveCamera( 60, container.width() / container.height(), 0.1, 1000.0 );
 				camera.position.x = 5.4;
-				camera.position.y = 5.0;
-				camera.position.z = 6.0;
-				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 1) );
+				camera.position.y = 5.5;
+				camera.position.z = 3.0;
+				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 1.25) );
 
 				// Add the COLLADA
 
@@ -572,7 +572,7 @@
 				directionalLight.position.z = 4.2;
 				directionalLight.rotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), 0.0);
 				directionalLight.castShadow = true;
-				directionalLight.shadowDarkness = 0.25;
+				directionalLight.shadowDarkness = 0.6;
 				directionalLight.shadowCameraNear = 0.5;
 				directionalLight.shadowCameraFar = 15;
 				directionalLight.shadowCameraLeft = -15;
