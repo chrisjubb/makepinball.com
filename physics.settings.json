@@ -1,4 +1,7 @@
 {
-	"test": 123.4,
-	"test2": 456
+	"flipperLimitsMin0": -30,
+	"flipperLimitsMax0": 40,
+
+	"flipperLimitsMin1": -40,
+	"flipperLimitsMax1": 30
 }

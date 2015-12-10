@@ -125,9 +125,6 @@
             var physCfgView = new ConfigView({ model: physCfg });
             $("#config").html(physCfgView.render().el);
 
-            var flipperLimitsMin = [-30,  -40 ];
-            var flipperLimitsMax = [ 40,   30 ];
-
             var planeBodies = [];
             var triangleMeshBodies = [];
             var ballBodies = [];
@@ -187,6 +184,13 @@
             }
 
 			function start() {
+
+				physCfg.ready(function() {
+					loadLevel();
+				});
+			}
+
+			function loadLevel() {
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
 
@@ -291,7 +295,7 @@
 			}
 
 			function dpos(pos) {
-			if(pos) {
+				if(pos) {
 					return "[ " + pos.x + ", " + pos.y + ", " + pos.z + " ]";
 				}
 				else {
@@ -487,8 +491,11 @@
                 dof.setAngularLowerLimit(new Ammo.btVector3(0,1,0));
                 dof.setAngularUpperLimit(new Ammo.btVector3(0,0,0));
 
+                var limitMin = physCfg.get("flipperLimitsMin" + flipperIndex);
+                var limitMax = physCfg.get("flipperLimitsMax" + flipperIndex);
+
 				var springyness = 0.9;
-				hinge.setLimit(radians(flipperLimitsMin[flipperIndex]), radians(flipperLimitsMax[flipperIndex]), 0.001, springyness, 1.0);
+				hinge.setLimit(radians(limitMin), radians(limitMax), 0.001, springyness, 1.0);
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
