@@ -118,13 +118,13 @@
 			var ssaoEnabled = false;
 
 			// physics
-			var dynamicsWorld;
-            var physicsMeshCallbacks = [];
-
-            var physCfg = new Config().load("physics.config.json", "physics.settings.json");
+			var physCfg = new Config().load("physics.config.json", "physics.settings.json");
             var physCfgView = new ConfigView({ model: physCfg });
             $("#config").html(physCfgView.render().el);
 
+            // physics state - could turn into a class
+			var dynamicsWorld;
+            var physicsMeshCallbacks = [];
             var planeBodies = [];
             var triangleMeshBodies = [];
             var ballBodies = [];
@@ -170,6 +170,7 @@
 
             function configUpdate() {
             	physCfgView.updateValues();
+            	initPhysics();
             }
 
             // blender export related
@@ -184,7 +185,6 @@
             }
 
 			function start() {
-
 				physCfg.ready(function() {
 					loadLevel();
 				});
@@ -194,50 +194,13 @@
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
 
-				var planes = [];
-				var triangleMeshes = [];
-				var balls = [];
-				var pointFlippers = [];
-				var flippers = [];
-				var switches = [];
-
 				loader.load( 'wire_forms.dae', function ( collada ) {
-
-					initPhysics();
-
 					dae = collada.scene;
 
-					dae.traverse( function (child) {
-						//console.log(child.name + " - " + dpos(child.position));
-
+					dae.traverse(function (child) {
 						var castShadow = true;
-
 						if(child.name == "Plane") {
 							castShadow = false; // no point
-							planes.push(child);
-						}
-
-						if(child.name.indexOf("P_") == 0) {
-							triangleMeshes.push(child);
-						}
-
-						if(child.name.indexOf("BALL") == 0) {
-							balls.push(child);
-						}
-
-						var pointFlipper = getNameIndex(child, "POINT_FLIPPER_");
-						if(pointFlipper) {
-							pointFlippers[pointFlipper.id] = pointFlipper.child;
-						}
-
-						var flipper = getNameIndex(child, "FLIPPER_");
-						if(flipper) {
-							flippers[flipper.id] = flipper.child;
-						}
-
-						var switchObject = getNameIndex(child, "SWITCH_")
-						if(switchObject) {
-							switches[switchObject.id] = switchObject.child;
 						}
 
 						if(child.name == "Camera") {
@@ -251,47 +214,15 @@
 
 						child.castShadow = castShadow;
 					    child.receiveShadow = true;
-					} );
-
-					_.each(planes, function(child) {
-						console.log("[!] Adding plane");
-						planeBodies.push(addPlane(child));
-					});
-
-					_.each(triangleMeshes, function(child) {
-						console.log("[!] Adding triangle mesh - " + child.name);
-						child.visible = false;
-						triangleMeshBodies.push(addTriangleMesh(child));
-					});
-
-					_.each(balls, function(child) {
-						console.log("[!] Adding ball (" + child.name + ") - " + dpos(child.position));
-						ballBodies.push(addBall(child));
-						ballStartingPositions.push(child.position.clone());
-					});
-
-					_.each(pointFlippers, function(child) {
-						console.log("[!] Adding point flipper");
-						pointFlipperBodies.push(addFlipperPoint(child));
-					});
-
-					_.each(flippers, function(child, flipperIndex) {
-						console.log("[!] Adding flipper");
-						flipperBodies.push(addFlipper(child, flipperIndex));
-					});
-
-					_.each(switches, function(child) {
-						console.log("[!] Adding switch");
-						switchBodies.push(addSwitch(child));
 					});
 
 					dae.scale.x = dae.scale.y = dae.scale.z = 1.0;
 					dae.updateMatrix();
 
+					initPhysics();
 					initScene();
 					animate();
-
-				} );
+				});
 			}
 
 			function dpos(pos) {
@@ -318,6 +249,76 @@
                 var solver = new Ammo.btSequentialImpulseConstraintSolver();
                 dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
                 dynamicsWorld.setGravity(new Ammo.btVector3(0, -2.6811, 21.8360));
+
+                var planes = [];
+				var triangleMeshes = [];
+				var balls = [];
+				var pointFlippers = [];
+				var flippers = [];
+				var switches = [];
+
+				dae.traverse(function (child) {
+					//console.log(child.name + " - " + dpos(child.position));
+
+					if(child.name == "Plane") {
+						planes.push(child);
+					}
+
+					if(child.name.indexOf("P_") == 0) {
+						triangleMeshes.push(child);
+					}
+
+					if(child.name.indexOf("BALL") == 0) {
+						balls.push(child);
+					}
+
+					var pointFlipper = getNameIndex(child, "POINT_FLIPPER_");
+					if(pointFlipper) {
+						pointFlippers[pointFlipper.id] = pointFlipper.child;
+					}
+
+					var flipper = getNameIndex(child, "FLIPPER_");
+					if(flipper) {
+						flippers[flipper.id] = flipper.child;
+					}
+
+					var switchObject = getNameIndex(child, "SWITCH_")
+					if(switchObject) {
+						switches[switchObject.id] = switchObject.child;
+					}
+				} );
+
+				_.each(planes, function(child) {
+					console.log("[!] Adding plane");
+					planeBodies.push(addPlane(child));
+				});
+
+				_.each(triangleMeshes, function(child) {
+					console.log("[!] Adding triangle mesh - " + child.name);
+					child.visible = false;
+					triangleMeshBodies.push(addTriangleMesh(child));
+				});
+
+				_.each(balls, function(child) {
+					console.log("[!] Adding ball (" + child.name + ") - " + dpos(child.position));
+					ballBodies.push(addBall(child));
+					ballStartingPositions.push(child.position.clone());
+				});
+
+				_.each(pointFlippers, function(child) {
+					console.log("[!] Adding point flipper");
+					pointFlipperBodies.push(addFlipperPoint(child));
+				});
+
+				_.each(flippers, function(child, flipperIndex) {
+					console.log("[!] Adding flipper");
+					flipperBodies.push(addFlipper(child, flipperIndex));
+				});
+
+				_.each(switches, function(child) {
+					console.log("[!] Adding switch");
+					switchBodies.push(addSwitch(child));
+				});
 			}
 
 			function addTriangleMesh(original) {
