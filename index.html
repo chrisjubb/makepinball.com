@@ -100,7 +100,7 @@
 
 		<script>
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			if(! Detector.webgl) Detector.addGetWebGLMessage();
 
 			var stats;
 
@@ -250,6 +250,19 @@
                 dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
                 dynamicsWorld.setGravity(new Ammo.btVector3(0, -2.6811, 21.8360));
 
+	            physicsMeshCallbacks = [];
+	            planeBodies = [];
+	            triangleMeshBodies = [];
+	            ballBodies = [];
+	            pointFlipperBodies = [];
+	            flipperBodies = [];
+	            ballStartingPositions = [];
+	            flipperConstraints = [];
+	            switchBodies = [];
+
+	            // collect into these first. this is so that we can init things that
+	            // are dependant on other objects - eg the flippers are dependent on the
+	            // flipper points existing.
                 var planes = [];
 				var triangleMeshes = [];
 				var balls = [];
