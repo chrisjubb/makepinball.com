@@ -273,7 +273,7 @@
 				dae.traverse(function (child) {
 					//console.log(child.name + " - " + dpos(child.position));
 
-					if(child.name == "Plane") {
+					if(child.name.indexOf("PLANE_") == 0) {
 						planes.push(child);
 					}
 
@@ -410,7 +410,11 @@
 			function addPlane(original) {
 				var pos = original.position.clone();
 
-				var shape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(0, 1, 0), 0);
+				var up = new THREE.Vector3(0, 1, 0);
+				var output = up.applyQuaternion(original.quaternion);
+				output.normalize();
+
+				var shape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(output.x, output.y, output.z), 0);
 
 				var transform = new Ammo.btTransform();
                 transform.setIdentity();
@@ -575,7 +579,7 @@
 				camera = new THREE.PerspectiveCamera( 60, container.width() / container.height(), 0.1, 1000.0 );
 				camera.position.x = 5.4;
 				camera.position.y = 5.5;
-				camera.position.z = 3.0;
+				camera.position.z = 6;
 				camera.lookAt( new THREE.Vector3(camera.position.x, 0, 1.25) );
 
 				// Add the COLLADA
@@ -609,7 +613,6 @@
 				renderer.shadowMapWidth = 1024;
 				renderer.shadowMapHeight = 1024;
 				renderer.shadowMap.enabled = true;
-				renderer.shadowMapEnabled = true;
 				renderer.shadowMap.cullFace = THREE.CullFaceBack;
 
 				container.append( renderer.domElement );
