@@ -100,7 +100,7 @@
 
 		<script>
 
-			if(! Detector.webgl) Detector.addGetWebGLMessage();
+			if(!Detector.webgl) Detector.addGetWebGLMessage();
 
 			var stats;
 
@@ -194,7 +194,7 @@
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
 
-				loader.load( 'output.dae', function ( collada ) {
+				loader.load('output.dae', function(collada) {
 					dae = collada.scene;
 
 					dae.traverse(function (child) {
@@ -208,7 +208,7 @@
 						}
 
 						if(child instanceof THREE.SkinnedMesh) {
-							var animation = new THREE.Animation( child, child.geometry.animation );
+							var animation = new THREE.Animation(child, child.geometry.animation);
 							animation.play();
 						}
 
