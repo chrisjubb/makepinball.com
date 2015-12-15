@@ -248,7 +248,9 @@
                 var overlappingPairCache = new Ammo.btDbvtBroadphase();
                 var solver = new Ammo.btSequentialImpulseConstraintSolver();
                 dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-                dynamicsWorld.setGravity(new Ammo.btVector3(0, -2.6811, 21.8360));
+                dynamicsWorld.setGravity(new Ammo.btVector3(physCfg.get("gravityX"),
+                											physCfg.get("gravityY"),
+                											physCfg.get("gravityZ")));
 
 	            physicsMeshCallbacks = [];
 	            planeBodies = [];
