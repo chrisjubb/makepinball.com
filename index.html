@@ -364,7 +364,6 @@
         			startingData.child.position = startingData.position.clone();
 
         			transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
-					body.forceActivationState(true);
 					body.setWorldTransform(transform);
 					body.setLinearVelocity(new Ammo.btVector3(0,0,0));
 					body.setAngularVelocity(new Ammo.btVector3(0,0,0));
@@ -440,6 +439,7 @@
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 addBodyPhysicsConfig(body, "ball");
+                body.setActivationState(4); // DISABLE_DEACTIVATION - never sleep
                 dynamicsWorld.addRigidBody(body, groupBall, maskBall);
                 body.activate();
 
@@ -527,6 +527,7 @@
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
                 addBodyPhysicsConfig(body, "flipper");
+                body.setActivationState(4); // DISABLE_DEACTIVATION
                 dynamicsWorld.addRigidBody(body, groupFlipper, maskFlipper);
 
 				var hingeTransform = new Ammo.btTransform();
@@ -773,10 +774,6 @@
 				var delta = clock.getDelta();
 
 				THREE.AnimationHandler.update( delta );
-
-				_.each(flipperBodies, function(flipperBody) {
-					flipperBody.forceActivationState(true);
-				});
 
 				processFlipper(flipperConstraints[0], leftButtonDown, 1);
 				processFlipper(flipperConstraints[1], rightButtonDown, -1);
