@@ -130,7 +130,7 @@
             var ballBodies = [];
             var pointFlipperBodies = [];
             var flipperBodies = [];
-            var ballStartingPositions = [];
+            var ballStartingData = [];
             var flipperConstraints = [];
             var switchBodies = [];
 
@@ -263,6 +263,8 @@
                 											gravityVector.y,
                 											gravityVector.z));
 
+                resetBallPositions();
+
 	            physicsMeshCallbacks = [];
 	            planeBodies = [];
 	            triangleMeshBodies = [];
@@ -327,8 +329,9 @@
 
 				_.each(balls, function(child) {
 					console.log("[!] Adding ball (" + child.name + ") - " + dpos(child.position));
-					ballBodies.push(addBall(child));
-					ballStartingPositions.push(child.position.clone());
+					var ballBody = addBall(child);
+					ballBodies.push(ballBody);
+					ballStartingData.push({ position: child.position.clone(), child: child });
 				});
 
 				_.each(pointFlippers, function(child) {
@@ -344,6 +347,26 @@
 				_.each(switches, function(child) {
 					console.log("[!] Adding switch");
 					switchBodies.push(addSwitch(child));
+				});
+
+				resetBallPositions();
+			}
+
+			function resetBallPositions() {
+				_.each(ballBodies, function(body, i) {
+					var transform = new Ammo.btTransform();
+        			transform.setIdentity();
+        			var startingData = ballStartingData[i];
+        			var pos = startingData.position;
+
+        			// reset the visual part
+        			startingData.child.position = startingData.position.clone();
+
+        			transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+					body.forceActivationState(true);
+					body.setWorldTransform(transform);
+					body.setLinearVelocity(new Ammo.btVector3(0,0,0));
+					body.setAngularVelocity(new Ammo.btVector3(0,0,0));
 				});
 			}
 
@@ -647,16 +670,7 @@
 
 				window.addEventListener( 'keyup', function(evt) {
 					if(evt.keyCode == 82) { // R
-						_.each(ballBodies, function(body, i) {
-							var transform = new Ammo.btTransform();
-                			transform.setIdentity();
-                			var pos = ballStartingPositions[i];
-                			transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
-							body.forceActivationState(true);
-							body.setWorldTransform(transform);
-							body.setLinearVelocity(new Ammo.btVector3(0,0,0));
-							body.setAngularVelocity(new Ammo.btVector3(0,0,0));
-						});
+						resetBallPositions();
 					}
 					else if(evt.keyCode == 65) { // 'A'
 						leftButtonDown = false;
