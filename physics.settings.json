@@ -31,6 +31,6 @@
 	"flipperLimitsMax1": 30,
 
 	"flipperHingeX": 90.0,
-	"flipperHingeY": 0.0,
+	"flipperHingeY": 180.0,
 	"flipperHingeZ": 0.0
 }
