@@ -1,10 +1,4 @@
 {
-	"flipperLimitsMin0": -30,
-	"flipperLimitsMax0": 40,
-
-	"flipperLimitsMin1": -40,
-	"flipperLimitsMax1": 30,
-
 	"tableAngle": -7,
 	"gravityForce": -22,
 
@@ -28,5 +22,15 @@
 	"flipperRestitution": 1.2,
 	"flipperDampingLinear": 0.04,
 	"flipperDampingAngular": 0.1,
-	"flipperFriction": 0.1
+	"flipperFriction": 0.1,
+
+	"flipperLimitsMin0": -30,
+	"flipperLimitsMax0": 40,
+
+	"flipperLimitsMin1": -40,
+	"flipperLimitsMax1": 30,
+
+	"flipperHingeX": 90.0,
+	"flipperHingeY": 0.0,
+	"flipperHingeZ": 0.0
 }

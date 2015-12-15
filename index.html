@@ -532,7 +532,7 @@
                 hingeTransform.setIdentity();
                 hingeTransform.setOrigin(new Ammo.btVector3(0,0.0,0));
                 var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-                hingeQuaternion.setEulerZYX(0.0, 180.0, 90.0);
+                hingeQuaternion.setEulerZYX(physCfg.get("flipperHingeZ"), physCfg.get("flipperHingeY"), physCfg.get("flipperHingeX"));
                 hingeQuaternion.normalize();
                 hingeTransform.setRotation(hingeQuaternion);
 
@@ -558,7 +558,7 @@
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
-                addPhysicsCallback(original, body, transform, { rotation: [0, 1, 0], translation: [1,1,1] });
+                addPhysicsCallback(original, body, transform, { rotation: [1, 1, 1], translation: [1,1,1] });
 
                 flipperConstraints.push(hinge);
 
