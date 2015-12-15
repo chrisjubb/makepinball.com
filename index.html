@@ -199,7 +199,7 @@
 
 					dae.traverse(function (child) {
 						var castShadow = true;
-						if(child.name == "Plane") {
+						if(child.name.indexOf("PLANE_") == 0) {
 							castShadow = false; // no point
 						}
 
