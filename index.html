@@ -559,7 +559,7 @@
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
-                addPhysicsCallback(original, body, transform, { rotation: [1, 1, 1], translation: [1,1,1] });
+                addPhysicsCallback(original, body, transform, { rotation: [0, 1, 0], translation: [1,1,1] });
 
                 flipperConstraints.push(hinge);
 
