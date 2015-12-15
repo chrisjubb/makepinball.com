@@ -554,8 +554,7 @@
                 var limitMin = physCfg.get("flipperLimitsMin" + flipperIndex);
                 var limitMax = physCfg.get("flipperLimitsMax" + flipperIndex);
 
-				var springyness = 0.9;
-				hinge.setLimit(radians(limitMin), radians(limitMax), 0.001, springyness, 1.0);
+				hinge.setLimit(radians(limitMin), radians(limitMax), physCfg.get("flipperHingeSoftness"), physCfg.get("flipperHingeSpringyness"), physCfg.get("flipperHingeRelaxationFactor"));
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);

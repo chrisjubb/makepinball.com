@@ -32,5 +32,9 @@
 
 	{ "name": "flipperHingeX", 				"type": "float", "min": 0, "max": 360, "step": 1 },
 	{ "name": "flipperHingeY", 				"type": "float", "min": 0, "max": 360, "step": 1 },
-	{ "name": "flipperHingeZ", 				"type": "float", "min": 0, "max": 360, "step": 1 }
+	{ "name": "flipperHingeZ", 				"type": "float", "min": 0, "max": 360, "step": 1 },
+
+	{ "name": "flipperHingeSoftness", 			"type": "float", "min": 0, "max": 1, "step": 0.001 },
+	{ "name": "flipperHingeSpringyness", 		"type": "float", "min": 0, "max": 2, "step": 0.1 },
+	{ "name": "flipperHingeRelaxationFactor",	"type": "float", "min": 0, "max": 2, "step": 0.1 }
 ]
