@@ -13,6 +13,7 @@
 	{ "name": "triangleMeshDampingAngular", "type": "float", "min": 0, "max": 2, "step": 0.01 },
 	{ "name": "triangleMeshFriction", 		"type": "float", "min": 0, "max": 2, "step": 0.01 },
 
+	{ "name": "ballMass",	 				"type": "float", "min": 0, "max": 5, "step": 0.01 },
 	{ "name": "ballRestitution", 			"type": "float", "min": 0, "max": 2, "step": 0.01 },
 	{ "name": "ballDampingLinear", 			"type": "float", "min": 0, "max": 2, "step": 0.01 },
 	{ "name": "ballDampingAngular", 		"type": "float", "min": 0, "max": 2, "step": 0.01 },
@@ -23,6 +24,7 @@
 	{ "name": "planeDampingAngular", 		"type": "float", "min": 0, "max": 2, "step": 0.01 },
 	{ "name": "planeFriction", 				"type": "float", "min": 0, "max": 2, "step": 0.01 },
 
+	{ "name": "flipperMass",	 			"type": "float", "min": 0, "max": 5, "step": 0.01 },
 	{ "name": "flipperRestitution", 		"type": "float", "min": 0, "max": 2, "step": 0.01 },
 	{ "name": "flipperDampingLinear", 		"type": "float", "min": 0, "max": 2, "step": 0.01 },
 	{ "name": "flipperDampingAngular", 		"type": "float", "min": 0, "max": 2, "step": 0.01 },
