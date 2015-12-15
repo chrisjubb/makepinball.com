@@ -5,7 +5,6 @@
 	"flipperLimitsMin1": -40,
 	"flipperLimitsMax1": 30,
 
-	"gravityX": 0,
-	"gravityY": -2.6811,
-	"gravityZ": 21.8360
+	"tableAngle": -7,
+	"gravityForce": -22
 }

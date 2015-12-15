@@ -34,7 +34,12 @@ var Config = Backbone.Model.extend({
 	},
 
 	get: function(id) {
-		return this.settingsJson[id];
+		var output = this.settingsJson[id];
+		if(output === undefined) {
+			console.error("No setting called: " + id);
+			return undefined;
+		}
+		return output;
 	},
 
 	setValue: function(id, value) {
