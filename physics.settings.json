@@ -6,5 +6,15 @@
 	"flipperLimitsMax1": 30,
 
 	"tableAngle": -7,
-	"gravityForce": -22
+	"gravityForce": -22,
+
+	"triangleMeshRestitution": 1.2,
+	"triangleMeshDampingLinear": 0.04,
+	"triangleMeshDampingAngular": 0.1,
+	"triangleMeshFriction": 0.5,
+
+	"ballRestitution": 0.6,
+	"ballDampingLinear": 0.04,
+	"ballDampingAngular": 0.1,
+	"ballFriction": 0.5
 }

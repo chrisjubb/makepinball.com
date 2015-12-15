@@ -347,6 +347,12 @@
 				});
 			}
 
+			function addBodyPhysicsConfig(bodyRef, configNameStart) {
+				bodyRef.setRestitution(physCfg.get(configNameStart + "Restitution"));
+                bodyRef.setDamping(physCfg.get(configNameStart + "DampingLinear"), physCfg.get(configNameStart + "DampingAngular"));
+               	bodyRef.setFriction(physCfg.get(configNameStart + "Friction"));
+			}
+
 			function addTriangleMesh(original) {
 				var physicsMesh = new Ammo.btTriangleMesh();
 
@@ -384,7 +390,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                body.setRestitution(0.0);
+                addBodyPhysicsConfig(body, "triangleMesh");
                 dynamicsWorld.addRigidBody(body, groupTriangleMesh, maskTriangleMesh);
                 body.activate();
 
@@ -409,9 +415,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                body.setRestitution(0.6);
-                body.setDamping(0.04, 0.1);
-               	body.setFriction(0.5);
+                addBodyPhysicsConfig(body, "ball");
                 dynamicsWorld.addRigidBody(body, groupBall, maskBall);
                 body.activate();
 
