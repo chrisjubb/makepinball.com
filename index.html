@@ -194,7 +194,7 @@
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
 
-				loader.load( 'wire_forms.dae', function ( collada ) {
+				loader.load( 'output.dae', function ( collada ) {
 					dae = collada.scene;
 
 					dae.traverse(function (child) {
