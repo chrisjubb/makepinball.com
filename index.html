@@ -754,8 +754,8 @@
 			}
 
 			function processFlipper(flipperConstraint, buttonDown, multiplier) {
-				var upImpulse = 500.0;
-				var downImpulse = -500.0;
+				var upImpulse = physCfg.get("flipperUpImpulse");
+				var downImpulse = physCfg.get("flipperDownImpulse");
 
 				var targetVelocity = downImpulse;
 
