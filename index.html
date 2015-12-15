@@ -116,6 +116,7 @@
 			var group;
 			var depthScale = 1.0;
 			var ssaoEnabled = false;
+			var shadowsEnabled = false;
 
 			// physics
 			var physCfg = new Config().load("physics.config.json", "physics.settings.json");
@@ -636,7 +637,7 @@
 				directionalLight.position.y = 5.9;
 				directionalLight.position.z = 4.2;
 				directionalLight.rotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), 0.0);
-				directionalLight.castShadow = true;
+				directionalLight.castShadow = shadowsEnabled;
 				directionalLight.shadowDarkness = 0.6;
 				directionalLight.shadowCameraNear = 0.5;
 				directionalLight.shadowCameraFar = 15;
@@ -653,7 +654,7 @@
 				renderer.shadowMapBias = 0.0039;
 				renderer.shadowMapWidth = 1024;
 				renderer.shadowMapHeight = 1024;
-				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.enabled = shadowsEnabled;
 				renderer.shadowMap.cullFace = THREE.CullFaceBack;
 
 				container.append( renderer.domElement );
