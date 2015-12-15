@@ -467,6 +467,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
+                addBodyPhysicsConfig(body, "plane");
                 dynamicsWorld.addRigidBody(body, groupPlane, maskPlane);
                 body.activate();
 
@@ -524,7 +525,7 @@
                 var motionState = new Ammo.btDefaultMotionState(transform);
                 var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
                 var body = new Ammo.btRigidBody(rigidBodyInfo);
-                body.setRestitution(1.2);
+                addBodyPhysicsConfig(body, "flipper");
                 dynamicsWorld.addRigidBody(body, groupFlipper, maskFlipper);
 
 				var hingeTransform = new Ammo.btTransform();

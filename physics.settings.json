@@ -16,5 +16,15 @@
 	"ballRestitution": 0.6,
 	"ballDampingLinear": 0.04,
 	"ballDampingAngular": 0.1,
-	"ballFriction": 0.5
+	"ballFriction": 0.5,
+
+	"planeRestitution": 0.4,
+	"planeDampingLinear": 0.04,
+	"planeDampingAngular": 0.1,
+	"planeFriction": 0.1,
+
+	"flipperRestitution": 1.2,
+	"flipperDampingLinear": 0.04,
+	"flipperDampingAngular": 0.1,
+	"flipperFriction": 0.1
 }
