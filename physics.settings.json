@@ -38,6 +38,5 @@
 	"flipperHingeSpringyness": 0.0,
 	"flipperHingeRelaxationFactor": 0.0,
 	"flipperUpImpulse": 600,
-	"flipperDownImpulse": -90,
-	"flipperActiveTimeSecs": 0.0
+	"flipperDownImpulse": -90
 }
