@@ -301,11 +301,6 @@
 						balls.push(child);
 					}
 
-					var pointFlipper = getNameIndex(child, "POINT_FLIPPER_");
-					if(pointFlipper) {
-						pointFlippers[pointFlipper.id] = pointFlipper.child;
-					}
-
 					var flipper = getNameIndex(child, "FLIPPER_");
 					if(flipper) {
 						flippers[flipper.id] = flipper.child;
@@ -335,14 +330,11 @@
 					ballStartingData.push({ position: child.position.clone(), child: child });
 				});
 
-				_.each(pointFlippers, function(child) {
-					console.log("[!] Adding point flipper");
-					pointFlipperBodies.push(addFlipperPoint(child));
-				});
-
 				_.each(flippers, function(child, flipperIndex) {
 					console.log("[!] Adding flipper");
-					flipperBodies.push(addFlipper(child, flipperIndex));
+					var flipperPointBody = addFlipperPoint(child);
+					pointFlipperBodies.push(flipperPointBody);
+					flipperBodies.push(addFlipper(child, flipperPointBody, flipperIndex));
 				});
 
 				_.each(switches, function(child) {
@@ -501,7 +493,7 @@
                 return body;
 			}
 
-			function addFlipper(original, flipperIndex) {
+			function addFlipper(original, flipperPointBody, flipperIndex) {
 				var shape = new Ammo.btConvexHullShape();
 
 				var child = original.children[0]; // should be the first one
@@ -540,12 +532,11 @@
 
                 var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
 
-                var pointFlipperBody = pointFlipperBodies[flipperIndex];
                 var tA = new Ammo.btTransform();
                 tA.setIdentity();
                 var tB = new Ammo.btTransform();
                 tB.setIdentity();
-                var dof = new Ammo.btGeneric6DofConstraint(body, pointFlipperBody,
+                var dof = new Ammo.btGeneric6DofConstraint(body, flipperPointBody,
                 		tA, tB, true);
                 dof.setLinearLowerLimit(new Ammo.btVector3(0,0,0));
                 dof.setLinearUpperLimit(new Ammo.btVector3(0,0,0));
