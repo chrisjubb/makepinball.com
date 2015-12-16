@@ -552,7 +552,7 @@
 
                 dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
-                addPhysicsCallback(original, body, transform, { rotation: [0, 1, 0], translation: [1,1,1] });
+                addPhysicsCallback(original, body, transform, { rotation: [1, 1, 1], translation: [1,1,1] });
 
                 flipperConstraints.push(hinge);
 
@@ -758,7 +758,7 @@
 				stats.update();
 			}
 
-			function processFlipper(flipperConstraint, buttonDown, multiplier) {
+			function processFlipper(flipperConstraint, flipperBody, buttonDown, multiplier) {
 				var upImpulse = physCfg.get("flipperUpImpulse");
 				var downImpulse = physCfg.get("flipperDownImpulse");
 
@@ -767,9 +767,7 @@
 				if(buttonDown) {
 					targetVelocity = upImpulse;
 				}
-
-				var maxMotorImpulse = upImpulse * 500.0;
-				flipperConstraint.enableAngularMotor(true, targetVelocity * multiplier, maxMotorImpulse);
+				flipperBody.applyTorque(new Ammo.btVector3(0, targetVelocity * multiplier, 0));
 			}
 
 			var clock = new THREE.Clock();
@@ -783,8 +781,8 @@
 				var leftFlipperActive = (leftButtonDown) || ((leftButtonActiveTimer) && (clock.elapsedTime < leftButtonActiveTimer));
 				var rightFlipperActive = (rightButtonDown) || ((rightButtonActiveTimer) && (clock.elapsedTime < rightButtonActiveTimer));
 
-				processFlipper(flipperConstraints[0], leftFlipperActive, 1);
-				processFlipper(flipperConstraints[1], rightFlipperActive, -1);
+				processFlipper(flipperConstraints[0], flipperBodies[0], leftFlipperActive, 1);
+				processFlipper(flipperConstraints[1], flipperBodies[1], rightFlipperActive, -1);
 
 				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {

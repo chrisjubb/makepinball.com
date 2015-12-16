@@ -7,7 +7,7 @@
 	"triangleMeshDampingAngular": 0.1,
 	"triangleMeshFriction": 0.5,
 
-	"ballMass": 1.0,
+	"ballMass": 1.5,
 	"ballRestitution": 0.6,
 	"ballDampingLinear": 0.04,
 	"ballDampingAngular": 0.1,
@@ -37,7 +37,7 @@
 	"flipperHingeSoftness": 1.0,
 	"flipperHingeSpringyness": 0.0,
 	"flipperHingeRelaxationFactor": 0.0,
-	"flipperUpImpulse": 2500,
-	"flipperDownImpulse": -500,
-	"flipperActiveTimeSecs": 0.3
+	"flipperUpImpulse": 600,
+	"flipperDownImpulse": -90,
+	"flipperActiveTimeSecs": 0.0
 }
