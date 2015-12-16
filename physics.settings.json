@@ -19,7 +19,7 @@
 	"planeFriction": 0.1,
 
 	"flipperMass": 2.0,
-	"flipperRestitution": 1.6,
+	"flipperRestitution": 1.0,
 	"flipperDampingLinear": 0.04,
 	"flipperDampingAngular": 0.1,
 	"flipperFriction": 0.1,
@@ -37,6 +37,7 @@
 	"flipperHingeSoftness": 1.0,
 	"flipperHingeSpringyness": 0.0,
 	"flipperHingeRelaxationFactor": 0.0,
-	"flipperUpImpulse": 2000,
-	"flipperDownImpulse": -500
+	"flipperUpImpulse": 2500,
+	"flipperDownImpulse": -500,
+	"flipperActiveTimeSecs": 0.3
 }

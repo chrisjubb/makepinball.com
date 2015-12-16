@@ -51,8 +51,8 @@
 				position: absolute;
 				left: 0;
 				top: 0;
-				width: 80%;
-				height: 100%;
+				width: 800px;
+				height: 600px;
 				background-color: blue;
 			}
 		</style>
@@ -109,6 +109,8 @@
 			var cameras = [];
 			var leftButtonDown = false;
 			var rightButtonDown = false;
+			var leftButtonActiveTimer;
+			var rightButtonActiveTimer;
 
 			// effects
 			var depthMaterial, effectComposer, depthRenderTarget;
@@ -676,9 +678,21 @@
 				window.addEventListener( 'keydown', function(evt) {
 					//console.log(evt.keyCode);
 					if(evt.keyCode == 65) { // 'A'
+
+						if(leftButtonDown == false) {
+							// just been pressed
+							leftButtonActiveTimer = clock.elapsedTime + physCfg.get("flipperActiveTimeSecs");
+						}
+
 						leftButtonDown = true;
 					}
 					else if(evt.keyCode == 76) { // 'L'
+
+						if(rightButtonDown == false) {
+							// just been pressed
+							rightButtonActiveTimer = clock.elapsedTime + physCfg.get("flipperActiveTimeSecs");
+						}
+
 						rightButtonDown = true;
 					}
 				});
@@ -754,7 +768,7 @@
 					targetVelocity = upImpulse;
 				}
 
-				var maxMotorImpulse = upImpulse * 5.0;
+				var maxMotorImpulse = upImpulse * 500.0;
 				flipperConstraint.enableAngularMotor(true, targetVelocity * multiplier, maxMotorImpulse);
 			}
 
@@ -766,8 +780,11 @@
 
 				THREE.AnimationHandler.update( delta );
 
-				processFlipper(flipperConstraints[0], leftButtonDown, 1);
-				processFlipper(flipperConstraints[1], rightButtonDown, -1);
+				var leftFlipperActive = (leftButtonDown) || ((leftButtonActiveTimer) && (clock.elapsedTime < leftButtonActiveTimer));
+				var rightFlipperActive = (rightButtonDown) || ((rightButtonActiveTimer) && (clock.elapsedTime < rightButtonActiveTimer));
+
+				processFlipper(flipperConstraints[0], leftFlipperActive, 1);
+				processFlipper(flipperConstraints[1], rightFlipperActive, -1);
 
 				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
