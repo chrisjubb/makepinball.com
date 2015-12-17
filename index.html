@@ -584,7 +584,7 @@
 				original.visible = false;
 
 				original.updateMatrixWorld();
-				var forceValue = 50; // todo - value for this, forceVector should be euler from the original.rotation
+				var forceValue = 150; // todo - value for this
 				var forceQuat = original.quaternion;
 				var forceVector = new THREE.Vector3(1,0,0);
 				forceVector = forceVector.applyQuaternion(forceQuat);
