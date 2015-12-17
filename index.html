@@ -579,6 +579,15 @@
 
 			function addForce(original) {
 				original.visible = false;
+
+				original.updateMatrixWorld();
+				var forceValue = 200;
+				var forceData = {
+					position: original.position,
+					forceVector: new Ammo.btVector3(0.4 * forceValue, 0.0, -0.8 * forceValue)
+				};
+
+				return forceData;
 			}
 
 			function addPhysicsCallback(object, body, transform, limitsData) {
@@ -791,9 +800,21 @@
 					// A ghost object
 					if(manifold.getBody1().getCollisionFlags() == 4) {
 						// todo - make a lookup, ghost.ptr -> switch id
-						_.each(switchBodies, function(body) {
-							if(manifold.getBody1().ptr == body.ptr) {
+						_.each(switchBodies, function(body, switchIndex) {
+							if((body) && (manifold.getBody1().ptr == body.ptr)) {
 								console.log("switch body - " + body);
+
+								var associatedForce = forceData[switchIndex];
+								if(associatedForce) {
+									// todo - lookup balls based on manifold.getBody0().ptr -> ballBody
+
+									_.each(ballBodies, function(ballBody) {
+										if(manifold.getBody0().ptr == ballBody.ptr) {
+											ballBody.applyForce(associatedForce.forceVector, associatedForce.position);
+										}
+									});
+
+								}
 							}
 						});
 					}
