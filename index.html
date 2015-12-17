@@ -610,12 +610,13 @@
 				directionalLight.rotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), 0.0);
 				directionalLight.castShadow = shadowsEnabled;
 				directionalLight.shadowDarkness = 0.6;
-				directionalLight.shadowCameraNear = 0.5;
+				directionalLight.shadowCameraNear = 0.1;
 				directionalLight.shadowCameraFar = 15;
 				directionalLight.shadowCameraLeft = -15;
 				directionalLight.shadowCameraRight = 15;
 				directionalLight.shadowCameraTop = 15;
 				directionalLight.shadowCameraBottom = -15;
+				directionalLight.shadowBias = 0.002;
 				scene.add( directionalLight );
 
 				renderer = new THREE.WebGLRenderer();
