@@ -159,6 +159,7 @@
             var ballStartingData = [];
             var flipperConstraints = [];
             var switchBodies = [];
+            var forceData = [];
 
             var groupPlane = 1;
             var groupTriangleMesh = 2;
@@ -296,15 +297,17 @@
 	            ballStartingPositions = [];
 	            flipperConstraints = [];
 	            switchBodies = [];
+	            forceData = [];
 
 	            var planes = [];
 				var triangleMeshes = [];
 				var balls = [];
 				var flippers = [];
 				var switches = [];
+				var forces = [];
 
 				dae.traverse(function (child) {
-					//console.log(child.name + " - " + dpos(child.position));
+					console.log(child.name + " - " + dpos(child.position));
 
 					if(child.name.indexOf("PLANE_") == 0) {
 						planes.push(child);
@@ -326,6 +329,11 @@
 					var switchObject = getNameIndex(child, "SWITCH_")
 					if(switchObject) {
 						switches[switchObject.id] = switchObject.child;
+					}
+
+					var forceObject = getNameIndex(child, "FORCE_")
+					if(forceObject) {
+						forces[forceObject.id] = forceObject.child;
 					}
 				} );
 
@@ -352,9 +360,18 @@
 					flipperBodies.push(addFlipper(child, flipperIndex));
 				});
 
-				_.each(switches, function(child) {
+				_.each(switches, function(child, switchIndex) {
 					console.log("[!] Adding switch");
-					switchBodies.push(addSwitch(child));
+					if(child) {
+						switchBodies[switchIndex] = addSwitch(child);
+					}
+				});
+
+				_.each(forces, function(child, forceIndex) {
+					console.log("[!] Adding force");
+					if(child) {
+						forceData[forceIndex] = addForce(child);
+					}
 				});
 
 				resetBallPositions();
@@ -558,6 +575,10 @@
                 body.activate();
 
                 return body;
+			}
+
+			function addForce(original) {
+				original.visible = false;
 			}
 
 			function addPhysicsCallback(object, body, transform, limitsData) {
