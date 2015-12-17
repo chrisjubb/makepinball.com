@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-17T18:53:21</created>
-    <modified>2015-12-17T18:53:21</modified>
+    <created>2015-12-17T22:17:14</created>
+    <modified>2015-12-17T22:17:14</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -1615,7 +1615,7 @@
         </instance_geometry>
       </node>
       <node id="FORCE_003" name="FORCE_003" type="NODE">
-        <matrix sid="transform">0.9455186 0.3255681 0 6.913524 -0.3255681 0.9455186 0 -2.181156 0 0 1 0.1406972 0 0 0 1</matrix>
+        <matrix sid="transform">-0.9455186 -0.3255681 0 6.913524 0.3255681 -0.9455186 0 -2.181156 0 0 1 0.1406972 0 0 0 1</matrix>
         <instance_geometry url="#Sphere_005-mesh" name="FORCE_003">
           <bind_material>
             <technique_common>

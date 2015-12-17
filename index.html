@@ -124,6 +124,9 @@
 
 			var camera, scene, renderer, objects;
 			var dae;
+
+			var addDebugging = false;
+
 			var cameras = [];
 			var leftButtonDown = false;
 			var rightButtonDown = false;
@@ -581,10 +584,17 @@
 				original.visible = false;
 
 				original.updateMatrixWorld();
-				var forceValue = 200; // todo - value for this, forceVector should be euler from the original.rotation
+				var forceValue = 50; // todo - value for this, forceVector should be euler from the original.rotation
+				var forceQuat = original.quaternion;
+				var forceVector = new THREE.Vector3(1,0,0);
+				forceVector = forceVector.applyQuaternion(forceQuat);
+				forceVector = forceVector.multiplyScalar(forceValue);
+
+				console.log(dpos(original.position) + " - " + dpos(forceVector));
+
 				var forceData = {
 					position: original.position,
-					forceVector: new Ammo.btVector3(0.4 * forceValue, 0.0, -0.8 * forceValue)
+					forceVector: new Ammo.btVector3(forceVector.x, forceVector.y, forceVector.z)
 				};
 
 				return forceData;
@@ -613,6 +623,29 @@
                 });
 			}
 
+			function addDebugToScene() {
+				var material = new THREE.LineBasicMaterial({
+			        color: 0x00ff00
+			    });
+
+				_.each(forceData, function(force) {
+					if(!force) {
+						return;
+					}
+					var position = force.position;
+					var forceVector = force.forceVector;
+
+					var offsetVector = position.clone();
+				    offsetVector.add(new THREE.Vector3(forceVector.x(), forceVector.y(), forceVector.z()));
+
+				    var geometry = new THREE.Geometry();
+				    geometry.vertices.push(position.clone());
+				    geometry.vertices.push(offsetVector);
+				    var line = new THREE.Line(geometry, material);
+				    scene.add(line);
+				});
+			}
+
 			function initScene() {
 
 				var container = getCanvasContainer();
@@ -627,7 +660,7 @@
 
 				// Add the COLLADA
 
-				scene.add( dae );
+				scene.add(dae);
 
 				// Lights
 
@@ -668,7 +701,12 @@
 
 				initPostprocessing();
 
-				//
+				// debugging
+				if(addDebugging) {
+					addDebugToScene();
+				}
+
+				// events
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
