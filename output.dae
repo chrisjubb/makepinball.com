@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-17T22:51:59</created>
-    <modified>2015-12-17T22:51:59</modified>
+    <created>2015-12-17T23:12:13</created>
+    <modified>2015-12-17T23:12:13</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -98,7 +98,11 @@
       </extra>
     </light>
   </library_lights>
-  <library_images/>
+  <library_images>
+    <image id="birch_wood_png" name="birch_wood_png">
+      <init_from>birch_wood.png</init_from>
+    </image>
+  </library_images>
   <library_effects>
     <effect id="GHOSTS_003-effect">
       <profile_COMMON>
@@ -516,8 +520,18 @@
         </technique>
       </profile_COMMON>
     </effect>
-    <effect id="plane_mat-effect">
+    <effect id="wood-effect">
       <profile_COMMON>
+        <newparam sid="birch_wood_png-surface">
+          <surface type="2D">
+            <init_from>birch_wood_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="birch_wood_png-sampler">
+          <sampler2D>
+            <source>birch_wood_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
@@ -527,7 +541,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.387795 0.64 0.2789955 1</color>
+              <texture texture="birch_wood_png-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="index_of_refraction">1</float>
@@ -690,8 +704,8 @@
     <material id="PHYSICS_RUBBER-material" name="PHYSICS_RUBBER">
       <instance_effect url="#PHYSICS_RUBBER-effect"/>
     </material>
-    <material id="plane_mat-material" name="plane_mat">
-      <instance_effect url="#plane_mat-effect"/>
+    <material id="wood-material" name="wood">
+      <instance_effect url="#wood-effect"/>
     </material>
     <material id="GHOSTS-material" name="GHOSTS">
       <instance_effect url="#GHOSTS-effect"/>
@@ -1442,6 +1456,15 @@
             </accessor>
           </technique_common>
         </source>
+        <source id="Plane-mesh-map-0">
+          <float_array id="Plane-mesh-map-0-array" count="12">1.798834 -0.7988342 1.798834 1.798834 -0.7988342 1.798834 -0.7988342 -0.7988342 1.798834 -0.7988342 -0.7988342 1.798834</float_array>
+          <technique_common>
+            <accessor source="#Plane-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
         <source id="Plane-mesh-colors-Col" name="Col">
           <float_array id="Plane-mesh-colors-Col-array" count="18">1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</float_array>
           <technique_common>
@@ -1455,12 +1478,13 @@
         <vertices id="Plane-mesh-vertices">
           <input semantic="POSITION" source="#Plane-mesh-positions"/>
         </vertices>
-        <polylist material="plane_mat-material" count="2">
+        <polylist material="wood-material" count="2">
           <input semantic="VERTEX" source="#Plane-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Plane-mesh-normals" offset="1"/>
-          <input semantic="COLOR" source="#Plane-mesh-colors-Col" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane-mesh-map-0" offset="2" set="0"/>
+          <input semantic="COLOR" source="#Plane-mesh-colors-Col" offset="3" set="0"/>
           <vcount>3 3 </vcount>
-          <p>1 0 0 3 0 1 2 0 2 0 0 3 1 0 4 2 0 5</p>
+          <p>1 0 0 0 3 0 1 1 2 0 2 2 0 0 3 3 1 0 4 4 2 0 5 5</p>
         </polylist>
       </mesh>
     </geometry>
@@ -2065,7 +2089,9 @@
         <instance_geometry url="#Plane-mesh" name="PLANE_0">
           <bind_material>
             <technique_common>
-              <instance_material symbol="plane_mat-material" target="#plane_mat-material"/>
+              <instance_material symbol="wood-material" target="#wood-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2149,7 +2175,9 @@
           <instance_geometry url="#_1__bumperring_m-mesh" name="interior">
             <bind_material>
               <technique_common>
-                <instance_material symbol="chrome-material" target="#chrome-material"/>
+                <instance_material symbol="chrome-material" target="#chrome-material">
+                  <bind_vertex_input semantic="_1__bumperring_m-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                </instance_material>
               </technique_common>
             </bind_material>
           </instance_geometry>
