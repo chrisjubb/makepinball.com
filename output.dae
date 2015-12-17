@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-17T18:27:45</created>
-    <modified>2015-12-17T18:27:45</modified>
+    <created>2015-12-17T18:53:21</created>
+    <modified>2015-12-17T18:53:21</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -100,6 +100,58 @@
   </library_lights>
   <library_images/>
   <library_effects>
+    <effect id="GHOSTS_003-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.007311543 0.04835875 0.64 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="FORCE_MATERIAL_001-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.007641585 0.64 0.007658114 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="GHOSTS_002-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -564,6 +616,12 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="GHOSTS_003-material" name="GHOSTS_003">
+      <instance_effect url="#GHOSTS_003-effect"/>
+    </material>
+    <material id="FORCE_MATERIAL_001-material" name="FORCE_MATERIAL_001">
+      <instance_effect url="#FORCE_MATERIAL_001-effect"/>
+    </material>
     <material id="GHOSTS_002-material" name="GHOSTS_002">
       <instance_effect url="#GHOSTS_002-effect"/>
     </material>
@@ -620,6 +678,72 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Cube_007-mesh" name="Cube.007">
+      <mesh>
+        <source id="Cube_007-mesh-positions">
+          <float_array id="Cube_007-mesh-positions-array" count="24">-1 -1 -1 -1 -1 1 -1 1 -1 -1 1 1 1 -1 -1 1 -1 1 1 1 -1 1 1 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_007-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_007-mesh-normals">
+          <float_array id="Cube_007-mesh-normals-array" count="18">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_007-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_007-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_007-mesh-positions"/>
+        </vertices>
+        <polylist material="GHOSTS_003-material" count="12">
+          <input semantic="VERTEX" source="#Cube_007-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_007-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>3 0 2 0 0 0 7 1 6 1 2 1 5 2 4 2 6 2 1 3 0 3 4 3 2 4 6 4 4 4 7 5 3 5 1 5 1 0 3 0 0 0 3 1 7 1 2 1 7 2 5 2 6 2 5 3 1 3 4 3 0 4 2 4 4 4 5 5 7 5 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Sphere_005-mesh" name="Sphere.005">
+      <mesh>
+        <source id="Sphere_005-mesh-positions">
+          <float_array id="Sphere_005-mesh-positions-array" count="126">-0.325 0 0.5629165 -0.5629165 0 0.3249999 -0.65 0 0 -0.2298097 0.2298096 0.5629165 -0.3980421 0.398042 0.3249999 -0.4596194 0.4596193 0 -0.398042 0.398042 -0.325 -0.2298097 0.2298096 -0.5629165 0 0.3249999 0.5629165 0 0.5629164 0.3249999 0 0.6499999 0 0 0.5629163 -0.325 0 0.3249999 -0.5629165 -1.67548e-7 0 0.65 0.2298095 0.2298096 0.5629165 0.3980419 0.398042 0.3249999 0.4596192 0.4596193 0 0.3980419 0.398042 -0.325 0.2298095 0.2298097 -0.5629165 0 0 -0.65 0.3249998 0 0.5629165 0.5629163 0 0.3249999 0.6499998 0 0 0.5629163 0 -0.325 0.3249998 0 -0.5629165 0.2298095 -0.2298096 0.5629165 0.3980419 -0.398042 0.3249999 0.4596192 -0.4596193 0 0.3980419 -0.398042 -0.325 0.2298095 -0.2298097 -0.5629165 0 -0.3249999 0.5629165 0 -0.5629164 0.3249999 0 -0.6499999 0 0 -0.5629163 -0.325 0 -0.3249999 -0.5629165 -0.2298097 -0.2298096 0.5629165 -0.3980421 -0.398042 0.3249999 -0.4596194 -0.4596193 0 -0.398042 -0.398042 -0.325 -0.2298097 -0.2298097 -0.5629165 -0.5629164 0 -0.325 -0.325 0 -0.5629165</float_array>
+          <technique_common>
+            <accessor source="#Sphere_005-mesh-positions-array" count="42" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Sphere_005-mesh-normals">
+          <float_array id="Sphere_005-mesh-normals-array" count="240">-0.6785982 0.2810847 0.6785985 -0.8968088 0.3714704 0.2402991 -0.3714703 0.8968089 -0.2402991 -0.2810843 0.6785984 0.6785985 -0.2810847 0.6785985 -0.6785982 -0.3714703 0.8968089 0.2402989 0.2810845 0.6785984 0.6785984 0.2810847 0.6785985 -0.6785982 0.3714704 0.8968089 0.2402991 0.3714704 0.8968089 -0.2402991 0.6785984 0.2810846 -0.6785984 0.8968089 0.3714705 0.2402992 0.8968088 0.3714703 -0.2402993 0.6785983 0.2810845 0.6785985 0.6785984 -0.2810846 -0.6785984 0.8968088 -0.3714704 0.2402991 0.8968089 -0.3714703 -0.2402993 0.6785982 -0.2810847 0.6785986 0.2810847 -0.6785985 -0.6785983 0.3714703 -0.8968089 0.2402989 0.3714703 -0.8968089 -0.2402991 0.2810843 -0.6785983 0.6785986 -0.2810847 -0.6785985 -0.6785982 -0.3714704 -0.8968089 0.2402991 -0.3714704 -0.8968089 -0.2402992 -0.2810844 -0.6785983 0.6785985 -0.6785985 -0.2810845 -0.6785982 -0.2573444 0.1065956 -0.9604225 -0.8968088 0.3714705 -0.2402992 -0.6785985 0.2810846 -0.6785983 -0.2573444 0.1065956 0.9604224 -0.1065954 0.2573446 0.9604225 -0.1065955 0.2573446 -0.9604224 0.1065954 0.2573446 0.9604225 0.1065955 0.2573446 -0.9604224 0.2573444 0.1065956 0.9604225 0.2573443 0.1065956 -0.9604225 0.2573444 -0.1065956 0.9604225 0.2573443 -0.1065956 -0.9604225 0.1065958 -0.2573446 0.9604223 0.1065955 -0.2573446 -0.9604224 -0.1065958 -0.2573446 0.9604223 -0.1065955 -0.2573446 -0.9604224 -0.8968089 -0.3714705 0.2402992 -0.2573444 -0.1065956 0.9604225 -0.2573444 -0.1065955 -0.9604225 -0.8968088 -0.3714705 -0.2402994 -0.6785983 -0.2810847 0.6785984 -0.6785984 0.2810845 0.6785984 -0.8968088 0.3714705 0.2402991 -0.3714704 0.8968089 -0.2402994 -0.2810847 0.6785982 0.6785985 -0.2810847 0.6785982 -0.6785985 -0.3714704 0.8968089 0.2402991 0.2810847 0.6785984 0.6785984 0.2810847 0.6785983 -0.6785984 0.3714703 0.8968089 0.2402991 0.3714703 0.8968089 -0.2402993 0.6785985 0.2810847 -0.6785982 0.8968089 0.3714703 0.2402991 0.8968089 0.3714705 -0.2402993 0.6785984 0.2810847 0.6785984 0.6785985 -0.2810847 -0.6785982 0.8968089 -0.3714703 0.2402991 0.8968089 -0.3714705 -0.2402993 0.6785984 -0.2810845 0.6785984 0.2810847 -0.6785983 -0.6785984 0.3714703 -0.8968089 0.2402991 0.3714703 -0.8968089 -0.2402993 0.2810847 -0.6785982 0.6785984 -0.2810846 -0.6785983 -0.6785985 -0.3714704 -0.8968089 0.2402991 -0.3714703 -0.8968088 -0.2402993 -0.2810847 -0.6785984 0.6785984 -0.6785986 -0.2810847 -0.6785981 -0.8968089 0.3714703 -0.2402995 -0.6785984 0.2810848 -0.6785982 -0.8968088 -0.3714705 0.2402991 -0.8968089 -0.3714703 -0.2402993 -0.6785984 -0.2810847 0.6785983</float_array>
+          <technique_common>
+            <accessor source="#Sphere_005-mesh-normals-array" count="80" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Sphere_005-mesh-vertices">
+          <input semantic="POSITION" source="#Sphere_005-mesh-positions"/>
+        </vertices>
+        <polylist material="FORCE_MATERIAL_001-material" count="80">
+          <input semantic="VERTEX" source="#Sphere_005-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Sphere_005-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>0 0 3 0 4 0 1 1 4 1 5 1 5 2 10 2 11 2 3 3 8 3 9 3 6 4 11 4 12 4 4 5 9 5 10 5 8 6 14 6 15 6 12 7 11 7 17 7 10 8 9 8 15 8 10 9 16 9 17 9 17 10 23 10 24 10 16 11 15 11 21 11 16 12 22 12 23 12 15 13 14 13 20 13 24 14 23 14 28 14 21 15 26 15 27 15 22 16 27 16 28 16 20 17 25 17 26 17 28 18 33 18 34 18 26 19 31 19 32 19 27 20 32 20 33 20 25 21 30 21 31 21 34 22 33 22 38 22 32 23 31 23 36 23 32 24 37 24 38 24 30 25 35 25 36 25 39 26 38 26 40 26 19 27 41 27 7 27 2 28 5 28 6 28 40 29 6 29 7 29 0 30 13 30 3 30 3 31 13 31 8 31 19 32 7 32 12 32 8 33 13 33 14 33 19 34 12 34 18 34 14 35 13 35 20 35 19 36 18 36 24 36 20 37 13 37 25 37 19 38 24 38 29 38 25 39 13 39 30 39 19 40 29 40 34 40 30 41 13 41 35 41 19 42 34 42 39 42 37 43 36 43 1 43 35 44 13 44 0 44 19 45 39 45 41 45 37 46 2 46 40 46 36 47 35 47 0 47 1 48 0 48 4 48 2 49 1 49 5 49 6 50 5 50 11 50 4 51 3 51 9 51 7 52 6 52 12 52 5 53 4 53 10 53 9 54 8 54 15 54 18 55 12 55 17 55 16 56 10 56 15 56 11 57 10 57 17 57 18 58 17 58 24 58 22 59 16 59 21 59 17 60 16 60 23 60 21 61 15 61 20 61 29 62 24 62 28 62 22 63 21 63 27 63 23 64 22 64 28 64 21 65 20 65 26 65 29 66 28 66 34 66 27 67 26 67 32 67 28 68 27 68 33 68 26 69 25 69 31 69 39 70 34 70 38 70 37 71 32 71 36 71 33 72 32 72 38 72 31 73 30 73 36 73 41 74 39 74 40 74 40 75 2 75 6 75 41 76 40 76 7 76 2 77 37 77 1 77 38 78 37 78 40 78 1 79 36 79 0 79</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Cube_004-mesh" name="Cube.004">
       <mesh>
         <source id="Cube_004-mesh-positions">
@@ -1480,6 +1604,26 @@
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="SWITCH_003" name="SWITCH_003" type="NODE">
+        <matrix sid="transform">0.08260425 0.2315998 0 6.913524 -0.02990395 0.6397525 0 -2.181156 0 0 0.1514653 0.1406972 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_007-mesh" name="SWITCH_003">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="GHOSTS_003-material" target="#GHOSTS_003-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="FORCE_003" name="FORCE_003" type="NODE">
+        <matrix sid="transform">0.9455186 0.3255681 0 6.913524 -0.3255681 0.9455186 0 -2.181156 0 0 1 0.1406972 0 0 0 1</matrix>
+        <instance_geometry url="#Sphere_005-mesh" name="FORCE_003">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="FORCE_MATERIAL_001-material" target="#FORCE_MATERIAL_001-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="SWITCH_002" name="SWITCH_002" type="NODE">
         <matrix sid="transform">0.08260438 -0.2315972 0 4.429573 0.02990362 0.6397535 0 -2.181156 0 0 0.1514653 0.1406972 0 0 0 1</matrix>
         <instance_geometry url="#Cube_004-mesh" name="SWITCH_002">
@@ -1741,7 +1885,7 @@
         </instance_geometry>
       </node>
       <node id="FORCE_002" name="FORCE_002" type="NODE">
-        <matrix sid="transform">1 0 0 4.429573 0 1 0 -2.181156 0 0 1 0.1406972 0 0 0 1</matrix>
+        <matrix sid="transform">0.9455186 -0.3255681 0 4.429573 0.3255681 0.9455186 0 -2.181156 0 0 1 0.1406972 0 0 0 1</matrix>
         <instance_geometry url="#Sphere_004-mesh" name="FORCE_002">
           <bind_material>
             <technique_common>

@@ -581,7 +581,7 @@
 				original.visible = false;
 
 				original.updateMatrixWorld();
-				var forceValue = 200;
+				var forceValue = 200; // todo - value for this, forceVector should be euler from the original.rotation
 				var forceData = {
 					position: original.position,
 					forceVector: new Ammo.btVector3(0.4 * forceValue, 0.0, -0.8 * forceValue)
