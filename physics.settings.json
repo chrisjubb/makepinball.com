@@ -34,9 +34,9 @@
 	"flipperHingeY": 180.0,
 	"flipperHingeZ": 0.0,
 
-	"flipperHingeSoftness": 1.0,
-	"flipperHingeSpringyness": 0.0,
-	"flipperHingeRelaxationFactor": 0.0,
-	"flipperUpImpulse": 600,
-	"flipperDownImpulse": -90
+	"flipperHingeSoftness": 0.3,
+	"flipperHingeSpringyness": 0.1,
+	"flipperHingeRelaxationFactor": 3.0,
+	"flipperUpImpulse": 100,
+	"flipperDownImpulse": -30
 }

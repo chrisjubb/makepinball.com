@@ -116,6 +116,7 @@
 			var FLIPPER_STATE_FLIPPING = 2;
 			var FLIPPER_STATE_END_OF_STROKE = 3;
 			var leftFlipperState = FLIPPER_STATE_RETURNING;
+			var rightFlipperState = FLIPPER_STATE_RETURNING;
 
 			// effects
 			var depthMaterial, effectComposer, depthRenderTarget;
@@ -555,7 +556,7 @@
 
 				hinge.setLimit(radians(limitMin), radians(limitMax), physCfg.get("flipperHingeSoftness"), physCfg.get("flipperHingeSpringyness"), physCfg.get("flipperHingeRelaxationFactor"));
 
-                dynamicsWorld.addConstraint(dof);
+                // dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
                 addPhysicsCallback(original, body, transform, { rotation: [1, 1, 1], translation: [1,1,1] });
 
@@ -761,31 +762,40 @@
 				var transform = flipperBody.getWorldTransform();
 				var quaternion = transform.getRotation();
 
+				// if(buttonDown) {
+				// 	if(state == FLIPPER_STATE_END_OF_STROKE) {
+				// 		targetVelocity = upImpulse * 0.75; // hold power
+				// 	}
+				// 	else {
+				// 		if(quaternion.y() < 0.35) {
+				// 			targetVelocity = upImpulse;
+				// 			updatedState = FLIPPER_STATE_FLIPPING;
+				// 			console.log("applying");
+				// 		}
+				// 		else {
+				// 			updatedState = FLIPPER_STATE_END_OF_STROKE;
+				// 		}
+				// 	}
+				// 	console.log(quaternion.y() + " - " + targetVelocity);
+				// }
+				// else {
+				// 	if(state != FLIPPER_STATE_RESTING) {
+				// 		if(quaternion.y() > -0.3) {
+				// 			targetVelocity = downImpulse;
+				// 			updatedState = FLIPPER_STATE_RETURNING;
+				// 		}
+				// 		else {
+				// 			updatedState = FLIPPER_STATE_RESTING;
+				// 		}
+				// 	}
+				// 	console.log(quaternion.y() + " - " + targetVelocity);
+				// }
+
 				if(buttonDown) {
-					if(state == FLIPPER_STATE_END_OF_STROKE) {
-						targetVelocity = upImpulse * 0.75; // hold power
-					}
-					else {
-						if(quaternion.y() < 0.35) {
-							targetVelocity = upImpulse;
-							updatedState = FLIPPER_STATE_FLIPPING;
-							console.log("applying");
-						}
-						else {
-							updatedState = FLIPPER_STATE_END_OF_STROKE;
-						}
-					}
+					targetVelocity = upImpulse;
 				}
 				else {
-					if(state != FLIPPER_STATE_RESTING) {
-						if(quaternion.y() > -0.09) {
-							targetVelocity = downImpulse;
-							updatedState = FLIPPER_STATE_RETURNING;
-						}
-						else {
-							updatedState = FLIPPER_STATE_RESTING;
-						}
-					}
+					targetVelocity = downImpulse;
 				}
 
 				if(targetVelocity) {
@@ -805,7 +815,7 @@
 				THREE.AnimationHandler.update( delta );
 
 				leftFlipperState = processFlipper(flipperConstraints[0], flipperBodies[0], leftFlipperState, leftButtonDown, 1);
-				//processFlipper(flipperConstraints[1], flipperBodies[1], rightButtonDown, -1);
+				rightFlipperState = processFlipper(flipperConstraints[1], flipperBodies[1], rightFlipperState, rightButtonDown, -1);
 
 				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
