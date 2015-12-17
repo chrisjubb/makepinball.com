@@ -137,7 +137,6 @@
             var planeBodies = [];
             var triangleMeshBodies = [];
             var ballBodies = [];
-            var pointFlipperBodies = [];
             var flipperBodies = [];
             var ballStartingData = [];
             var flipperConstraints = [];
@@ -147,7 +146,6 @@
             var groupTriangleMesh = 2;
             var groupBall = 4;
             var groupFlipper = 8;
-            var groupFlipperPoint = 16;
             var groupSwitch = 32;
 
             // plane -> ball only
@@ -158,8 +156,6 @@
             var maskBall = groupPlane + groupTriangleMesh + groupFlipper + groupBall + groupSwitch;
             // flipper -> ball
             var maskFlipper = groupBall;
-            // flipper point -> nothing
-            var maskFlipperPoint = 0;
             // ghost -> ball
             var maskSwitch = groupBall;
 
@@ -278,19 +274,14 @@
 	            planeBodies = [];
 	            triangleMeshBodies = [];
 	            ballBodies = [];
-	            pointFlipperBodies = [];
 	            flipperBodies = [];
 	            ballStartingPositions = [];
 	            flipperConstraints = [];
 	            switchBodies = [];
 
-	            // collect into these first. this is so that we can init things that
-	            // are dependant on other objects - eg the flippers are dependent on the
-	            // flipper points existing.
-                var planes = [];
+	            var planes = [];
 				var triangleMeshes = [];
 				var balls = [];
-				var pointFlippers = [];
 				var flippers = [];
 				var switches = [];
 
@@ -340,9 +331,7 @@
 
 				_.each(flippers, function(child, flipperIndex) {
 					console.log("[!] Adding flipper");
-					var flipperPointBody = addFlipperPoint(child);
-					pointFlipperBodies.push(flipperPointBody);
-					flipperBodies.push(addFlipper(child, flipperPointBody, flipperIndex));
+					flipperBodies.push(addFlipper(child, flipperIndex));
 				});
 
 				_.each(switches, function(child) {
@@ -479,29 +468,7 @@
 				shape.addPoint(new Ammo.btVector3(threePosition.x, threePosition.y, threePosition.z));
 			}
 
-			function addFlipperPoint(original) {
-				var pos = original.position.clone();
-
-				var shape = new Ammo.btSphereShape(0.00001);
-
-				var transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
-
-                var mass = 0;
-                var localInertia = new Ammo.btVector3(0, 0, 0);
-                shape.calculateLocalInertia(mass, localInertia);
-
-                var motionState = new Ammo.btDefaultMotionState(transform);
-                var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
-                var body = new Ammo.btRigidBody(rigidBodyInfo);
-                dynamicsWorld.addRigidBody(body, groupFlipperPoint, maskFlipperPoint);
-                body.activate();
-
-                return body;
-			}
-
-			function addFlipper(original, flipperPointBody, flipperIndex) {
+			function addFlipper(original, flipperIndex) {
 				var shape = new Ammo.btConvexHullShape();
 
 				var child = original.children[0]; // should be the first one
@@ -539,24 +506,11 @@
                 hingeTransform.setRotation(hingeQuaternion);
 
                 var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
-
-                var tA = new Ammo.btTransform();
-                tA.setIdentity();
-                var tB = new Ammo.btTransform();
-                tB.setIdentity();
-                var dof = new Ammo.btGeneric6DofConstraint(body, flipperPointBody,
-                		tA, tB, true);
-                dof.setLinearLowerLimit(new Ammo.btVector3(0,0,0));
-                dof.setLinearUpperLimit(new Ammo.btVector3(0,0,0));
-                dof.setAngularLowerLimit(new Ammo.btVector3(0,1,0));
-                dof.setAngularUpperLimit(new Ammo.btVector3(0,0,0));
-
                 var limitMin = physCfg.get("flipperLimitsMin" + flipperIndex);
                 var limitMax = physCfg.get("flipperLimitsMax" + flipperIndex);
 
 				hinge.setLimit(radians(limitMin), radians(limitMax), physCfg.get("flipperHingeSoftness"), physCfg.get("flipperHingeSpringyness"), physCfg.get("flipperHingeRelaxationFactor"));
 
-                // dynamicsWorld.addConstraint(dof);
                 dynamicsWorld.addConstraint(hinge);
                 addPhysicsCallback(original, body, transform, { rotation: [1, 1, 1], translation: [1,1,1] });
 
@@ -760,37 +714,6 @@
 				var targetVelocity;
 
 				var transform = flipperBody.getWorldTransform();
-				var quaternion = transform.getRotation();
-
-				// if(buttonDown) {
-				// 	if(state == FLIPPER_STATE_END_OF_STROKE) {
-				// 		targetVelocity = upImpulse * 0.75; // hold power
-				// 	}
-				// 	else {
-				// 		if(quaternion.y() < 0.35) {
-				// 			targetVelocity = upImpulse;
-				// 			updatedState = FLIPPER_STATE_FLIPPING;
-				// 			console.log("applying");
-				// 		}
-				// 		else {
-				// 			updatedState = FLIPPER_STATE_END_OF_STROKE;
-				// 		}
-				// 	}
-				// 	console.log(quaternion.y() + " - " + targetVelocity);
-				// }
-				// else {
-				// 	if(state != FLIPPER_STATE_RESTING) {
-				// 		if(quaternion.y() > -0.3) {
-				// 			targetVelocity = downImpulse;
-				// 			updatedState = FLIPPER_STATE_RETURNING;
-				// 		}
-				// 		else {
-				// 			updatedState = FLIPPER_STATE_RESTING;
-				// 		}
-				// 	}
-				// 	console.log(quaternion.y() + " - " + targetVelocity);
-				// }
-
 				if(buttonDown) {
 					targetVelocity = upImpulse;
 				}
@@ -801,7 +724,6 @@
 				if(targetVelocity) {
 					flipperBody.applyTorque(new Ammo.btVector3(0, targetVelocity * multiplier, 0));
 				}
-				// console.log("quat = " + quaternion.x() + ", " + quaternion.y() + ", " + quaternion.z());
 
 				return updatedState;
 			}
