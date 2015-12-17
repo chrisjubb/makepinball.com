@@ -13,14 +13,21 @@
 			}
 
 			#info {
-				color: #fff;
+				color: white;
 				position: absolute;
 				top: 10px;
 				width: 100%;
 				text-align: center;
 				z-index: 100;
 				display:block;
+			}
 
+			#instructions {
+				color: white;
+				position: absolute;
+				bottom: 20px;
+				width: 50%;
+				z-index: 100;
 			}
 
 			a { color: skyblue }
@@ -60,6 +67,17 @@
 	<body>
 		<div id="info">
 			makepinball.com <a href="https://github.com/chrisjubb/">github</a>
+		</div>
+		<div id="instructions">
+			<p>This is a work in progress.</p>
+			<p>Feel free to contribute on github: <a href="https://github.com/chrisjubb/makepinball.com/">https://github.com/chrisjubb/makepinball.com/</a></p>
+
+			<p>Left Flipper = 'A'</p>
+			<p>Right Flipper = 'L'</p>
+			<p>Reset balls = 'R'</p>
+
+			<p>You can change physics parameters on the right and click 'UPDATE' to see the changes.</p>
+			<p>Uses <a href="http://threejs.org/">three.js</a>, <a href="https://github.com/kripken/ammo.js/">ammo.js</a> and <a href="http://www.blender.org/">Blender</a>.
 		</div>
 		<div id="canvasContainer"></div>
 		<div id="configContainer">
