@@ -278,10 +278,12 @@
                 var tableAngle = physCfg.get("tableAngle");
                 var gravityForce = physCfg.get("gravityForce");
 
-                var gravityVector = new THREE.Vector3(0, gravityForce, 0);
+                var gravityVector = new THREE.Vector3(0, 1, 0);
                 var gravityRotation = new THREE.Quaternion();
-                gravityRotation.setFromEuler(new THREE.Euler(tableAngle, 0, 0));
+                gravityRotation.setFromEuler(new THREE.Euler(radians(tableAngle), 0, 0));
                 gravityVector = gravityVector.applyQuaternion(gravityRotation);
+                gravityVector.normalize();
+                gravityVector.multiplyScalar(gravityForce);
 
                 console.log("tableAngle = " + tableAngle + ", vector = " + dpos(gravityVector));
 
