@@ -164,6 +164,8 @@
             var switchBodies = [];
             var forceData = [];
 
+            var switchToBodyPtrLookup = {}; // Ammo body ptr -> switch index
+
             var groupPlane = 1;
             var groupTriangleMesh = 2;
             var groupBall = 4;
@@ -390,7 +392,7 @@
 				_.each(switches, function(child, switchIndex) {
 					console.log("[!] Adding switch");
 					if(child) {
-						switchBodies[switchIndex] = addSwitch(child);
+						switchBodies[switchIndex] = addSwitch(child, switchIndex);
 					}
 				});
 
@@ -583,7 +585,7 @@
                 return body;
 			}
 
-			function addSwitch(original) {
+			function addSwitch(original, switchIndex) {
 				var pos = original.position.clone();
                 var rot = new THREE.Quaternion();
                 rot.setFromEuler(original.rotation);
@@ -612,6 +614,8 @@
 
                 dynamicsWorld.addCollisionObject(body, groupSwitch, maskSwitch);
                 body.activate();
+
+                switchToBodyPtrLookup[body.ptr] = switchIndex;
 
                 return body;
 			}
@@ -876,6 +880,10 @@
 				}
 			}
 
+			function getSwitchFromBodyPtr(bodyPtr) {
+				return switchToBodyPtrLookup[bodyPtr];
+			}
+
 			var clock = new THREE.Clock();
 
 			function render() {
@@ -898,24 +906,20 @@
 
 					// A ghost object
 					if(manifold.getBody1().getCollisionFlags() == 4) {
-						// todo - make a lookup, ghost.ptr -> switch id
-						_.each(switchBodies, function(body, switchIndex) {
-							if((body) && (manifold.getBody1().ptr == body.ptr)) {
-								console.log("switch body - " + switchIndex);
+						var switchIndex = getSwitchFromBodyPtr(manifold.getBody1().ptr);
+						if(switchIndex) {
+							console.log("switch body - " + switchIndex);
 
-								var ballBody = _.find(ballBodies, function(ballBody) {
-									return (manifold.getBody0().ptr == ballBody.ptr);
-								});
+							var ballBody = _.find(ballBodies, function(ballBody) {
+								return (manifold.getBody0().ptr == ballBody.ptr);
+							});
 
-								// automatically map switch -> force
-								if(ballBody) {
-									activateForce(switchIndex, ballBody);
-								}
+							// automatically map switch -> force
+							if(ballBody) {
+								activateForce(switchIndex, ballBody);
 							}
-						});
+						}
 					}
-
-
 				}
 
 				if(ssaoEnabled) {
