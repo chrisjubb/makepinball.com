@@ -1,6 +1,6 @@
 {
 	"tableAngle": -7,
-	"gravityForce": -22,
+	"gravityForce": -30,
 
 	"triangleMeshRestitution": 1.2,
 	"triangleMeshDampingLinear": 0.04,
