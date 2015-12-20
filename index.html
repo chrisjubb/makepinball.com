@@ -564,7 +564,19 @@
                 var rot = new THREE.Quaternion();
                 rot.setFromEuler(original.rotation);
 
-                var shape = new Ammo.btBoxShape(new Ammo.btVector3(original.scale.x, original.scale.y, original.scale.y));
+                var shape;
+
+                var mesh = original.children[0];
+				var geometry = mesh.geometry;
+				// need to do this a better way really
+				if(geometry.faces.length == 12) {
+					// assume box
+                	shape = new Ammo.btBoxShape(new Ammo.btVector3(original.scale.x * 0.5, original.scale.y * 0.5, original.scale.z * 0.5));
+                }
+                else {
+                	// assume cylinder
+                	shape = new Ammo.btCylinderShape(new Ammo.btVector3(original.scale.x * 0.5, original.scale.y * 0.5, original.scale.z * 0.5));
+                }
                 var transform = new Ammo.btTransform();
                 transform.setIdentity();
                 transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
@@ -584,7 +596,7 @@
 				original.visible = false;
 
 				original.updateMatrixWorld();
-				var forceValue = 150; // todo - value for this
+				var forceValue = original.scale.x;
 				var forceQuat = original.quaternion;
 				var forceVector = new THREE.Vector3(1,0,0);
 				forceVector = forceVector.applyQuaternion(forceQuat);
@@ -840,7 +852,7 @@
 						// todo - make a lookup, ghost.ptr -> switch id
 						_.each(switchBodies, function(body, switchIndex) {
 							if((body) && (manifold.getBody1().ptr == body.ptr)) {
-								console.log("switch body - " + body);
+								console.log("switch body - " + switchIndex);
 
 								var associatedForce = forceData[switchIndex];
 								if(associatedForce) {
