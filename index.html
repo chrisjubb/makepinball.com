@@ -262,11 +262,33 @@
 			}
 
 			function radians(degrees) {
-			  return degrees * Math.PI / 180;
+				return degrees * Math.PI / 180;
 			}
 
 			function degrees(radians) {
-			  return radians * 180 / Math.PI;
+				return radians * 180 / Math.PI;
+			}
+
+			function convertToVector3(vec) {
+				if(vec instanceof Ammo.btVector3) {
+					return new THREE.Vector3(vec.x(), vec.y(), vec.z());
+				}
+				else if(vec instanceof THREE.Vector3) {
+					return vec;
+				}
+				else if(vec instanceof Object) {
+					return new THREE.Vector3(vec.x, vec.y, vec.z);
+				}
+				else {
+					return undefined;
+				}
+			}
+
+			function distanceSq(a, b) {
+				var dataA = convertToVector3(a);
+				var dataB = convertToVector3(b);
+
+				return dataA.distanceToSquared(dataB);
 			}
 
 			function initPhysics() {
@@ -375,7 +397,7 @@
 				_.each(forces, function(child, forceIndex) {
 					console.log("[!] Adding force");
 					if(child) {
-						forceData[forceIndex] = addForce(child);
+						forceData[forceIndex] = addForce(child, forceIndex);
 					}
 				});
 
@@ -594,11 +616,15 @@
                 return body;
 			}
 
-			function addForce(original) {
+			function addForce(original, forceIndex) {
 				original.visible = false;
 
 				original.updateMatrixWorld();
-				var forceValue = original.scale.x;
+				var forceValue = 100.0; // todo // original.scale.x;
+				if(forceIndex == 0) {
+					forceValue = 1000.0;
+				}
+
 				var forceQuat = original.quaternion;
 				var forceVector = new THREE.Vector3(1,0,0);
 				forceVector = forceVector.applyQuaternion(forceQuat);
@@ -734,6 +760,20 @@
 					else if(evt.keyCode == 76) { // 'L'
 						rightButtonDown = false;
 					}
+					else if(evt.keyCode == 70) { // 'F'
+						// 0 is the shooter lane one
+						var forceId = 0;
+						_.find(ballBodies, function(ballBody) {
+							var ballPosition = ballBody.getWorldTransform().getOrigin();
+							var forcePosition = forceData[forceId].position;
+
+							var d = distanceSq(ballPosition, forcePosition);
+							console.log(d);
+							if(d < 0.1) {
+								activateForce(forceId, ballBody);
+							}
+						});
+					}
 				}, false );
 
 				window.addEventListener( 'keydown', function(evt) {
@@ -829,6 +869,13 @@
 				return updatedState;
 			}
 
+			function activateForce(forceIndex, ballBody) {
+				var associatedForce = forceData[forceIndex];
+				if(associatedForce) {
+					ballBody.applyForce(associatedForce.forceVector, associatedForce.position);
+				}
+			}
+
 			var clock = new THREE.Clock();
 
 			function render() {
@@ -856,16 +903,13 @@
 							if((body) && (manifold.getBody1().ptr == body.ptr)) {
 								console.log("switch body - " + switchIndex);
 
-								var associatedForce = forceData[switchIndex];
-								if(associatedForce) {
-									// todo - lookup balls based on manifold.getBody0().ptr -> ballBody
+								var ballBody = _.find(ballBodies, function(ballBody) {
+									return (manifold.getBody0().ptr == ballBody.ptr);
+								});
 
-									_.each(ballBodies, function(ballBody) {
-										if(manifold.getBody0().ptr == ballBody.ptr) {
-											ballBody.applyForce(associatedForce.forceVector, associatedForce.position);
-										}
-									});
-
+								// automatically map switch -> force
+								if(ballBody) {
+									activateForce(switchIndex, ballBody);
 								}
 							}
 						});

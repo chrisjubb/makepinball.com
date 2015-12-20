@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-20T12:49:10</created>
-    <modified>2015-12-20T12:49:10</modified>
+    <created>2015-12-20T13:55:42</created>
+    <modified>2015-12-20T13:55:42</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -104,6 +104,32 @@
     </image>
   </library_images>
   <library_effects>
+    <effect id="FORCE_MATERIAL_005-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.007641585 0.64 0.007658114 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="invisble-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -682,6 +708,9 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="FORCE_MATERIAL_005-material" name="FORCE_MATERIAL_005">
+      <instance_effect url="#FORCE_MATERIAL_005-effect"/>
+    </material>
     <material id="invisble-material" name="invisble">
       <instance_effect url="#invisble-effect"/>
     </material>
@@ -750,6 +779,72 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Cube_012-mesh" name="Cube.012">
+      <mesh>
+        <source id="Cube_012-mesh-positions">
+          <float_array id="Cube_012-mesh-positions-array" count="24">-0.5702604 -0.9999999 -1 -0.5702604 -0.9999999 1 -0.5702604 1 -1 -0.5702604 1 1 1 -0.1335257 -1 1 -0.1335257 1 1 0.1335257 -1 1 0.1335257 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_012-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_012-mesh-normals">
+          <float_array id="Cube_012-mesh-normals-array" count="30">-1 0 0 0.4831302 0.8755486 0 1 0 0 0.4831301 -0.8755486 0 0 0 -1 0 0 1 0.4831302 0.8755485 0 0.4831302 -0.8755487 0 -5.68556e-7 0 -1 -5.68556e-7 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_012-mesh-normals-array" count="10" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_012-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_012-mesh-positions"/>
+        </vertices>
+        <polylist material="FORCE_MATERIAL_005-material" count="12">
+          <input semantic="VERTEX" source="#Cube_012-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_012-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>3 0 2 0 0 0 7 1 6 1 2 1 5 2 4 2 6 2 1 3 0 3 4 3 0 4 2 4 6 4 7 5 3 5 1 5 1 0 3 0 0 0 3 6 7 6 2 6 7 2 5 2 6 2 5 7 1 7 4 7 4 8 0 8 6 8 5 9 7 9 1 9</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Cube_011-mesh" name="Cube.011">
+      <mesh>
+        <source id="Cube_011-mesh-positions">
+          <float_array id="Cube_011-mesh-positions-array" count="24">-1 -1 -1 -1 -1 1 -1 1 -1 -1 1 1 1 -1 -1 1 -1 1 1 1 -1 1 1 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_011-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_011-mesh-normals">
+          <float_array id="Cube_011-mesh-normals-array" count="18">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_011-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_011-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_011-mesh-positions"/>
+        </vertices>
+        <polylist material="invisble-material" count="12">
+          <input semantic="VERTEX" source="#Cube_011-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_011-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>3 0 2 0 0 0 7 1 6 1 2 1 5 2 4 2 6 2 1 3 0 3 4 3 2 4 6 4 4 4 7 5 3 5 1 5 1 0 3 0 0 0 3 1 7 1 2 1 7 2 5 2 6 2 5 3 1 3 4 3 0 4 2 4 4 4 5 5 7 5 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Mesh_005-mesh" name="Mesh.005">
       <mesh>
         <source id="Mesh_005-mesh-positions">
@@ -2019,12 +2114,65 @@
         </polylist>
       </mesh>
     </geometry>
+    <geometry id="Cube_010-mesh" name="Cube.010">
+      <mesh>
+        <source id="Cube_010-mesh-positions">
+          <float_array id="Cube_010-mesh-positions-array" count="24">-1 -1 -1 -1 -1 1 -1 1 -1 -1 1 1 1 -1 -1 1 -1 1 1 1 -1 1 1 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_010-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_010-mesh-normals">
+          <float_array id="Cube_010-mesh-normals-array" count="18">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_010-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_010-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_010-mesh-positions"/>
+        </vertices>
+        <polylist count="12">
+          <input semantic="VERTEX" source="#Cube_010-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_010-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>3 0 2 0 0 0 7 1 6 1 2 1 5 2 4 2 6 2 1 3 0 3 4 3 2 4 6 4 4 4 7 5 3 5 1 5 1 0 3 0 0 0 3 1 7 1 2 1 7 2 5 2 6 2 5 3 1 3 4 3 0 4 2 4 4 4 5 5 7 5 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
   </library_geometries>
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="FORCE_000" name="FORCE_000" type="NODE">
+        <matrix sid="transform">-1.64843e-8 -0.3771171 0 8.928263 0.3771171 -1.64843e-8 0 -4.399635 0 0 0.3187375 0.1406972 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_012-mesh" name="FORCE_000">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="FORCE_MATERIAL_005-material" target="#FORCE_MATERIAL_005-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="P_shooter_lane" name="P_shooter_lane" type="NODE">
+        <matrix sid="transform">0.02996475 0 0 8.664923 0 2.702276 0 -1.828155 0 0 0.1611669 0.1458097 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_011-mesh" name="P_shooter_lane">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="invisble-material" target="#invisble-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="P_top_rail" name="P_top_rail" type="NODE">
-        <matrix sid="transform">1 0 0 5.619962 0 1 0 2.600109 0 0 1 0.3149119 0 0 0 1</matrix>
+        <matrix sid="transform">1.118125 0 0 5.927868 0 1 0 2.600109 0 0 1 0.3149119 0 0 0 1</matrix>
         <instance_geometry url="#Mesh_005-mesh" name="P_top_rail">
           <bind_material>
             <technique_common>
@@ -2084,7 +2232,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_4" name="PLANE_4" type="NODE">
-        <matrix sid="transform">2.858502 0 0 5.637672 0 -1.94587e-8 1 -4.510313 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">3.2143 0 0 5.960987 0 -1.62172e-8 1 -4.510312 0 -0.371007 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_004-mesh" name="PLANE_4">
           <bind_material>
             <technique_common>
@@ -2094,7 +2242,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_3" name="PLANE_3" type="NODE">
-        <matrix sid="transform">-2.856447 1.70114e-15 -8.74228e-8 5.661718 2.49719e-7 1.94587e-8 -1 4.719998 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">-3.211989 1.41776e-15 -8.74228e-8 5.988027 2.80801e-7 1.62172e-8 -1 4.719998 0 -0.371007 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_003-mesh" name="PLANE_3">
           <bind_material>
             <technique_common>
@@ -2104,7 +2252,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_2" name="PLANE_2" type="NODE">
-        <matrix sid="transform">-2.01332e-7 -1.94587e-8 1 2.8 -4.60593 8.50568e-16 -4.37114e-8 0.1268408 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">-2.01332e-7 -1.62172e-8 1 2.8 -4.60593 7.08878e-16 -4.37114e-8 0.1268408 0 -0.371007 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_002-mesh" name="PLANE_2">
           <bind_material>
             <technique_common>
@@ -2144,7 +2292,7 @@
         </instance_geometry>
       </node>
       <node id="SWITCH_001" name="SWITCH_001" type="NODE">
-        <matrix sid="transform">3.252922 0 0 5.671295 0 0.134754 0 -4.320983 0 0 0.2905322 0.2100679 0 0 0 1</matrix>
+        <matrix sid="transform">2.954158 0 0 5.671295 0 0.134754 0 -4.320983 0 0 0.2905322 0.2100679 0 0 0 1</matrix>
         <instance_geometry url="#Cube_000-mesh" name="SWITCH_001">
           <bind_material>
             <technique_common>
@@ -2178,7 +2326,7 @@
         </instance_geometry>
       </node>
       <node id="BALL_2" name="BALL_2" type="NODE">
-        <matrix sid="transform">1 0 0 5.455566 0 1 0 0.07554927 0 0 1 0.3209202 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 8.912058 0 1 0 -3.938329 0 0 1 0.1855631 0 0 0 1</matrix>
         <instance_geometry url="#Sphere_000-mesh" name="BALL_2">
           <bind_material>
             <technique_common>
@@ -2276,7 +2424,7 @@
         </extra>
       </node>
       <node id="PLANE_0" name="PLANE_0" type="NODE">
-        <matrix sid="transform">1.623188 0 0 5.631076 0 2.595493 0 0.0958302 0 0 2.879255 -5.96046e-5 0 0 0 1</matrix>
+        <matrix sid="transform">1.774698 0 0 5.988644 0 2.595493 0 0.0958302 0 0 2.879255 -5.96046e-5 0 0 0 1</matrix>
         <instance_geometry url="#Plane-mesh" name="PLANE_0">
           <bind_material>
             <technique_common>
@@ -2315,9 +2463,9 @@
         <matrix sid="transform">0.6031744 0.6555921 0.4542902 7.568495 -0.5036624 0.7547089 -0.4204028 -4.215828 -0.6184697 0.02476734 0.7854183 0.9817286 0 0 0 1</matrix>
         <instance_light url="#Sun-light"/>
       </node>
-      <node id="SWITCH_000" name="SWITCH_000" type="NODE">
+      <node id="SWITCH_005" name="SWITCH_005" type="NODE">
         <matrix sid="transform">0.1235274 0 0 3.306097 0 0.1235274 0 -0.568748 0 0 0.1235274 0.3084395 0 0 0 1</matrix>
-        <instance_geometry url="#Cube_003-mesh" name="SWITCH_000">
+        <instance_geometry url="#Cube_003-mesh" name="SWITCH_005">
           <bind_material>
             <technique_common>
               <instance_material symbol="GHOSTS-material" target="#GHOSTS-material"/>
@@ -2326,7 +2474,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_1" name="PLANE_1" type="NODE">
-        <matrix sid="transform">-2.01332e-7 1.94587e-8 -1 8.5 4.60593 8.50568e-16 -4.37114e-8 0.1238484 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">-2.01332e-7 1.62172e-8 -1 9.146059 4.60593 7.08878e-16 -4.37114e-8 0.1238484 0 -0.371007 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_001-mesh" name="PLANE_1">
           <bind_material>
             <technique_common>
@@ -2383,7 +2531,7 @@
         </instance_geometry>
       </node>
       <node id="visual_top_rail" name="visual_top_rail" type="NODE">
-        <matrix sid="transform">1 0 0 5.619962 0 1 0 2.600109 0 0 1 0.3149119 0 0 0 1</matrix>
+        <matrix sid="transform">1.118125 0 0 5.927868 0 1 0 2.600109 0 0 1 0.3149119 0 0 0 1</matrix>
         <instance_geometry url="#Mesh_004-mesh" name="visual_top_rail">
           <bind_material>
             <technique_common>
@@ -2391,6 +2539,10 @@
             </technique_common>
           </bind_material>
         </instance_geometry>
+      </node>
+      <node id="visual_shooter_lane" name="visual_shooter_lane" type="NODE">
+        <matrix sid="transform">0.02996475 0 0 8.664923 0 2.702276 0 -1.828155 0 0 0.1611669 0.1458097 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_010-mesh" name="visual_shooter_lane"/>
       </node>
     </visual_scene>
   </library_visual_scenes>
