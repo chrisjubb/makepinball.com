@@ -74,6 +74,7 @@
 
 			<p>Left Flipper = 'A'</p>
 			<p>Right Flipper = 'L'</p>
+			<p>Plunger = 'F'</p>
 			<p>Reset balls = 'R'</p>
 
 			<p>You can change physics parameters on the right and click 'UPDATE' to see the changes.</p>
@@ -116,18 +117,20 @@
 		<script src="js/Detector.js"></script>
 		<script src="js/libs/stats.min.js"></script>
 
+		<script src="engine.js"></script>
+		<script src="game.js"></script>
+
 		<script>
 
 			if(!Detector.webgl) Detector.addGetWebGLMessage();
 
 			var stats;
 
-			var camera, scene, renderer, objects;
+			var camera, scene, renderer;
 			var dae;
 
 			var addDebugging = false;
 
-			var cameras = [];
 			var leftButtonDown = false;
 			var rightButtonDown = false;
 
@@ -230,10 +233,6 @@
 						var castShadow = true;
 						if(child.name.indexOf("PLANE_") == 0) {
 							castShadow = false; // no point
-						}
-
-						if(child.name == "Camera") {
-							cameras.push(child);
 						}
 
 						if(child instanceof THREE.SkinnedMesh) {
