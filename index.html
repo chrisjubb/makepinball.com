@@ -134,14 +134,6 @@
 			var leftButtonDown = false;
 			var rightButtonDown = false;
 
-			// flipper control
-			var FLIPPER_STATE_RESTING = 0;
-			var FLIPPER_STATE_RETURNING = 1;
-			var FLIPPER_STATE_FLIPPING = 2;
-			var FLIPPER_STATE_END_OF_STROKE = 3;
-			var leftFlipperState = FLIPPER_STATE_RETURNING;
-			var rightFlipperState = FLIPPER_STATE_RETURNING;
-
 			// effects
 			var depthMaterial, effectComposer, depthRenderTarget;
 			var ssaoPass;
@@ -850,8 +842,7 @@
 				stats.update();
 			}
 
-			function processFlipper(flipperConstraint, flipperBody, state, buttonDown, multiplier) {
-				var updatedState = state;
+			function processFlipper(flipperConstraint, flipperBody, buttonDown, multiplier) {
 				var upImpulse = physCfg.get("flipperUpImpulse");
 				var downImpulse = physCfg.get("flipperDownImpulse");
 
@@ -868,8 +859,6 @@
 				if(targetVelocity) {
 					flipperBody.applyTorque(new Ammo.btVector3(0, targetVelocity * multiplier, 0));
 				}
-
-				return updatedState;
 			}
 
 			function activateForce(forceIndex, ballBody) {
@@ -891,8 +880,8 @@
 
 				THREE.AnimationHandler.update( delta );
 
-				leftFlipperState = processFlipper(flipperConstraints[0], flipperBodies[0], leftFlipperState, leftButtonDown, 1);
-				rightFlipperState = processFlipper(flipperConstraints[1], flipperBodies[1], rightFlipperState, rightButtonDown, -1);
+				processFlipper(flipperConstraints[0], flipperBodies[0], leftButtonDown, 1);
+				processFlipper(flipperConstraints[1], flipperBodies[1], rightButtonDown, -1);
 
 				dynamicsWorld.stepSimulation(delta, 2);
 				_.each(physicsMeshCallbacks, function(callback) {
