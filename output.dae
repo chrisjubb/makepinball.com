@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-20T12:18:32</created>
-    <modified>2015-12-20T12:18:32</modified>
+    <created>2015-12-20T12:49:10</created>
+    <modified>2015-12-20T12:49:10</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -98,8 +98,38 @@
       </extra>
     </light>
   </library_lights>
-  <library_images/>
+  <library_images>
+    <image id="birch_wood_png" name="birch_wood_png">
+      <init_from>birch_wood.png</init_from>
+    </image>
+  </library_images>
   <library_effects>
+    <effect id="invisble-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.6101864 0.02500837 0.5256636 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="FORCE_MATERIAL_003-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -490,32 +520,6 @@
         </technique>
       </profile_COMMON>
     </effect>
-    <effect id="invisble-effect">
-      <profile_COMMON>
-        <technique sid="common">
-          <phong>
-            <emission>
-              <color sid="emission">0 0 0 1</color>
-            </emission>
-            <ambient>
-              <color sid="ambient">0 0 0 1</color>
-            </ambient>
-            <diffuse>
-              <color sid="diffuse">0.6101864 0.02500837 0.5256636 1</color>
-            </diffuse>
-            <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
-            </specular>
-            <shininess>
-              <float sid="shininess">50</float>
-            </shininess>
-            <index_of_refraction>
-              <float sid="index_of_refraction">1</float>
-            </index_of_refraction>
-          </phong>
-        </technique>
-      </profile_COMMON>
-    </effect>
     <effect id="PHYSICS_RUBBER_001-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -570,6 +574,16 @@
     </effect>
     <effect id="wood-effect">
       <profile_COMMON>
+        <newparam sid="birch_wood_png-surface">
+          <surface type="2D">
+            <init_from>birch_wood_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="birch_wood_png-sampler">
+          <sampler2D>
+            <source>birch_wood_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
@@ -579,7 +593,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <texture texture="birch_wood_png-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="index_of_refraction">1</float>
@@ -668,6 +682,9 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="invisble-material" name="invisble">
+      <instance_effect url="#invisble-effect"/>
+    </material>
     <material id="FORCE_MATERIAL_003-material" name="FORCE_MATERIAL_003">
       <instance_effect url="#FORCE_MATERIAL_003-effect"/>
     </material>
@@ -713,9 +730,6 @@
     <material id="Material-material" name="Material">
       <instance_effect url="#Material-effect"/>
     </material>
-    <material id="invisble-material" name="invisble">
-      <instance_effect url="#invisble-effect"/>
-    </material>
     <material id="PHYSICS_RUBBER_001-material" name="PHYSICS_RUBBER_001">
       <instance_effect url="#PHYSICS_RUBBER_001-effect"/>
     </material>
@@ -736,6 +750,39 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Mesh_005-mesh" name="Mesh.005">
+      <mesh>
+        <source id="Mesh_005-mesh-positions">
+          <float_array id="Mesh_005-mesh-positions-array" count="150">-2.8 -1 -0.312 -2.8 -1 0.312 -2.789623 -0.7305389 -0.312 -2.789623 -0.7305389 0.312 -2.767716 -0.4299108 -0.312 -2.767716 -0.4299108 0.312 -2.72572 -0.1084637 -0.312 -2.72572 -0.1084637 0.312 -2.655076 0.2234546 -0.312 -2.655076 0.2234546 0.312 -2.547225 0.5554965 -0.312 -2.547225 0.5554965 0.312 -2.39361 0.8773139 -0.312 -2.39361 0.8773139 0.312 -2.185671 1.178559 -0.312 -2.185671 1.178559 0.312 -1.91485 1.448884 -0.312 -1.91485 1.448884 0.312 -1.572588 1.677941 -0.312 -1.572588 1.677941 0.312 -1.150328 1.855383 -0.312 -1.150328 1.855383 0.312 -0.6395092 1.97086 -0.312 -0.6395092 1.97086 0.312 -0.0315743 2.014026 -0.312 -0.0315743 2.014026 0.312 0.6627984 1.980364 -0.312 0.6627984 1.980364 0.312 1.237608 1.877184 -0.312 1.237608 1.877184 0.312 1.704072 1.713479 -0.312 1.704072 1.713479 0.312 2.073408 1.498238 -0.312 2.073408 1.498238 0.312 2.356835 1.240453 -0.312 2.356835 1.240453 0.312 2.565569 0.9491164 -0.312 2.565569 0.9491164 0.312 2.710829 0.6332182 -0.312 2.710829 0.6332182 0.312 2.803832 0.3017498 -0.312 2.803832 0.3017498 0.312 2.855796 -0.03629732 -0.312 2.855796 -0.03629732 0.312 2.877938 -0.3719322 -0.312 2.877938 -0.3719322 0.312 2.881478 -0.6961634 -0.312 2.881478 -0.6961634 0.312 2.877631 -1 -0.312 2.877631 -1 0.312</float_array>
+          <technique_common>
+            <accessor source="#Mesh_005-mesh-positions-array" count="50" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Mesh_005-mesh-normals">
+          <float_array id="Mesh_005-mesh-normals-array" count="75">-0.9984546 0.05557477 0 -0.9992604 0.03845417 0 -0.9948721 0.1011413 0 -0.9856187 0.168985 0 -0.9659054 0.2588952 0 -0.9287733 0.3706487 0 -0.86545 0.5009953 0 -0.7678984 0.6405715 0 -0.6343091 0.7730795 0 -0.4739652 0.8805437 0 -0.3051278 0.9523114 0 -0.1460642 0.9892752 0 -0.0112006 0.9999373 0 0.1127693 0.9936212 0 0.2547096 0.9670177 0 0.419213 0.9078879 0 0.591455 0.8063381 0 0.7470203 0.6648013 0 0.8646466 0.5023807 0 0.9385946 0.3450222 0 0.9773987 0.2114045 0 0.9940435 0.1089843 0 0.9992639 0.03836274 0 0.9999997 -8.54544e-4 0 0.9999203 -0.01263481 0</float_array>
+          <technique_common>
+            <accessor source="#Mesh_005-mesh-normals-array" count="25" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Mesh_005-mesh-vertices">
+          <input semantic="POSITION" source="#Mesh_005-mesh-positions"/>
+        </vertices>
+        <polylist material="invisble-material" count="48">
+          <input semantic="VERTEX" source="#Mesh_005-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Mesh_005-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>3 0 2 0 0 1 5 2 4 2 2 0 7 3 6 3 4 2 9 4 8 4 6 3 11 5 10 5 8 4 13 6 12 6 10 5 15 7 14 7 12 6 17 8 16 8 14 7 19 9 18 9 16 8 21 10 20 10 18 9 23 11 22 11 20 10 25 12 24 12 22 11 27 13 26 13 24 12 29 14 28 14 26 13 31 15 30 15 28 14 33 16 32 16 30 15 35 17 34 17 32 16 37 18 36 18 34 17 39 19 38 19 36 18 41 20 40 20 38 19 43 21 42 21 40 20 45 22 44 22 42 21 47 23 46 23 44 22 49 24 48 24 46 23 1 1 3 0 0 1 3 0 5 2 2 0 5 2 7 3 4 2 7 3 9 4 6 3 9 4 11 5 8 4 11 5 13 6 10 5 13 6 15 7 12 6 15 7 17 8 14 7 17 8 19 9 16 8 19 9 21 10 18 9 21 10 23 11 20 10 23 11 25 12 22 11 25 12 27 13 24 12 27 13 29 14 26 13 29 14 31 15 28 14 31 15 33 16 30 15 33 16 35 17 32 16 35 17 37 18 34 17 37 18 39 19 36 18 39 19 41 20 38 19 41 20 43 21 40 20 43 21 45 22 42 21 45 22 47 23 44 22 47 23 49 24 46 23</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Cube_009-mesh" name="Cube.009">
       <mesh>
         <source id="Cube_009-mesh-positions">
@@ -1939,10 +1986,53 @@
         </polylist>
       </mesh>
     </geometry>
+    <geometry id="Mesh_004-mesh" name="Mesh.004">
+      <mesh>
+        <source id="Mesh_004-mesh-positions">
+          <float_array id="Mesh_004-mesh-positions-array" count="150">-2.8 -1 -0.312 -2.8 -1 0.312 -2.789623 -0.7305389 -0.312 -2.789623 -0.7305389 0.312 -2.767716 -0.4299108 -0.312 -2.767716 -0.4299108 0.312 -2.72572 -0.1084637 -0.312 -2.72572 -0.1084637 0.312 -2.655076 0.2234546 -0.312 -2.655076 0.2234546 0.312 -2.547225 0.5554965 -0.312 -2.547225 0.5554965 0.312 -2.39361 0.8773139 -0.312 -2.39361 0.8773139 0.312 -2.185671 1.178559 -0.312 -2.185671 1.178559 0.312 -1.91485 1.448884 -0.312 -1.91485 1.448884 0.312 -1.572588 1.677941 -0.312 -1.572588 1.677941 0.312 -1.150328 1.855383 -0.312 -1.150328 1.855383 0.312 -0.6395092 1.97086 -0.312 -0.6395092 1.97086 0.312 -0.0315743 2.014026 -0.312 -0.0315743 2.014026 0.312 0.6627984 1.980364 -0.312 0.6627984 1.980364 0.312 1.237608 1.877184 -0.312 1.237608 1.877184 0.312 1.704072 1.713479 -0.312 1.704072 1.713479 0.312 2.073408 1.498238 -0.312 2.073408 1.498238 0.312 2.356835 1.240453 -0.312 2.356835 1.240453 0.312 2.565569 0.9491164 -0.312 2.565569 0.9491164 0.312 2.710829 0.6332182 -0.312 2.710829 0.6332182 0.312 2.803832 0.3017498 -0.312 2.803832 0.3017498 0.312 2.855796 -0.03629732 -0.312 2.855796 -0.03629732 0.312 2.877938 -0.3719322 -0.312 2.877938 -0.3719322 0.312 2.881478 -0.6961634 -0.312 2.881478 -0.6961634 0.312 2.877631 -1 -0.312 2.877631 -1 0.312</float_array>
+          <technique_common>
+            <accessor source="#Mesh_004-mesh-positions-array" count="50" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Mesh_004-mesh-normals">
+          <float_array id="Mesh_004-mesh-normals-array" count="75">0.9992604 -0.03845417 0 0.9984546 -0.05557477 0 0.9948721 -0.1011413 0 0.9856187 -0.168985 0 0.9659054 -0.2588952 0 0.9287733 -0.3706487 0 0.86545 -0.5009953 0 0.7678984 -0.6405715 0 0.6343091 -0.7730795 0 0.4739652 -0.8805437 0 0.3051278 -0.9523114 0 0.1460642 -0.9892752 0 0.0112006 -0.9999373 0 -0.1127693 -0.9936212 0 -0.2547096 -0.9670177 0 -0.419213 -0.9078879 0 -0.591455 -0.8063381 0 -0.7470203 -0.6648013 0 -0.8646466 -0.5023807 0 -0.9385946 -0.3450222 0 -0.9773987 -0.2114045 0 -0.9940435 -0.1089843 0 -0.9992639 -0.03836274 0 -0.9999997 8.54544e-4 0 -0.9999203 0.01263481 0</float_array>
+          <technique_common>
+            <accessor source="#Mesh_004-mesh-normals-array" count="25" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Mesh_004-mesh-vertices">
+          <input semantic="POSITION" source="#Mesh_004-mesh-positions"/>
+        </vertices>
+        <polylist material="chrome-material" count="48">
+          <input semantic="VERTEX" source="#Mesh_004-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Mesh_004-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>0 0 2 1 3 1 2 1 4 2 5 2 4 2 6 3 7 3 6 3 8 4 9 4 8 4 10 5 11 5 10 5 12 6 13 6 12 6 14 7 15 7 14 7 16 8 17 8 16 8 18 9 19 9 18 9 20 10 21 10 20 10 22 11 23 11 22 11 24 12 25 12 24 12 26 13 27 13 26 13 28 14 29 14 28 14 30 15 31 15 30 15 32 16 33 16 32 16 34 17 35 17 34 17 36 18 37 18 36 18 38 19 39 19 38 19 40 20 41 20 40 20 42 21 43 21 42 21 44 22 45 22 44 22 46 23 47 23 46 23 48 24 49 24 1 0 0 0 3 1 3 1 2 1 5 2 5 2 4 2 7 3 7 3 6 3 9 4 9 4 8 4 11 5 11 5 10 5 13 6 13 6 12 6 15 7 15 7 14 7 17 8 17 8 16 8 19 9 19 9 18 9 21 10 21 10 20 10 23 11 23 11 22 11 25 12 25 12 24 12 27 13 27 13 26 13 29 14 29 14 28 14 31 15 31 15 30 15 33 16 33 16 32 16 35 17 35 17 34 17 37 18 37 18 36 18 39 19 39 19 38 19 41 20 41 20 40 20 43 21 43 21 42 21 45 22 45 22 44 22 47 23 47 23 46 23 49 24</p>
+        </polylist>
+      </mesh>
+    </geometry>
   </library_geometries>
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="P_top_rail" name="P_top_rail" type="NODE">
+        <matrix sid="transform">1 0 0 5.619962 0 1 0 2.600109 0 0 1 0.3149119 0 0 0 1</matrix>
+        <instance_geometry url="#Mesh_005-mesh" name="P_top_rail">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="invisble-material" target="#invisble-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="FORCE_003" name="FORCE_003" type="NODE">
         <matrix sid="transform">-0.4865336 -0.1675269 0 6.913524 0.1675269 -0.4865336 0 -2.181156 0 0 0.4349104 0.1406972 0 0 0 1</matrix>
         <instance_geometry url="#Cube_009-mesh" name="FORCE_003">
@@ -1994,7 +2084,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_4" name="PLANE_4" type="NODE">
-        <matrix sid="transform">3.553696 0 0 5.589555 0 -1.94587e-8 1 -6.799713 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">2.858502 0 0 5.637672 0 -1.94587e-8 1 -4.510313 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_004-mesh" name="PLANE_4">
           <bind_material>
             <technique_common>
@@ -2004,7 +2094,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_3" name="PLANE_3" type="NODE">
-        <matrix sid="transform">-3.553696 1.70114e-15 -8.74228e-8 5.589555 3.10674e-7 1.94587e-8 -1 4.719998 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">-2.856447 1.70114e-15 -8.74228e-8 5.661718 2.49719e-7 1.94587e-8 -1 4.719998 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_003-mesh" name="PLANE_3">
           <bind_material>
             <technique_common>
@@ -2014,7 +2104,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_2" name="PLANE_2" type="NODE">
-        <matrix sid="transform">-2.90678e-7 -1.94587e-8 1 2.769158 -6.649939 8.50568e-16 -4.37114e-8 -0.7526624 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">-2.01332e-7 -1.94587e-8 1 2.8 -4.60593 8.50568e-16 -4.37114e-8 0.1268408 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_002-mesh" name="PLANE_2">
           <bind_material>
             <technique_common>
@@ -2054,7 +2144,7 @@
         </instance_geometry>
       </node>
       <node id="SWITCH_001" name="SWITCH_001" type="NODE">
-        <matrix sid="transform">3.252922 0 0 5.671295 0 0.2905322 0 -7.499081 0 0 0.2905322 0.2100679 0 0 0 1</matrix>
+        <matrix sid="transform">3.252922 0 0 5.671295 0 0.134754 0 -4.320983 0 0 0.2905322 0.2100679 0 0 0 1</matrix>
         <instance_geometry url="#Cube_000-mesh" name="SWITCH_001">
           <bind_material>
             <technique_common>
@@ -2186,11 +2276,13 @@
         </extra>
       </node>
       <node id="PLANE_0" name="PLANE_0" type="NODE">
-        <matrix sid="transform">1.949254 0 0 5.72036 0 4.370981 0 -1.090867 0 0 2.879255 -5.96046e-5 0 0 0 1</matrix>
+        <matrix sid="transform">1.623188 0 0 5.631076 0 2.595493 0 0.0958302 0 0 2.879255 -5.96046e-5 0 0 0 1</matrix>
         <instance_geometry url="#Plane-mesh" name="PLANE_0">
           <bind_material>
             <technique_common>
-              <instance_material symbol="wood-material" target="#wood-material"/>
+              <instance_material symbol="wood-material" target="#wood-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2234,7 +2326,7 @@
         </instance_geometry>
       </node>
       <node id="PLANE_1" name="PLANE_1" type="NODE">
-        <matrix sid="transform">-2.90678e-7 1.94587e-8 -1 8.573769 6.649939 8.50568e-16 -4.37114e-8 -0.7526624 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
+        <matrix sid="transform">-2.01332e-7 1.94587e-8 -1 8.5 4.60593 8.50568e-16 -4.37114e-8 0.1238484 0 -0.4451639 -4.37114e-8 0.3110393 0 0 0 1</matrix>
         <instance_geometry url="#Plane_001-mesh" name="PLANE_1">
           <bind_material>
             <technique_common>
@@ -2264,7 +2356,9 @@
           <instance_geometry url="#_1__bumperring_m-mesh" name="interior">
             <bind_material>
               <technique_common>
-                <instance_material symbol="chrome-material" target="#chrome-material"/>
+                <instance_material symbol="chrome-material" target="#chrome-material">
+                  <bind_vertex_input semantic="_1__bumperring_m-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                </instance_material>
               </technique_common>
             </bind_material>
           </instance_geometry>
@@ -2284,6 +2378,16 @@
           <bind_material>
             <technique_common>
               <instance_material symbol="FORCE_MATERIAL-material" target="#FORCE_MATERIAL-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="visual_top_rail" name="visual_top_rail" type="NODE">
+        <matrix sid="transform">1 0 0 5.619962 0 1 0 2.600109 0 0 1 0.3149119 0 0 0 1</matrix>
+        <instance_geometry url="#Mesh_004-mesh" name="visual_top_rail">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="chrome-material" target="#chrome-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
