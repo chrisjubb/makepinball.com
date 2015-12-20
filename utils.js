@@ -34,8 +34,8 @@ Pin.Utils = {
 	},
 
 	distanceSq: function(a, b) {
-		var dataA = convertToVector3(a);
-		var dataB = convertToVector3(b);
+		var dataA = this.convertToVector3(a);
+		var dataB = this.convertToVector3(b);
 
 		return dataA.distanceToSquared(dataB);
 	}

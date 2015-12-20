@@ -7,6 +7,10 @@ Pin.View = Class.extend({
 
 	readyCallbacks: [],
 
+	// todo - think where this should go
+	leftButtonDown: false,
+	rightButtonDown: false,
+
 	camera: undefined,
 	scene: undefined,
 	renderer: undefined,
@@ -586,28 +590,28 @@ Pin.View = Class.extend({
 		}
 
 		// events
-
-		/*window.addEventListener( 'keyup', function(evt) {
+		var self = this;
+		window.addEventListener( 'keyup', function(evt) {
 			if(evt.keyCode == 82) { // R
-				resetBallPositions();
+				self.resetBallPositions();
 			}
 			else if(evt.keyCode == 65) { // 'A'
-				leftButtonDown = false;
+				self.leftButtonDown = false;
 			}
 			else if(evt.keyCode == 76) { // 'L'
-				rightButtonDown = false;
+				self.rightButtonDown = false;
 			}
 			else if(evt.keyCode == 70) { // 'F'
 				// 0 is the shooter lane one
 				var forceId = 0;
-				_.find(ballBodies, function(ballBody) {
+				_.find(self.ballBodies, function(ballBody) {
 					var ballPosition = ballBody.getWorldTransform().getOrigin();
-					var forcePosition = forceData[forceId].position;
+					var forcePosition = self.forceData[forceId].position;
 
-					var d = distanceSq(ballPosition, forcePosition);
+					var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
 					console.log(d);
 					if(d < 0.1) {
-						activateForce(forceId, ballBody);
+						self.activateForce(forceId, ballBody);
 					}
 				});
 			}
@@ -616,12 +620,12 @@ Pin.View = Class.extend({
 		window.addEventListener( 'keydown', function(evt) {
 			//console.log(evt.keyCode);
 			if(evt.keyCode == 65) { // 'A'
-				leftButtonDown = true;
+				self.leftButtonDown = true;
 			}
 			else if(evt.keyCode == 76) { // 'L'
-				rightButtonDown = true;
+				self.rightButtonDown = true;
 			}
-		});*/
+		});
 	},
 
 	initPostprocessing: function() {
@@ -707,8 +711,8 @@ Pin.View = Class.extend({
 		var delta = this.clock.getDelta();
 		THREE.AnimationHandler.update(delta);
 
-		//this.processFlipper(this.flipperBodies[0], leftButtonDown, 1);
-		//this.processFlipper(this.flipperBodies[1], rightButtonDown, -1);
+		this.processFlipper(this.flipperBodies[0], this.leftButtonDown, 1);
+		this.processFlipper(this.flipperBodies[1], this.rightButtonDown, -1);
 
 		this.dynamicsWorld.stepSimulation(delta, 2);
 		_.each(this.physicsMeshCallbacks, function(callback) {
