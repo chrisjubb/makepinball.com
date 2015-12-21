@@ -70,12 +70,15 @@ Pin.View = Class.extend({
 		this.maskSwitch = this.groupBall;
 	},
 
+	setPhysicsConfig: function(physCfg) {
+		this.physCfg = physCfg;
+	},
+
 	ready: function(readyFunction) {
 		this.readyCallbacks.push(readyFunction);
 	},
 
 	load: function(canvasContainer) {
-		this.physCfg = engine.getPhysicsConfig();
 		this.canvasContainer = canvasContainer;
 
 		var loader = new THREE.ColladaLoader();
