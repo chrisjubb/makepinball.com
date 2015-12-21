@@ -16,7 +16,7 @@ Pin.Game = Class.extend({
 
 	update: function(switchState) {
 		// todo - need to get these magic numbers from the view
-		this.forceState[0] = switchState[1002];
+		this.forceState[0] = switchState[this.SW_PLUNGER_BUTTON];
 
 		// we want these to fire based on which bodies are active in the switch area
 		this.forceFromSwitchState[2] = switchState[2];
@@ -32,8 +32,8 @@ Pin.Game = Class.extend({
 
 	getFlipperData: function() {
 		return [
-			this.constructFlipperData(0, 1000, 1),
-			this.constructFlipperData(1, 1001, -1)
+			this.constructFlipperData(0, this.SW_LEFT_FLIPPER,   1),
+			this.constructFlipperData(1, this.SW_RIGHT_FLIPPER, -1)
 		];
 	},
 
