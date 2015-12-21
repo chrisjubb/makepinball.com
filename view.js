@@ -1,8 +1,6 @@
 var Pin = Pin || {};
 
 Pin.View = Class.extend({
-	engine: undefined,
-
 	clock: undefined,
 
 	readyCallbacks: [],
@@ -52,8 +50,7 @@ Pin.View = Class.extend({
 	groupFlipper: 8,
 	groupSwitch: 32,
 
-	init: function(engine) {
-		this.engine = engine;
+	init: function() {
 		this.clock = new THREE.Clock();
 
 		// plane -> ball only

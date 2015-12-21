@@ -2,12 +2,10 @@ var Pin = Pin || {};
 
 Pin.Game = Class.extend({
 
-	engine: undefined,
 	lightState: [],
 	forceState: [],
 
-	init: function(engine) {
-		this.engine = engine;
+	init: function() {
 	},
 
 	update: function(switchState) {
