@@ -171,7 +171,8 @@
 				game.update(switchState);
 				var lightState = game.getLightState();
 				var forceState = game.getForceState();
-				view.update(lightState, forceState);
+				var forceFromSwitchState = game.getForceFromSwitchState()
+				view.update(lightState, forceState, forceFromSwitchState);
 				view.render();
 				stats.update();
 			}

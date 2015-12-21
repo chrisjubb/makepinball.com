@@ -128,6 +128,8 @@ Pin.View = Class.extend({
 			}
 		});
 
+		this.switchActivatedByBodies = [];
+
 		var dispatcher = this.dynamicsWorld.getDispatcher();
 		for(var i = 0, n = dispatcher.getNumManifolds(); i < n; ++i) {
 			var manifold = dispatcher.getManifoldByIndexInternal(i);
@@ -140,21 +142,20 @@ Pin.View = Class.extend({
 
 					self.switchState[switchIndex] = 1;
 
-					// todo - how to do this?
-					/*var ballBody = _.find(this.ballBodies, function(ballBody) {
+					var ballBody = _.find(this.ballBodies, function(ballBody) {
 						return (manifold.getBody0().ptr == ballBody.ptr);
 					});
 
-					// automatically map switch -> force
-					if(ballBody) {
-						this.activateForce(switchIndex, ballBody);
-					}*/
+					if(self.switchActivatedByBodies[switchIndex] == undefined) {
+						self.switchActivatedByBodies[switchIndex] = [];
+					}
+					self.switchActivatedByBodies[switchIndex].push(ballBody);
 				}
 			}
 		}
 	},
 
-	update: function(lightState, forceState) {
+	update: function(lightState, forceState, forceFromSwitchState) {
 		var delta = this.clock.getDelta();
 		THREE.AnimationHandler.update(delta);
 
@@ -162,6 +163,17 @@ Pin.View = Class.extend({
 		_.each(forceState, function(forceValue, forceId) {
 			if(forceValue) {
 				self.activateForceOnBall(forceId);
+			}
+		});
+
+		_.each(forceFromSwitchState, function(forceValue, forceSwitchIndex) {
+			if(forceValue) {
+				var ballBodies = self.switchActivatedByBodies[forceSwitchIndex];
+				if(ballBodies) {
+					_.each(ballBodies, function(ballBody) {
+						self.activateForce(forceSwitchIndex, ballBody);
+					});
+				}
 			}
 		});
 
