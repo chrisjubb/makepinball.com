@@ -120,7 +120,7 @@
 
 		<script src="utils.js"></script>
 		<script src="engine.js"></script>
-		<!-- <script src="game.js"></script> -->
+		<script src="game.js"></script>
 		<script src="view.js"></script>
 
 		<script>
@@ -128,7 +128,7 @@
 			if(!Detector.webgl) Detector.addGetWebGLMessage();
 
 			var engine = new Pin.Engine();
-			// var game = new Pin.Game(engine);
+			var game = new Pin.Game(engine);
 			var view = new Pin.View(engine);
 
             // BLENDER -> THREE
@@ -167,6 +167,13 @@
 
 			function animate() {
 				requestAnimationFrame(animate);
+
+				view.preUpdate();
+				var switchState = view.getSwitchState();
+				game.update(switchState);
+				var lightState = game.getLightState();
+				var forceState = game.getForceState();
+				view.update(lightState, forceState);
 				view.render();
 				stats.update();
 			}

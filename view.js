@@ -7,9 +7,11 @@ Pin.View = Class.extend({
 
 	readyCallbacks: [],
 
-	// todo - think where this should go
-	leftButtonDown: false,
-	rightButtonDown: false,
+	switchState: [],
+	// special ids - don't want this colliding
+	SW_LEFT_FLIPPER: 	1000,
+	SW_RIGHT_FLIPPER: 	1001,
+	SW_PLUNGER_BUTTON: 	1002,
 
 	camera: undefined,
 	scene: undefined,
@@ -113,6 +115,65 @@ Pin.View = Class.extend({
 				callback();
 			})
 			self.readyCallbacks = [];
+		});
+	},
+
+	getSwitchState: function() {
+		return this.switchState;
+	},
+
+	preUpdate: function() {
+		var self = this;
+
+		_.each(this.switchBodies, function(switchBody, switchIndex) {
+			if(switchBody) {
+				self.switchState[switchIndex] = 0;
+			}
+		});
+
+		var dispatcher = this.dynamicsWorld.getDispatcher();
+		for(var i = 0, n = dispatcher.getNumManifolds(); i < n; ++i) {
+			var manifold = dispatcher.getManifoldByIndexInternal(i);
+
+			// A ghost object
+			if(manifold.getBody1().getCollisionFlags() == 4) {
+				var switchIndex = this.getSwitchFromBodyPtr(manifold.getBody1().ptr);
+				if(switchIndex) {
+					console.log("switch body - " + switchIndex);
+
+					self.switchState[switchIndex] = 1;
+
+					// todo - how to do this?
+					/*var ballBody = _.find(this.ballBodies, function(ballBody) {
+						return (manifold.getBody0().ptr == ballBody.ptr);
+					});
+
+					// automatically map switch -> force
+					if(ballBody) {
+						this.activateForce(switchIndex, ballBody);
+					}*/
+				}
+			}
+		}
+	},
+
+	update: function(lightState, forceState) {
+		var delta = this.clock.getDelta();
+		THREE.AnimationHandler.update(delta);
+
+		var self = this;
+		_.each(forceState, function(forceValue, forceId) {
+			if(forceValue) {
+				self.activateForceOnBall(forceId);
+			}
+		});
+
+		this.processFlipper(this.flipperBodies[0], this.switchState[this.SW_LEFT_FLIPPER],   1);
+		this.processFlipper(this.flipperBodies[1], this.switchState[this.SW_RIGHT_FLIPPER], -1);
+
+		this.dynamicsWorld.stepSimulation(delta, 2);
+		_.each(this.physicsMeshCallbacks, function(callback) {
+			callback();
 		});
 	},
 
@@ -453,6 +514,8 @@ Pin.View = Class.extend({
 	    transform.setIdentity();
 	    transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
+	    mesh.visible = false;
+
 	    var body = new Ammo.btGhostObject();
 	    body.setCollisionShape(shape);
 	    body.setWorldTransform(transform);
@@ -599,34 +662,26 @@ Pin.View = Class.extend({
 				self.resetBallPositions();
 			}
 			else if(evt.keyCode == 65) { // 'A'
-				self.leftButtonDown = false;
+				self.switchState[self.SW_LEFT_FLIPPER] = 0;
 			}
 			else if(evt.keyCode == 76) { // 'L'
-				self.rightButtonDown = false;
+				self.switchState[self.SW_RIGHT_FLIPPER] = 0;
 			}
 			else if(evt.keyCode == 70) { // 'F'
-				// 0 is the shooter lane one
-				var forceId = 0;
-				_.find(self.ballBodies, function(ballBody) {
-					var ballPosition = ballBody.getWorldTransform().getOrigin();
-					var forcePosition = self.forceData[forceId].position;
-
-					var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
-					console.log(d);
-					if(d < 0.1) {
-						self.activateForce(forceId, ballBody);
-					}
-				});
+				self.switchState[self.SW_PLUNGER_BUTTON] = 0;
 			}
 		}, false );
 
 		window.addEventListener( 'keydown', function(evt) {
 			//console.log(evt.keyCode);
 			if(evt.keyCode == 65) { // 'A'
-				self.leftButtonDown = true;
+				self.switchState[self.SW_LEFT_FLIPPER] = 1;
 			}
 			else if(evt.keyCode == 76) { // 'L'
-				self.rightButtonDown = true;
+				self.switchState[self.SW_RIGHT_FLIPPER] = 1;
+			}
+			else if(evt.keyCode == 70) {  // 'F'
+				self.switchState[self.SW_PLUNGER_BUTTON] = 1;
 			}
 		});
 	},
@@ -706,44 +761,27 @@ Pin.View = Class.extend({
 		}
 	},
 
+	activateForceOnBall: function(forceId) {
+		if(this.forceData[forceId]) {
+			var self = this;
+			_.find(this.ballBodies, function(ballBody) {
+				var ballPosition = ballBody.getWorldTransform().getOrigin();
+				var forcePosition = self.forceData[forceId].position;
+
+				var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
+				console.log(d);
+				if(d < 0.1) {
+					self.activateForce(forceId, ballBody);
+				}
+			});
+		}
+	},
+
 	getSwitchFromBodyPtr: function(bodyPtr) {
 		return this.switchToBodyPtrLookup[bodyPtr];
 	},
 
 	render: function() {
-		var delta = this.clock.getDelta();
-		THREE.AnimationHandler.update(delta);
-
-		this.processFlipper(this.flipperBodies[0], this.leftButtonDown, 1);
-		this.processFlipper(this.flipperBodies[1], this.rightButtonDown, -1);
-
-		this.dynamicsWorld.stepSimulation(delta, 2);
-		_.each(this.physicsMeshCallbacks, function(callback) {
-			callback();
-		});
-
-		var dispatcher = this.dynamicsWorld.getDispatcher();
-		for(var i = 0, n = dispatcher.getNumManifolds(); i < n; ++i) {
-			var manifold = dispatcher.getManifoldByIndexInternal(i);
-
-			// A ghost object
-			if(manifold.getBody1().getCollisionFlags() == 4) {
-				var switchIndex = this.getSwitchFromBodyPtr(manifold.getBody1().ptr);
-				if(switchIndex) {
-					console.log("switch body - " + switchIndex);
-
-					var ballBody = _.find(this.ballBodies, function(ballBody) {
-						return (manifold.getBody0().ptr == ballBody.ptr);
-					});
-
-					// automatically map switch -> force
-					if(ballBody) {
-						this.activateForce(switchIndex, ballBody);
-					}
-				}
-			}
-		}
-
 		if(this.ssaoEnabled) {
 			// for post processing
 			this.scene.overrideMaterial = this.depthMaterial;
