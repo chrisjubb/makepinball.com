@@ -7,10 +7,7 @@ Pin.View = Class.extend({
 
 	switchState: [],
 	flipperData: [],
-	// special ids - don't want this colliding
-	SW_LEFT_FLIPPER: 	1000,
-	SW_RIGHT_FLIPPER: 	1001,
-	SW_PLUNGER_BUTTON: 	1002,
+	inputMapping: [],
 
 	camera: undefined,
 	scene: undefined,
@@ -122,6 +119,10 @@ Pin.View = Class.extend({
 
 	setFlipperData: function(flipperData) {
 		this.flipperData = flipperData;
+	},
+
+	setInputMapping: function(inputMapping) {
+		this.inputMapping = inputMapping;
 	},
 
 	preUpdate: function() {
@@ -615,6 +616,15 @@ Pin.View = Class.extend({
 		});
 	},
 
+	handleInput: function(keyCode, state) {
+		var self = this;
+		_.each(this.inputMapping, function(inputData) {
+			if(keyCode == inputData.keyCode) {
+				self.switchState[inputData.switchIndex] = state;
+			}
+		});
+	},
+
 	initScene: function() {
 
 		var container = getCanvasContainer();
@@ -676,28 +686,13 @@ Pin.View = Class.extend({
 			if(evt.keyCode == 82) { // R
 				self.resetBallPositions();
 			}
-			else if(evt.keyCode == 65) { // 'A'
-				self.switchState[self.SW_LEFT_FLIPPER] = 0;
-			}
-			else if(evt.keyCode == 76) { // 'L'
-				self.switchState[self.SW_RIGHT_FLIPPER] = 0;
-			}
-			else if(evt.keyCode == 70) { // 'F'
-				self.switchState[self.SW_PLUNGER_BUTTON] = 0;
-			}
+
+			self.handleInput(evt.keyCode, 0);
 		}, false );
 
 		window.addEventListener( 'keydown', function(evt) {
 			//console.log(evt.keyCode);
-			if(evt.keyCode == 65) { // 'A'
-				self.switchState[self.SW_LEFT_FLIPPER] = 1;
-			}
-			else if(evt.keyCode == 76) { // 'L'
-				self.switchState[self.SW_RIGHT_FLIPPER] = 1;
-			}
-			else if(evt.keyCode == 70) {  // 'F'
-				self.switchState[self.SW_PLUNGER_BUTTON] = 1;
-			}
+			self.handleInput(evt.keyCode, 1);
 		});
 	},
 

@@ -2,6 +2,11 @@ var Pin = Pin || {};
 
 Pin.Game = Class.extend({
 
+	// special ids - don't want this colliding
+	SW_LEFT_FLIPPER: 	1000,
+	SW_RIGHT_FLIPPER: 	1001,
+	SW_PLUNGER_BUTTON: 	1002,
+
 	lightState: [],
 	forceState: [],
 	forceFromSwitchState: [],
@@ -29,6 +34,14 @@ Pin.Game = Class.extend({
 		return [
 			this.constructFlipperData(0, 1000, 1),
 			this.constructFlipperData(1, 1001, -1)
+		];
+	},
+
+	getInputMapping: function() {
+		return [
+			{ keyCode: 65, switchIndex: this.SW_LEFT_FLIPPER },		// 'A'
+			{ keyCode: 76, switchIndex: this.SW_RIGHT_FLIPPER },	// 'L'
+			{ keyCode: 70, switchIndex: this.SW_PLUNGER_BUTTON },	// 'F'
 		];
 	},
 
