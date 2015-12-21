@@ -138,8 +138,6 @@ Pin.View = Class.extend({
 			if(manifold.getBody1().getCollisionFlags() == 4) {
 				var switchIndex = this.getSwitchFromBodyPtr(manifold.getBody1().ptr);
 				if(switchIndex) {
-					console.log("switch body - " + switchIndex);
-
 					self.switchState[switchIndex] = 1;
 
 					var ballBody = _.find(this.ballBodies, function(ballBody) {
