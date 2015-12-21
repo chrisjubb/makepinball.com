@@ -156,10 +156,8 @@
 				vec3 lightDir = normalize( vViewPosition );
 
 				float dotProduct = max( dot( normal, lightDir ), 0.0 ) + 0.2;
-
-				// gl_FragColor = vec4( mix( tColor.rgb, tColor2.rgb, tColor2.a ), 1.0 ) * dotProduct;
-				gl_FragColor.rgb = (backgroundColor.rgb * (1.0 - overlayColor.a)) +
-									(overlayColor.rgb * (overlayColor.a));
+				gl_FragColor.rgb = ((backgroundColor.rgb * (1.0 - overlayColor.a)) +
+									(overlayColor.rgb * (overlayColor.a))) * dotProduct;
 				gl_FragColor.a = backgroundColor.a + overlayColor.a;
 			}
 		</script>
