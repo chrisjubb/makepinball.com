@@ -9,6 +9,9 @@ Pin.View = Class.extend({
 	flipperData: [],
 	inputMapping: [],
 
+	lightVertexShader: undefined,
+	lightFragmentShader: undefined,
+
 	camera: undefined,
 	scene: undefined,
 	renderer: undefined,
@@ -39,6 +42,7 @@ Pin.View = Class.extend({
 	flipperConstraints: [],
 	switchBodies: [],
 	forceData: [],
+	lightObjects: [],
 
 	switchToBodyPtrLookup: {}, // Ammo body ptr -> switch inde,
 
@@ -115,6 +119,11 @@ Pin.View = Class.extend({
 
 	getSwitchState: function() {
 		return this.switchState;
+	},
+
+	setLightShader: function(vertexShaderId, fragmentShaderId) {
+		this.lightVertexShader		= document.getElementById(vertexShaderId).textContent;
+		this.lightFragmentShader	= document.getElementById(fragmentShaderId).textContent;
 	},
 
 	setFlipperData: function(flipperData) {
@@ -242,6 +251,7 @@ Pin.View = Class.extend({
 	    this.flipperConstraints = [];
 	    this.switchBodies = [];
 	    this.forceData = [];
+	    this.lightObjects = [];
 
 	    var planes = [];
 		var triangleMeshes = [];
@@ -249,6 +259,7 @@ Pin.View = Class.extend({
 		var flippers = [];
 		var switches = [];
 		var forces = [];
+		var lights = [];
 
 		var self = this;
 		this.dae.traverse(function(child) {
@@ -279,6 +290,11 @@ Pin.View = Class.extend({
 			var forceObject = self.getNameIndex(child, "FORCE_")
 			if(forceObject) {
 				forces[forceObject.id] = forceObject.child;
+			}
+
+			var lightObject = self.getNameIndex(child, "LIGHT_");
+			if(lightObject) {
+				lights[lightObject.id] = lightObject.child;
 			}
 		} );
 
@@ -316,6 +332,12 @@ Pin.View = Class.extend({
 			console.log("[!] Adding force");
 			if(child) {
 				self.forceData[forceIndex] = self.addForce(child, forceIndex);
+			}
+		});
+
+		_.each(lights, function(child, lightIndex) {
+			if(child) {
+				self.lightObjects[lightIndex] = self.addLight(child, lightIndex);
 			}
 		});
 
@@ -567,6 +589,29 @@ Pin.View = Class.extend({
 		};
 
 		return forceData;
+	},
+
+	addLight: function(original, lightIndex) {
+		var self = this;
+		_.each(original.children, function(child) {
+			if(child.material.specularMap) {
+				var uniforms = {
+					overlayTexture:  	{ type: "t", value: child.material.map },
+					backgroundTexture:  { type: "t", value: child.material.specularMap }
+				};
+
+				var material = new THREE.ShaderMaterial({
+					uniforms        : uniforms,
+					vertexShader    : self.lightVertexShader,
+					fragmentShader  : self.lightFragmentShader
+				});
+
+				child.material = material;
+				child.material.needsUpdate = true;
+			}
+		});
+
+		return original;
 	},
 
 	addPhysicsCallback: function(object, body, transform, limitsData) {

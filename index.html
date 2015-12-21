@@ -92,7 +92,7 @@
 			</div>
 		</div>
 
-		<script src="lib/three.min.js"></script>
+		<script src="lib/three.js"></script>
 		<script src="lib/ammo.js"></script>
 		<script src="lib/underscore-min.js"></script>
 		<script src="lib/jquery.js"></script>
@@ -122,6 +122,48 @@
 		<script src="game.js"></script>
 		<script src="view.js"></script>
 
+		<script id="light_vertex_shader" type="x-shader/x-vertex">
+			varying vec2 vUv;
+			varying vec3 vNormal;
+			varying vec3 vViewPosition;
+
+			void main() {
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+				vUv = uv;
+				vNormal = normalize( normalMatrix * normal );
+				vViewPosition = -mvPosition.xyz;
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			}
+		</script>
+
+		<script id="light_fragment_shader" type="x-shader/x-fragment">
+			uniform sampler2D backgroundTexture;
+			uniform sampler2D overlayTexture;
+
+			varying vec2 vUv;
+			varying vec3 vNormal;
+			varying vec3 vViewPosition;
+
+			void main() {
+				vec4 backgroundColor = texture2D( backgroundTexture, vUv );
+				vec4 overlayColor = texture2D( overlayTexture, vUv );
+
+				// hack in a fake pointlight at camera location, plus ambient
+				vec3 normal = normalize( vNormal );
+				vec3 lightDir = normalize( vViewPosition );
+
+				float dotProduct = max( dot( normal, lightDir ), 0.0 ) + 0.2;
+
+				// gl_FragColor = vec4( mix( tColor.rgb, tColor2.rgb, tColor2.a ), 1.0 ) * dotProduct;
+				gl_FragColor.rgb = (backgroundColor.rgb * (1.0 - overlayColor.a)) +
+									(overlayColor.rgb * (overlayColor.a));
+				gl_FragColor.a = backgroundColor.a + overlayColor.a;
+			}
+		</script>
+
 		<script>
 
 			if(!Detector.webgl) Detector.addGetWebGLMessage();
@@ -129,6 +171,7 @@
 			var game = new Pin.Game();
 			var view = new Pin.View();
 
+			view.setLightShader("light_vertex_shader", "light_fragment_shader");
 			view.setFlipperData(game.getFlipperData());
 			view.setInputMapping(game.getInputMapping());
 

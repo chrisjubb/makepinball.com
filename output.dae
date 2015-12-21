@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-21T18:47:23</created>
-    <modified>2015-12-21T18:47:23</modified>
+    <created>2015-12-21T21:24:54</created>
+    <modified>2015-12-21T21:24:54</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -99,16 +99,42 @@
     </light>
   </library_lights>
   <library_images>
+    <image id="circle_insert_png" name="circle_insert_png">
+      <init_from>circle_insert.png</init_from>
+    </image>
+    <image id="circle_insert_100_png" name="circle_insert_100_png">
+      <init_from>circle_insert_100.png</init_from>
+    </image>
+    <image id="circle_insert_500_png" name="circle_insert_500_png">
+      <init_from>circle_insert_500.png</init_from>
+    </image>
     <image id="birch_wood_png" name="birch_wood_png">
       <init_from>birch_wood.png</init_from>
-    </image>
-    <image id="insert_circle_png" name="insert_circle_png">
-      <init_from>insert_circle.png</init_from>
     </image>
   </library_images>
   <library_effects>
     <effect id="circle_insert_100-effect">
       <profile_COMMON>
+        <newparam sid="circle_insert_100_png-surface">
+          <surface type="2D">
+            <init_from>circle_insert_100_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="circle_insert_100_png-sampler">
+          <sampler2D>
+            <source>circle_insert_100_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="circle_insert_png-surface">
+          <surface type="2D">
+            <init_from>circle_insert_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="circle_insert_png-sampler">
+          <sampler2D>
+            <source>circle_insert_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -118,10 +144,10 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <texture texture="circle_insert_100_png-sampler" texcoord="UVMap"/>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
+              <texture texture="circle_insert_png-sampler" texcoord="UVMap"/>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
@@ -135,6 +161,26 @@
     </effect>
     <effect id="circle_insert_500-effect">
       <profile_COMMON>
+        <newparam sid="circle_insert_500_png-surface">
+          <surface type="2D">
+            <init_from>circle_insert_500_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="circle_insert_500_png-sampler">
+          <sampler2D>
+            <source>circle_insert_500_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="circle_insert_png-surface">
+          <surface type="2D">
+            <init_from>circle_insert_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="circle_insert_png-sampler">
+          <sampler2D>
+            <source>circle_insert_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -144,10 +190,10 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <texture texture="circle_insert_500_png-sampler" texcoord="UVMap"/>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
+              <texture texture="circle_insert_png-sampler" texcoord="UVMap"/>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
