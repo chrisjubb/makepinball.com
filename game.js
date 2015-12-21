@@ -19,6 +19,19 @@ Pin.Game = Class.extend({
 		this.forceFromSwitchState[4] = switchState[4];
 	},
 
+	constructFlipperData: function(flipperBodyIndex, switchIndex, directionMultiplier) {
+		return {	flipperBodyIndex: flipperBodyIndex,
+					switchIndex: switchIndex,
+					directionMultiplier: directionMultiplier };
+	},
+
+	getFlipperData: function() {
+		return [
+			this.constructFlipperData(0, 1000, 1),
+			this.constructFlipperData(1, 1001, -1)
+		];
+	},
+
 	getLightState: function() {
 		return this.lightState;
 	},

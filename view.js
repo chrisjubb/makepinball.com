@@ -6,6 +6,7 @@ Pin.View = Class.extend({
 	readyCallbacks: [],
 
 	switchState: [],
+	flipperData: [],
 	// special ids - don't want this colliding
 	SW_LEFT_FLIPPER: 	1000,
 	SW_RIGHT_FLIPPER: 	1001,
@@ -119,6 +120,10 @@ Pin.View = Class.extend({
 		return this.switchState;
 	},
 
+	setFlipperData: function(flipperData) {
+		this.flipperData = flipperData;
+	},
+
 	preUpdate: function() {
 		var self = this;
 
@@ -175,8 +180,11 @@ Pin.View = Class.extend({
 			}
 		});
 
-		this.processFlipper(this.flipperBodies[0], this.switchState[this.SW_LEFT_FLIPPER],   1);
-		this.processFlipper(this.flipperBodies[1], this.switchState[this.SW_RIGHT_FLIPPER], -1);
+		_.each(this.flipperData, function(flipperData) {
+			self.processFlipper(self.flipperBodies[flipperData.flipperBodyIndex],
+								self.switchState[flipperData.switchIndex],
+								flipperData.directionMultiplier);
+		});
 
 		this.dynamicsWorld.stepSimulation(delta, 2);
 		_.each(this.physicsMeshCallbacks, function(callback) {
@@ -550,7 +558,7 @@ Pin.View = Class.extend({
 		forceVector = forceVector.applyQuaternion(forceQuat);
 		forceVector = forceVector.multiplyScalar(forceValue);
 
-		console.log(Pin.Utils.dpos(original.position) + " - " + Pin.Utils.dpos(forceVector));
+		//console.log(Pin.Utils.dpos(original.position) + " - " + Pin.Utils.dpos(forceVector));
 
 		var forceData = {
 			position: original.position,
@@ -776,7 +784,6 @@ Pin.View = Class.extend({
 				var forcePosition = self.forceData[forceId].position;
 
 				var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
-				console.log(d);
 				if(d < 0.1) {
 					self.activateForce(forceId, ballBody);
 				}
