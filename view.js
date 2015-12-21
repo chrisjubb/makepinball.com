@@ -596,8 +596,9 @@ Pin.View = Class.extend({
 		_.each(original.children, function(child) {
 			if(child.material.specularMap) {
 				var uniforms = {
-					overlayTexture:  	{ type: "t", value: child.material.map },
-					backgroundTexture:  { type: "t", value: child.material.specularMap }
+					overlayTexture:  	{ type: "t",  value: child.material.map },
+					backgroundTexture:  { type: "t",  value: child.material.specularMap },
+					backgroundTint: 	{ type: "v4", value: new THREE.Vector4(1,1,1,1) }
 				};
 
 				var material = new THREE.ShaderMaterial({

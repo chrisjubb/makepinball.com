@@ -135,13 +135,14 @@
 				vViewPosition = -mvPosition.xyz;
 
 				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-
 			}
 		</script>
 
 		<script id="light_fragment_shader" type="x-shader/x-fragment">
 			uniform sampler2D backgroundTexture;
 			uniform sampler2D overlayTexture;
+
+			uniform vec4 backgroundTint;
 
 			varying vec2 vUv;
 			varying vec3 vNormal;
@@ -156,9 +157,9 @@
 				vec3 lightDir = normalize( vViewPosition );
 
 				float dotProduct = max( dot( normal, lightDir ), 0.0 ) + 0.2;
-				gl_FragColor.rgb = ((backgroundColor.rgb * (1.0 - overlayColor.a)) +
+				gl_FragColor.rgb = ((backgroundColor.rgb * backgroundTint.rgb * (1.0 - overlayColor.a)) +
 									(overlayColor.rgb * (overlayColor.a))) * dotProduct;
-				gl_FragColor.a = backgroundColor.a + overlayColor.a;
+				gl_FragColor.a = (backgroundColor.a * backgroundTint.a) + overlayColor.a;
 			}
 		</script>
 
