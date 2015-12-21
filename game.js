@@ -10,6 +10,7 @@ Pin.Game = Class.extend({
 	},
 
 	update: function(switchState) {
+		// todo - need to get these magic numbers from the view
 		this.forceState[0] = switchState[1002];
 
 		// we want these to fire based on which bodies are active in the switch area

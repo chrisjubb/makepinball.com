@@ -542,7 +542,7 @@ Pin.View = Class.extend({
 		original.visible = false;
 
 		original.updateMatrixWorld();
-		var forceValue = 100.0; // todo // original.scale.x;
+		var forceValue = 100.0; // todo - need to specify a force here
 		if(forceIndex == 0) {
 			forceValue = 1000.0;
 		}
