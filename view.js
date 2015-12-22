@@ -2,6 +2,7 @@ var Pin = Pin || {};
 
 Pin.View = Class.extend({
 	clock: undefined,
+	deltaTime: undefined,
 
 	readyCallbacks: [],
 
@@ -137,6 +138,9 @@ Pin.View = Class.extend({
 	preUpdate: function() {
 		var self = this;
 
+		this.deltaTime = this.clock.getDelta();
+		THREE.AnimationHandler.update(this.deltaTime);
+
 		_.each(this.switchBodies, function(switchBody, switchIndex) {
 			if(switchBody) {
 				self.switchState[switchIndex] = 0;
@@ -169,9 +173,6 @@ Pin.View = Class.extend({
 	},
 
 	update: function(lightState, forceState, forceFromSwitchState) {
-		var delta = this.clock.getDelta();
-		THREE.AnimationHandler.update(delta);
-
 		var self = this;
 		_.each(forceState, function(forceValue, forceId) {
 			if(forceValue) {
@@ -196,7 +197,7 @@ Pin.View = Class.extend({
 								flipperData.directionMultiplier);
 		});
 
-		this.dynamicsWorld.stepSimulation(delta, 2);
+		this.dynamicsWorld.stepSimulation(this.deltaTime, 2);
 		_.each(this.physicsMeshCallbacks, function(callback) {
 			callback();
 		});
@@ -217,6 +218,10 @@ Pin.View = Class.extend({
 				}
 			}
 		});
+	},
+
+	getDeltaTime: function() {
+		return this.deltaTime;
 	},
 
 	getCanvasContainer: function() {

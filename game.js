@@ -18,13 +18,32 @@ Pin.Game = Class.extend({
 		}
 	},
 
-	update: function(switchState) {
+	update: function(switchState, delta) {
 		this.forceState[0] = switchState[this.SW_PLUNGER_BUTTON];
 
 		// we want these to fire based on which bodies are active in the switch area
 		this.forceFromSwitchState[2] = switchState[2];
 		this.forceFromSwitchState[3] = switchState[3];
 		this.forceFromSwitchState[4] = switchState[4];
+
+		_.each(this.lightState, function(lightData, lightIndex) {
+			if(lightData) {
+				if(switchState[2]) {
+					lightData.set(0,1,0,1);
+				}
+				else if(switchState[3]) {
+					lightData.set(0.6,0.6,1,1);
+				}
+				else if(switchState[4]) {
+					lightData.set(1,0,0,1);
+				}
+				else {
+					lightData.fadeOut();
+				}
+
+				lightData.update(delta);
+			}
+		});
 	},
 
 	constructFlipperData: function(flipperBodyIndex, switchIndex, directionMultiplier) {

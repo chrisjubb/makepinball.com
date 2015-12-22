@@ -214,7 +214,7 @@
 
 				view.preUpdate();
 				var switchState = view.getSwitchState();
-				game.update(switchState);
+				game.update(switchState, view.getDeltaTime());
 				var lightState = game.getLightState();
 				var forceState = game.getForceState();
 				var forceFromSwitchState = game.getForceFromSwitchState()
