@@ -38,5 +38,15 @@ Pin.Utils = {
 		var dataB = this.convertToVector3(b);
 
 		return dataA.distanceToSquared(dataB);
-	}
+	},
+
+	lerp: function (value1, value2, amount) {
+        amount = amount < 0 ? 0 : amount;
+        amount = amount > 1 ? 1 : amount;
+        return value1 + (value2 - value1) * amount;
+    },
+
+    sin01: function(value) {
+    	return (Math.sin(value) + 1.0) * 0.5;
+    }
 };

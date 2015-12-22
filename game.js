@@ -26,7 +26,8 @@ Pin.Game = Class.extend({
 		this.forceFromSwitchState[3] = switchState[3];
 		this.forceFromSwitchState[4] = switchState[4];
 
-		_.each(this.lightState, function(lightData, lightIndex) {
+		for(var i = 0; i < 4; ++i) {
+			var lightData = this.lightState[i];
 			if(lightData) {
 				if(switchState[2]) {
 					lightData.set(0,1,0,1);
@@ -40,9 +41,18 @@ Pin.Game = Class.extend({
 				else {
 					lightData.fadeOut();
 				}
-
-				lightData.update(delta);
 			}
+		}
+
+		for(var i = 4; i < 8; ++i) {
+			var lightData = this.lightState[i];
+			if(lightData) {
+				lightData.pulse(1,1,0, 1);
+			}
+		}
+
+		_.each(this.lightState, function(lightData) {
+			lightData.update(delta);
 		});
 	},
 
