@@ -30,6 +30,9 @@
 	{ "name": "flipperLimitsMin1", 			"type": "float", "min": -180, "max": 180, "step": 1 },
 	{ "name": "flipperLimitsMax1", 			"type": "float", "min": -180, "max": 180, "step": 1 },
 
+	{ "name": "flipperLimitsMin2", 			"type": "float", "min": -180, "max": 180, "step": 1 },
+	{ "name": "flipperLimitsMax2", 			"type": "float", "min": -180, "max": 180, "step": 1 },
+
 	{ "name": "flipperHingeX", 				"type": "float", "min": 0, "max": 360, "step": 1 },
 	{ "name": "flipperHingeY", 				"type": "float", "min": 0, "max": 360, "step": 1 },
 	{ "name": "flipperHingeZ", 				"type": "float", "min": 0, "max": 360, "step": 1 },

@@ -65,7 +65,8 @@ Pin.Game = Class.extend({
 	getFlipperData: function() {
 		return [
 			this.constructFlipperData(0, this.SW_LEFT_FLIPPER,   1),
-			this.constructFlipperData(1, this.SW_RIGHT_FLIPPER, -1)
+			this.constructFlipperData(1, this.SW_RIGHT_FLIPPER, -1),
+			this.constructFlipperData(2, this.SW_RIGHT_FLIPPER, -1)
 		];
 	},
 
