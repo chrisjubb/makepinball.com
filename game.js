@@ -44,7 +44,7 @@ Pin.Game = Class.extend({
 			}
 		}
 
-		for(var i = 4; i < 8; ++i) {
+		for(var i = 4; i < 9; ++i) {
 			var lightData = this.lightState[i];
 			if(lightData) {
 				lightData.pulse(1,1,0, 1);
