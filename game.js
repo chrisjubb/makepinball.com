@@ -7,11 +7,15 @@ Pin.Game = Class.extend({
 	SW_RIGHT_FLIPPER: 	1001,
 	SW_PLUNGER_BUTTON: 	1002,
 
+	numberOfLights: 64,
 	lightState: [],
 	forceState: [],
 	forceFromSwitchState: [],
 
 	init: function() {
+		for(var i = 0; i < this.numberOfLights; ++i) {
+			this.lightState.push(new Pin.Light());
+		}
 	},
 
 	update: function(switchState) {

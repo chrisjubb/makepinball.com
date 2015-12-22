@@ -201,17 +201,21 @@ Pin.View = Class.extend({
 			callback();
 		});
 
-		_.each(this.lightObjects, function(lightObject) {
-			_.each(lightObject.children, function(child) {
-
-				var lightColour = new THREE.Vector4(1,1,1,1);
-				lightColour.x = Math.max(0.5, (Math.sin(self.clock.elapsedTime * 6.0 + 0.00 + lightObject.position.x * 20.0) + 1.0) * 0.5);
-				lightColour.y = Math.max(0.5, (Math.sin(self.clock.elapsedTime * 5.0 + 0.75 + lightObject.position.y * 20.0) + 1.0) * 0.5);
-				lightColour.z = Math.max(0.5, (Math.sin(self.clock.elapsedTime * 4.0 + 1.25 + lightObject.position.z * 20.0) + 1.0) * 0.5);
-
-				child.material.uniforms.backgroundTint.value = lightColour;
-				child.material.needsUpdate = true;
-			});
+		_.each(lightState, function(lightData, lightIndex) {
+			if(lightData) {
+				var lightObject = self.lightObjects[lightIndex];
+				if(lightObject) {
+					_.each(lightObject.children, function(child) {
+						child.material.uniforms.backgroundTint.value.set(
+							lightData.r(),
+							lightData.g(),
+							lightData.b(),
+							lightData.a()
+						);
+						child.material.needsUpdate = true;
+					});
+				}
+			}
 		});
 	},
 
