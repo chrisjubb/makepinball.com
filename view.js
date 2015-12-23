@@ -277,6 +277,7 @@ Pin.View = Class.extend({
 
 	    var planes = [];
 		var triangleMeshes = [];
+		var triangleMeshesVisual = [];
 		var balls = [];
 		var flippers = [];
 		var switches = [];
@@ -293,6 +294,10 @@ Pin.View = Class.extend({
 
 			if(child.name.indexOf("P_") == 0) {
 				triangleMeshes.push(child);
+			}
+
+			if(child.name.indexOf("PV_") == 0) {
+				triangleMeshesVisual.push(child);
 			}
 
 			if(child.name.indexOf("BALL") == 0) {
@@ -328,6 +333,11 @@ Pin.View = Class.extend({
 		_.each(triangleMeshes, function(child) {
 			console.log("[!] Adding triangle mesh - " + child.name);
 			child.visible = false;
+			self.triangleMeshBodies.push(self.addTriangleMesh(child));
+		});
+
+		_.each(triangleMeshesVisual, function(child) {
+			console.log("[!] Adding triangle mesh with visuals - " + child.name);
 			self.triangleMeshBodies.push(self.addTriangleMesh(child));
 		});
 
@@ -700,10 +710,10 @@ Pin.View = Class.extend({
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera( 60, container.width() / container.height(), 0.1, 1000.0 );
-		this.camera.position.x = 5.4;
-		this.camera.position.y = 5.5;
-		this.camera.position.z = 6;
-		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, 1.25) );
+		this.camera.position.x = 5.6;
+		this.camera.position.y = 8.2;
+		this.camera.position.z = 2.5;
+		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, -0.2) );
 
 		// Add the COLLADA
 
