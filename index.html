@@ -160,7 +160,7 @@
 				float dotProduct = max( dot( normal, lightDir ), 0.0 ) + 0.2;
 				gl_FragColor.rgb = ((backgroundColor.rgb * backgroundTint.rgb * (1.0 - overlayColor.a)) +
 									(overlayColor.rgb * (overlayColor.a))) * dotProduct;
-				gl_FragColor.a = (backgroundColor.a * backgroundTint.a) + overlayColor.a;
+				gl_FragColor.a = backgroundColor.a;
 			}
 		</script>
 

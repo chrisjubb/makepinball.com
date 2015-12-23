@@ -640,6 +640,7 @@ Pin.View = Class.extend({
 				});
 
 				child.material = material;
+				child.material.transparent = true;
 				child.material.needsUpdate = true;
 			}
 		});
@@ -711,9 +712,9 @@ Pin.View = Class.extend({
 
 		this.camera = new THREE.PerspectiveCamera( 60, container.width() / container.height(), 0.1, 1000.0 );
 		this.camera.position.x = 5.6;
-		this.camera.position.y = 8.2;
-		this.camera.position.z = 2.5;
-		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, -0.2) );
+		this.camera.position.y = 7.2;
+		this.camera.position.z = 2.6;
+		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, 0.5) );
 
 		// Add the COLLADA
 
