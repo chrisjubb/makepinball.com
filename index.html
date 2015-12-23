@@ -217,8 +217,9 @@
 				game.update(switchState, view.getDeltaTime());
 				var lightState = game.getLightState();
 				var forceState = game.getForceState();
-				var forceFromSwitchState = game.getForceFromSwitchState()
-				view.update(lightState, forceState, forceFromSwitchState);
+				var forceFromSwitchState = game.getForceFromSwitchState();
+				var forceFromCenterAndSwitchState = game.getForceFromCenterAndSwitchState()
+				view.update(lightState, forceState, forceFromSwitchState, forceFromCenterAndSwitchState);
 				view.render();
 				stats.update();
 			}

@@ -33,6 +33,10 @@ Pin.Utils = {
 		}
 	},
 
+	convertToAmmoVector3: function(vec) {
+		return new Ammo.btVector3(vec.x, vec.y, vec.z);
+	},
+
 	distanceSq: function(a, b) {
 		var dataA = this.convertToVector3(a);
 		var dataB = this.convertToVector3(b);

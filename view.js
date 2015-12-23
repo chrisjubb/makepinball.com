@@ -172,7 +172,7 @@ Pin.View = Class.extend({
 		}
 	},
 
-	update: function(lightState, forceState, forceFromSwitchState) {
+	update: function(lightState, forceState, forceFromSwitchState, forceFromCenterAndSwitchState) {
 		var self = this;
 		_.each(forceState, function(forceValue, forceId) {
 			if(forceValue) {
@@ -185,7 +185,18 @@ Pin.View = Class.extend({
 				var ballBodies = self.switchActivatedByBodies[forceSwitchIndex];
 				if(ballBodies) {
 					_.each(ballBodies, function(ballBody) {
-						self.activateForce(forceSwitchIndex, ballBody);
+						self.activateForce(forceSwitchIndex, ballBody, false);
+					});
+				}
+			}
+		});
+
+		_.each(forceFromCenterAndSwitchState, function(forceValue, forceSwitchIndex) {
+			if(forceValue) {
+				var ballBodies = self.switchActivatedByBodies[forceSwitchIndex];
+				if(ballBodies) {
+					_.each(ballBodies, function(ballBody) {
+						self.activateForce(forceSwitchIndex, ballBody, true);
 					});
 				}
 			}
@@ -617,7 +628,8 @@ Pin.View = Class.extend({
 
 		var forceData = {
 			position: original.position,
-			forceVector: new Ammo.btVector3(forceVector.x, forceVector.y, forceVector.z)
+			forceVector: new Ammo.btVector3(forceVector.x, forceVector.y, forceVector.z),
+			force: forceValue
 		};
 
 		return forceData;
@@ -843,10 +855,24 @@ Pin.View = Class.extend({
 		}
 	},
 
-	activateForce: function(forceIndex, ballBody) {
+	activateForce: function(forceIndex, ballBody, applyFromCenterToBody) {
 		var associatedForce = this.forceData[forceIndex];
 		if(associatedForce) {
-			ballBody.applyForce(associatedForce.forceVector, associatedForce.position);
+			if(applyFromCenterToBody) {
+				// Want to apply it from the center of the force -> the ballBody.
+				var ballBodyPosition = Pin.Utils.convertToVector3(ballBody.getWorldTransform().getOrigin());
+				var newForceVector = ballBodyPosition.sub(associatedForce.position);
+				newForceVector.normalize();
+				newForceVector.multiplyScalar(associatedForce.force);
+
+				ballBody.applyForce(new Ammo.btVector3(newForceVector.x, newForceVector.y, newForceVector.z),
+									associatedForce.position);
+			}
+			else {
+				// Want to apply the force vector directly
+				ballBody.applyForce(associatedForce.forceVector,
+									associatedForce.position);
+			}
 		}
 	},
 

@@ -11,6 +11,7 @@ Pin.Game = Class.extend({
 	lightState: [],
 	forceState: [],
 	forceFromSwitchState: [],
+	forceFromCenterAndSwitchState: [],
 
 	init: function() {
 		for(var i = 0; i < this.numberOfLights; ++i) {
@@ -21,10 +22,15 @@ Pin.Game = Class.extend({
 	update: function(switchState, delta) {
 		this.forceState[0] = switchState[this.SW_PLUNGER_BUTTON];
 
-		// we want these to fire based on which bodies are active in the switch area
+		// we want these to fire based on which bodies are active in the switch area.
+		// this can be used for slingshots.
 		this.forceFromSwitchState[2] = switchState[2];
 		this.forceFromSwitchState[3] = switchState[3];
-		this.forceFromSwitchState[4] = switchState[4];
+
+		// we want this to fire based on the bodies active in the switch area
+		// AND we want it to do the force away from the center of the force.
+		// this can be used for pop bumpers.
+		this.forceFromCenterAndSwitchState[4] = switchState[4];
 
 		for(var i = 0; i < 4; ++i) {
 			var lightData = this.lightState[i];
@@ -88,6 +94,10 @@ Pin.Game = Class.extend({
 
 	getForceFromSwitchState: function() {
 		return this.forceFromSwitchState;
+	},
+
+	getForceFromCenterAndSwitchState: function() {
+		return this.forceFromCenterAndSwitchState;
 	}
 
 });
