@@ -28,14 +28,11 @@ Pin.Light = Class.extend({
 	FADE_PULSE: 3,
 
 	init: function() {
-		this.fadeState = this.FADE_NONE;
-		this._r = this._off_r;
-		this._g = this._off_g;
-		this._b = this._off_b;
-		this._a = this._off_a;
+		this.set(this._off_r, this._off_g, this._off_b, this._off_a);
 	},
 
 	set: function(r, g, b, a) {
+		this.fadeState = this.FADE_NONE;
 		this._r = r;
 		this._g = g;
 		this._b = b;

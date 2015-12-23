@@ -13,10 +13,29 @@ Pin.Game = Class.extend({
 	forceFromSwitchState: [],
 	forceFromCenterAndSwitchState: [],
 
+	targetBank0: undefined,
+	targetBank1: undefined,
+
 	init: function() {
 		for(var i = 0; i < this.numberOfLights; ++i) {
 			this.lightState.push(new Pin.Light());
 		}
+
+		var targetBankData0 = [];
+		for(var i = 0; i < 4; ++i) {
+			targetBankData0.push({ light: this.lightState[i], switchIndex: 10 + i });
+		}
+		this.targetBank0 = new Pin.TargetBank(targetBankData0);
+		this.targetBank0.setLitColour(1,1,0, 1);
+		this.targetBank0.pusle(1,1,0, 1);
+
+		var targetBankData1 = [];
+		for(var i = 4; i < 11; ++i) {
+			targetBankData1.push({ light: this.lightState[i], switchIndex: 10 + i });
+		}
+		this.targetBank1 = new Pin.TargetBank(targetBankData1);
+		this.targetBank1.setLitColour(1,0.6,0, 1);
+		this.targetBank1.pusle(1,0.6,0, 1);
 	},
 
 	update: function(switchState, delta) {
@@ -32,30 +51,9 @@ Pin.Game = Class.extend({
 		// this can be used for pop bumpers.
 		this.forceFromCenterAndSwitchState[4] = switchState[4];
 
-		for(var i = 0; i < 4; ++i) {
-			var lightData = this.lightState[i];
-			if(lightData) {
-				if(switchState[2]) {
-					lightData.set(0,1,0,1);
-				}
-				else if(switchState[3]) {
-					lightData.set(0.6,0.6,1,1);
-				}
-				else if(switchState[4]) {
-					lightData.set(1,0,0,1);
-				}
-				else {
-					lightData.fadeOut();
-				}
-			}
-		}
-
-		for(var i = 4; i < 11; ++i) {
-			var lightData = this.lightState[i];
-			if(lightData) {
-				lightData.pulse(1,1,0, 1);
-			}
-		}
+		// update target banks
+		this.targetBank0.update(switchState);
+		this.targetBank1.update(switchState);
 
 		_.each(this.lightState, function(lightData) {
 			lightData.update(delta);
