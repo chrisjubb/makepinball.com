@@ -3,9 +3,9 @@ var Pin = Pin || {};
 Pin.Game = Class.extend({
 
 	// special ids - don't want this colliding
-	SW_LEFT_FLIPPER: 	1000,
-	SW_RIGHT_FLIPPER: 	1001,
-	SW_PLUNGER_BUTTON: 	1002,
+	SW_LEFT_FLIPPER: 	100,
+	SW_RIGHT_FLIPPER: 	101,
+	SW_PLUNGER_BUTTON: 	102,
 
 	numberOfLights: 64,
 	lightState: [],

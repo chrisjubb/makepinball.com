@@ -18,16 +18,29 @@ Pin.Light = Class.extend({
 	_destination_a: 1.0,
 
 	fadeState: undefined,
+
 	fadeSpeed: undefined,
+
 	pulseTimer: undefined,
+
+	flashSpeed: undefined,
+	flashTimer: undefined,
+
 	defaultFadeDuration: 0.25,
 	defaultPulseDuration: 0.15,
+	defaultFlashDuration: 0.2,
+
 	FADE_NONE: 0,
 	FADE_OUT: 1,
 	FADE_IN: 2,
 	FADE_PULSE: 3,
+	FLASH: 4,
 
 	init: function() {
+		this.reset();
+	},
+
+	reset: function() {
 		this.set(this._off_r, this._off_g, this._off_b, this._off_a);
 	},
 
@@ -98,6 +111,26 @@ Pin.Light = Class.extend({
 		this._destination_a = a;
 	},
 
+	flash: function(r, g, b, a, flashDuration) {
+		if(this.fadeState == this.FLASH) {
+			// no need
+			return;
+		}
+
+		if(!flashDuration) {
+			flashDuration = this.defaultFlashDuration;
+		}
+
+		this.flashSpeed = 1.0 / (flashDuration);
+		this.fadeState = this.FLASH;
+		this.flashTimer = 0.0;
+
+		this._destination_r = r;
+		this._destination_g = g;
+		this._destination_b = b;
+		this._destination_a = a;
+	},
+
 	atOffState: function() {
 		return (this._r == this._off_r) &&
 			   (this._g == this._off_g) &&
@@ -125,15 +158,22 @@ Pin.Light = Class.extend({
 
 			this.pulseTimer += delta * this.fadeSpeed;
 		}
+		else if(this.fadeState == this.FLASH) {
+			var timerInt = Math.floor(this.flashTimer);
+			var timerFrac = this.flashTimer - timerInt;
+			if(timerFrac < 0.5) {
+				this._r = this._destination_r;
+				this._g = this._destination_g;
+				this._b = this._destination_b;
+				this._a = this._destination_a;
+			}
+			else {
+				this._r = this._off_r;
+				this._g = this._off_g;
+				this._b = this._off_b;
+				this._a = this._off_a;
+			}
+			this.flashTimer += delta * this.flashSpeed;
+		}
 	}
 });
-
-
-/*
-
-var lightColour = new THREE.Vector4(1,1,1,1);
-lightColour.x = Math.max(0.5, (Math.sin(self.clock.elapsedTime * 6.0 + 0.00 + lightObject.position.x * 20.0) + 1.0) * 0.5);
-lightColour.y = Math.max(0.5, (Math.sin(self.clock.elapsedTime * 5.0 + 0.75 + lightObject.position.y * 20.0) + 1.0) * 0.5);
-lightColour.z = Math.max(0.5, (Math.sin(self.clock.elapsedTime * 4.0 + 1.25 + lightObject.position.z * 20.0) + 1.0) * 0.5);
-
-*/
