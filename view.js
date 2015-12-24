@@ -717,7 +717,7 @@ Pin.View = Class.extend({
 			var forceVector = force.forceVector;
 
 			var offsetVector = position.clone();
-		    offsetVector.add(new THREE.Vector3(forceVector.x(), forceVector.y(), forceVector.z()));
+		    offsetVector.add(Pin.Utils.convertToVector3(forceVector));
 
 		    var geometry = new THREE.Geometry();
 		    geometry.vertices.push(position.clone());
