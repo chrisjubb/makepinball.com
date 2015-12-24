@@ -45,7 +45,8 @@ Pin.View = Class.extend({
 	forceData: [],
 	lightObjects: [],
 
-	switchToBodyPtrLookup: {}, // Ammo body ptr -> switch inde,
+	switchToBodyPtrLookup: {}, // Ammo body ptr -> switch index.
+	switchOrientationVectors: [], // switch index -> Ammo.btVector3 of the switch orientation.
 
 	groupPlane: 1,
 	groupTriangleMesh: 2,
@@ -166,7 +167,16 @@ Pin.View = Class.extend({
 					if(self.switchActivatedByBodies[switchIndex] == undefined) {
 						self.switchActivatedByBodies[switchIndex] = [];
 					}
-					self.switchActivatedByBodies[switchIndex].push(ballBody);
+					var velocity = ballBody.getLinearVelocity().length();
+					var switchVector = self.switchOrientationVectors[switchIndex];
+					var velocityNormalized = new Ammo.btVector3(ballBody.getLinearVelocity().x(),
+																ballBody.getLinearVelocity().y(),
+																ballBody.getLinearVelocity().z());
+					velocityNormalized.normalize();
+					var dotProduct = velocityNormalized.dot(switchVector);
+					self.switchActivatedByBodies[switchIndex].push( {body: ballBody,
+																	 velocity: velocity,
+																	 dotProduct: dotProduct });
 				}
 			}
 		}
@@ -182,10 +192,10 @@ Pin.View = Class.extend({
 
 		_.each(forceFromSwitchState, function(forceValue, forceSwitchIndex) {
 			if(forceValue) {
-				var ballBodies = self.switchActivatedByBodies[forceSwitchIndex];
-				if(ballBodies) {
-					_.each(ballBodies, function(ballBody) {
-						self.activateForce(forceSwitchIndex, ballBody, false);
+				var bodyData = self.switchActivatedByBodies[forceSwitchIndex];
+				if(bodyData) {
+					_.each(bodyData, function(bodyDataItem) {
+						self.activateForce(forceSwitchIndex, bodyDataItem.body, false);
 					});
 				}
 			}
@@ -193,10 +203,10 @@ Pin.View = Class.extend({
 
 		_.each(forceFromCenterAndSwitchState, function(forceValue, forceSwitchIndex) {
 			if(forceValue) {
-				var ballBodies = self.switchActivatedByBodies[forceSwitchIndex];
-				if(ballBodies) {
-					_.each(ballBodies, function(ballBody) {
-						self.activateForce(forceSwitchIndex, ballBody, true);
+				var bodyData = self.switchActivatedByBodies[forceSwitchIndex];
+				if(bodyData) {
+					_.each(bodyData, function(bodyDataItem) {
+						self.activateForce(forceSwitchIndex, bodyDataItem.body, true);
 					});
 				}
 			}
@@ -606,6 +616,12 @@ Pin.View = Class.extend({
 	    body.activate();
 
 	    this.switchToBodyPtrLookup[body.ptr] = switchIndex;
+	    var switchVector = new THREE.Vector3(0, 0, 1);
+		switchVector = switchVector.applyQuaternion(rot);
+		this.switchOrientationVectors[switchIndex] = new Ammo.btVector3(
+															switchVector.x,
+															switchVector.y,
+															switchVector.z);
 
 	    return body;
 	},
@@ -684,8 +700,12 @@ Pin.View = Class.extend({
 	},
 
 	addDebugToScene: function() {
-		var material = new THREE.LineBasicMaterial({
+		var materialGreen = new THREE.LineBasicMaterial({
 	        color: 0x00ff00
+	    });
+
+	    var materialPurple = new THREE.LineBasicMaterial({
+	        color: 0xff00ff
 	    });
 
 		var self = this;
@@ -702,8 +722,24 @@ Pin.View = Class.extend({
 		    var geometry = new THREE.Geometry();
 		    geometry.vertices.push(position.clone());
 		    geometry.vertices.push(offsetVector);
-		    var line = new THREE.Line(geometry, material);
+		    var line = new THREE.Line(geometry, materialGreen);
 		    self.scene.add(line);
+		});
+
+		_.each(this.switchBodies, function(switchBody, switchIndex) {
+			if(switchBody) {
+				var switchVector = self.switchOrientationVectors[switchIndex];
+				var switchPosition = Pin.Utils.convertToVector3(switchBody.getWorldTransform().getOrigin());
+
+				var switchVectorBig = Pin.Utils.convertToVector3(switchVector).multiplyScalar(2);
+				var switchPositionEnd = switchPosition.clone().add(switchVectorBig);
+
+				var geometry = new THREE.Geometry();
+			    geometry.vertices.push(switchPosition.clone());
+			    geometry.vertices.push(switchPositionEnd);
+			    var line = new THREE.Line(geometry, materialPurple);
+			    self.scene.add(line);
+			}
 		});
 	},
 
