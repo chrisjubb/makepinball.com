@@ -100,6 +100,16 @@ Pin.Game = Class.extend({
 		];
 	},
 
+	getForceSwitchData: function() {
+		var forceSwitchData = [];
+		_.each(this.targetBankList0, function(item) {
+			forceSwitchData[item.s] = {	forceRequired: 5.0,
+										minDotProduct: 0.6 };
+		});
+
+		return forceSwitchData;
+	},
+
 	getLightState: function() {
 		return this.lightState;
 	},

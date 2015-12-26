@@ -9,6 +9,7 @@ Pin.View = Class.extend({
 	switchState: [],
 	flipperData: [],
 	inputMapping: [],
+	forceSwitchData: [],
 
 	lightVertexShader: undefined,
 	lightFragmentShader: undefined,
@@ -136,6 +137,10 @@ Pin.View = Class.extend({
 		this.inputMapping = inputMapping;
 	},
 
+	setForceSwitchData: function(forceSwitchData) {
+		this.forceSwitchData = forceSwitchData;
+	},
+
 	preUpdate: function() {
 		var self = this;
 
@@ -158,7 +163,7 @@ Pin.View = Class.extend({
 			if(manifold.getBody1().getCollisionFlags() == 4) {
 				var switchIndex = this.getSwitchFromBodyPtr(manifold.getBody1().ptr);
 				if(switchIndex) {
-					self.switchState[switchIndex] = 1;
+					var activateSwitch = true;
 
 					var ballBody = _.find(this.ballBodies, function(ballBody) {
 						return (manifold.getBody0().ptr == ballBody.ptr);
@@ -177,6 +182,21 @@ Pin.View = Class.extend({
 					self.switchActivatedByBodies[switchIndex].push( {body: ballBody,
 																	 velocity: velocity,
 																	 dotProduct: dotProduct });
+
+					// if there is a force switch data associated - check it's still valid
+					var forceSwitchDataItem = self.forceSwitchData[switchIndex];
+					if(forceSwitchDataItem) {
+						if(velocity < forceSwitchDataItem.forceRequired) {
+							activateSwitch = false;
+						}
+						if(Math.abs(dotProduct) < forceSwitchDataItem.minDotProduct) {
+							activateSwitch = false;
+						}
+					}
+
+					if(activateSwitch) {
+						self.switchState[switchIndex] = 1;
+					}
 				}
 			}
 		}
