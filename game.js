@@ -13,26 +13,44 @@ Pin.Game = Class.extend({
 	forceFromSwitchState: [],
 	forceFromCenterAndSwitchState: [],
 
+	// l = light index
+	// s = switch index
+	targetBankList0: [
+						{l: 0, s: 10},
+						{l: 1, s: 11},
+						{l: 2, s: 12},
+						{l: 3, s: 13}
+					 ],
+	targetBankList1: [
+						{l: 4,  s: 14},
+						{l: 5,  s: 15},
+						{l: 6,  s: 16},
+						{l: 7,  s: 17},
+						{l: 8,  s: 18},
+						{l: 9,  s: 19},
+						{l: 10, s: 20},
+					 ],
 	targetBank0: undefined,
 	targetBank1: undefined,
 
 	init: function() {
+		var self = this;
 		for(var i = 0; i < this.numberOfLights; ++i) {
 			this.lightState.push(new Pin.Light());
 		}
 
 		var targetBankData0 = [];
-		for(var i = 0; i < 4; ++i) {
-			targetBankData0.push({ light: this.lightState[i], switchIndex: 10 + i });
-		}
+		_.each(this.targetBankList0, function(item) {
+			targetBankData0.push({ light: self.lightState[item.l], switchIndex: item.s });
+		});
 		this.targetBank0 = new Pin.TargetBank(targetBankData0);
 		this.targetBank0.setLitColour(1,1,0, 1);
 		this.targetBank0.pusle(1,1,0, 1);
 
 		var targetBankData1 = [];
-		for(var i = 4; i < 11; ++i) {
-			targetBankData1.push({ light: this.lightState[i], switchIndex: 10 + i });
-		}
+		_.each(this.targetBankList1, function(item) {
+			targetBankData1.push({ light: self.lightState[item.l], switchIndex: item.s });
+		});
 		this.targetBank1 = new Pin.TargetBank(targetBankData1);
 		this.targetBank1.setLitColour(1,0.6,0, 1);
 		this.targetBank1.pusle(1,0.6,0, 1);
