@@ -19,7 +19,7 @@ Pin.Game = Class.extend({
 						{l: 0, s: 10},
 						{l: 1, s: 11},
 						{l: 2, s: 12},
-						{l: 3, s: 13}
+						{l: 3, s: 13},
 					 ],
 	targetBankList1: [
 						{l: 4,  s: 14},
@@ -30,8 +30,16 @@ Pin.Game = Class.extend({
 						{l: 9,  s: 19},
 						{l: 10, s: 20},
 					 ],
+	targetBankList2: [
+						{l: 11, s: 21},
+						{l: 12, s: 22},
+						{l: 13, s: 23},
+						{l: 14, s: 24},
+						{l: 15, s: 25},
+					 ],
 	targetBank0: undefined,
 	targetBank1: undefined,
+	targetBank2: undefined,
 
 	init: function() {
 		var self = this;
@@ -39,21 +47,23 @@ Pin.Game = Class.extend({
 			this.lightState.push(new Pin.Light());
 		}
 
-		var targetBankData0 = [];
-		_.each(this.targetBankList0, function(item) {
-			targetBankData0.push({ light: self.lightState[item.l], switchIndex: item.s });
-		});
-		this.targetBank0 = new Pin.TargetBank(targetBankData0);
+		this.targetBank0 = new Pin.TargetBank(this.createTargetBankData(
+																this.targetBankList0,
+																this.lightState));
 		this.targetBank0.setLitColour(1,1,0, 1);
 		this.targetBank0.pusle(1,1,0, 1);
 
-		var targetBankData1 = [];
-		_.each(this.targetBankList1, function(item) {
-			targetBankData1.push({ light: self.lightState[item.l], switchIndex: item.s });
-		});
-		this.targetBank1 = new Pin.TargetBank(targetBankData1);
+		this.targetBank1 = new Pin.TargetBank(this.createTargetBankData(
+																this.targetBankList1,
+																this.lightState));
 		this.targetBank1.setLitColour(1,0.6,0, 1);
 		this.targetBank1.pusle(1,0.6,0, 1);
+
+		this.targetBank2 = new Pin.TargetBank(this.createTargetBankData(
+																this.targetBankList2,
+																this.lightState));
+		this.targetBank2.setLitColour(0.4,0.5,1.0, 1);
+		this.targetBank2.pusle(0.4,0.5,1.0, 1);
 	},
 
 	update: function(switchState, delta) {
@@ -72,10 +82,20 @@ Pin.Game = Class.extend({
 		// update target banks
 		this.targetBank0.update(switchState);
 		this.targetBank1.update(switchState);
+		this.targetBank2.update(switchState);
 
 		_.each(this.lightState, function(lightData) {
 			lightData.update(delta);
 		});
+	},
+
+	createTargetBankData: function(dataList, lightState) {
+		var targetBankData = [];
+		_.each(dataList, function(item) {
+			targetBankData.push({ light: lightState[item.l], switchIndex: item.s });
+		});
+
+		return targetBankData;
 	},
 
 	constructFlipperData: function(flipperBodyIndex, switchIndex, directionMultiplier) {
