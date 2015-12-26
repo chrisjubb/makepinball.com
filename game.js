@@ -102,9 +102,15 @@ Pin.Game = Class.extend({
 
 	getForceSwitchData: function() {
 		var forceSwitchData = [];
+		var leafSwitchForceRequired = 5.0;
+		var leafSwitchMinDotProduct = 0.6;
 		_.each(this.targetBankList0, function(item) {
-			forceSwitchData[item.s] = {	forceRequired: 5.0,
-										minDotProduct: 0.6 };
+			forceSwitchData[item.s] = {	forceRequired: leafSwitchForceRequired,
+										minDotProduct: leafSwitchMinDotProduct };
+		});
+		_.each(this.targetBankList1, function(item) {
+			forceSwitchData[item.s] = {	forceRequired: leafSwitchForceRequired,
+										minDotProduct: leafSwitchMinDotProduct };
 		});
 
 		return forceSwitchData;
