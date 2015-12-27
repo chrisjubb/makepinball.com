@@ -122,14 +122,23 @@ Pin.Game = Class.extend({
 
 	getForceSwitchData: function() {
 		var forceSwitchData = [];
+
 		var leafSwitchForceRequired = 5.0;
+		// fall much slower down the side
+		var sideForceRequired = 2.0;
+
 		var leafSwitchMinDotProduct = 0.6;
+
 		_.each(this.targetBankList0, function(item) {
 			forceSwitchData[item.s] = {	forceRequired: leafSwitchForceRequired,
 										minDotProduct: leafSwitchMinDotProduct };
 		});
 		_.each(this.targetBankList1, function(item) {
 			forceSwitchData[item.s] = {	forceRequired: leafSwitchForceRequired,
+										minDotProduct: leafSwitchMinDotProduct };
+		});
+		_.each(this.targetBankList2, function(item) {
+			forceSwitchData[item.s] = {	forceRequired: sideForceRequired,
 										minDotProduct: leafSwitchMinDotProduct };
 		});
 

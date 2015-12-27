@@ -189,6 +189,7 @@ Pin.View = Class.extend({
 						if(velocity < forceSwitchDataItem.forceRequired) {
 							activateSwitch = false;
 						}
+						// todo - remove this abs and get it working one side only
 						if(Math.abs(dotProduct) < forceSwitchDataItem.minDotProduct) {
 							activateSwitch = false;
 						}
