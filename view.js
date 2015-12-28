@@ -242,7 +242,7 @@ Pin.View = Class.extend({
 				var bodyData = self.switchActivatedByBodies[switchIndex];
 				if(bodyData) {
 					_.each(bodyData, function(bodyDataItem) {
-						bodyDataItem.body.forceActivationState(5); // DISABLE_SIMULATION
+						bodyDataItem.body.setMassProps(0, new Ammo.btVector3(0,0,0));
 					});
 				}
 			}
@@ -440,6 +440,7 @@ Pin.View = Class.extend({
 			transform.setIdentity();
 			var startingData = self.ballStartingData[i];
 			var pos = startingData.position;
+			var mass = this.physCfg.get("ballMass");
 
 			// reset the visual part
 			startingData.child.position = startingData.position.clone();
@@ -448,6 +449,7 @@ Pin.View = Class.extend({
 			body.setWorldTransform(transform);
 			body.setLinearVelocity(new Ammo.btVector3(0,0,0));
 			body.setAngularVelocity(new Ammo.btVector3(0,0,0));
+			body.setMassProps(mass, new Ammo.btVector3(0,0,0));
 		});
 	},
 
