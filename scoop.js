@@ -28,6 +28,11 @@ Pin.Scoop = Class.extend({
 			// one frame
 			this.state = this.STATE_INSIDE;
 		}
+		else if(this.state == this.STATE_INSIDE) {
+			if(switchState[this.switchIndex] == false) {
+				this.state = this.STATE_HITTING;
+			}
+		}
 	},
 
 	shouldDeactivate: function() {
