@@ -121,6 +121,7 @@
 		<script src="utils.js"></script>
 		<script src="light.js"></script>
 		<script src="target_bank.js"></script>
+		<script src="scoop.js"></script>
 		<script src="game.js"></script>
 		<script src="view.js"></script>
 
@@ -220,8 +221,13 @@
 				var lightState = game.getLightState();
 				var forceState = game.getForceState();
 				var forceFromSwitchState = game.getForceFromSwitchState();
-				var forceFromCenterAndSwitchState = game.getForceFromCenterAndSwitchState()
-				view.update(lightState, forceState, forceFromSwitchState, forceFromCenterAndSwitchState);
+				var forceFromCenterAndSwitchState = game.getForceFromCenterAndSwitchState();
+				var deactivateFromSwitchState = game.getDeactivateFromSwitchState();
+				view.update(lightState,
+							forceState,
+							forceFromSwitchState,
+							forceFromCenterAndSwitchState,
+							deactivateFromSwitchState);
 				view.render();
 				stats.update();
 			}

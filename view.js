@@ -203,7 +203,11 @@ Pin.View = Class.extend({
 		}
 	},
 
-	update: function(lightState, forceState, forceFromSwitchState, forceFromCenterAndSwitchState) {
+	update: function(	lightState,
+						forceState,
+						forceFromSwitchState,
+						forceFromCenterAndSwitchState,
+						deactivateFromSwitchState) {
 		var self = this;
 		_.each(forceState, function(forceValue, forceId) {
 			if(forceValue) {
@@ -228,6 +232,17 @@ Pin.View = Class.extend({
 				if(bodyData) {
 					_.each(bodyData, function(bodyDataItem) {
 						self.activateForce(forceSwitchIndex, bodyDataItem.body, true);
+					});
+				}
+			}
+		});
+
+		_.each(deactivateFromSwitchState, function(deactivateValue, switchIndex) {
+			if(deactivateValue) {
+				var bodyData = self.switchActivatedByBodies[switchIndex];
+				if(bodyData) {
+					_.each(bodyData, function(bodyDataItem) {
+						bodyDataItem.body.forceActivationState(5); // DISABLE_SIMULATION
 					});
 				}
 			}
@@ -651,9 +666,9 @@ Pin.View = Class.extend({
 		original.visible = false;
 
 		original.updateMatrixWorld();
-		var forceValue = 200.0; // todo - need to specify a force here
+		var forceValue = 50.0; // todo - need to specify a force here
 		if(forceIndex == 0) {
-			forceValue = 500.0;
+			forceValue = 400.0;
 		}
 
 		var forceQuat = original.quaternion;
