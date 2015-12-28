@@ -37,9 +37,15 @@ Pin.Game = Class.extend({
 						{l: 14, s: 24},
 						{l: 15, s: 25},
 					 ],
+	targetBankList3: [
+						{l: 16, s: 26},
+						{l: 17, s: 27},
+						{l: 18, s: 28},
+					 ],
 	targetBank0: undefined,
 	targetBank1: undefined,
 	targetBank2: undefined,
+	targetBank3: undefined,
 
 	init: function() {
 		var self = this;
@@ -64,6 +70,12 @@ Pin.Game = Class.extend({
 																this.lightState));
 		this.targetBank2.setLitColour(0.4,0.5,1.0, 1);
 		this.targetBank2.pusle(0.4,0.5,1.0, 1);
+
+		this.targetBank3 = new Pin.TargetBank(this.createTargetBankData(
+																this.targetBankList3,
+																this.lightState));
+		this.targetBank3.setLitColour(0.9,0.2,0.1, 1);
+		this.targetBank3.pusle(0.9,0.2,0.1, 1);
 	},
 
 	update: function(switchState, delta) {
@@ -83,6 +95,7 @@ Pin.Game = Class.extend({
 		this.targetBank0.update(switchState);
 		this.targetBank1.update(switchState);
 		this.targetBank2.update(switchState);
+		this.targetBank3.update(switchState);
 
 		_.each(this.lightState, function(lightData) {
 			lightData.update(delta);
