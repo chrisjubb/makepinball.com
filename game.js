@@ -101,6 +101,7 @@ Pin.Game = Class.extend({
 		// AND we want it to do the force away from the center of the force.
 		// this can be used for pop bumpers.
 		this.forceFromCenterAndSwitchState[4] = switchState[4];
+		this.forceFromCenterAndSwitchState[5] = switchState[5];
 
 		// update target banks
 		this.targetBank0.update(switchState);
