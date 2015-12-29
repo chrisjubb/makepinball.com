@@ -51,6 +51,9 @@ Pin.Game = Class.extend({
 
 	scoop0: undefined,
 
+	lightIndicator0: undefined,
+	lightIndicatorTimer0: undefined,
+
 	init: function() {
 		var self = this;
 		for(var i = 0; i < this.numberOfLights; ++i) {
@@ -83,14 +86,21 @@ Pin.Game = Class.extend({
 
 		this.scoop0 = new Pin.Scoop(6);
 
+		// center diamond
 		for(var i = 20; i <= 35; ++i) {
 			var t = (i - 20.0) / (35.0 - 20.0);
 			this.lightState[i].pulse(t, 1.0 - (t * 0.01), 0.5 + (t * 0.4), 1.0, (t + 0.5));
 		}
+
+		// shoot again
 		this.lightState[40].flash(0.1, 0.1, 0.8,  1.0, 0.25);
+
+		// by pop bumpers
+		this.lightIndicator0 = new Pin.LightIndicator(this.lightState, 0.1, 1, 1,  1,  45, 56);
+		this.lightIndicatorTimer0 = 0.0;
 	},
 
-	update: function(switchState, delta) {
+	update: function(switchState, elapsedTime, delta) {
 		this.forceState[0] = switchState[this.SW_PLUNGER_BUTTON];
 
 		// we want these to fire based on which bodies are active in the switch area.
@@ -133,6 +143,12 @@ Pin.Game = Class.extend({
 		// temporary logic for testing.
 
 		this.activateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldActivate();
+
+		if( (elapsedTime > this.lightIndicatorTimer0) &&
+			(switchState[4] || switchState[5])) {
+			this.lightIndicator0.increase();
+			this.lightIndicatorTimer0 = elapsedTime + 0.25;
+		}
 	},
 
 	createTargetBankData: function(dataList, lightState) {

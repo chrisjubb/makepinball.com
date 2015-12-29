@@ -122,6 +122,7 @@
 		<script src="light.js"></script>
 		<script src="target_bank.js"></script>
 		<script src="scoop.js"></script>
+		<script src="light_indicator.js"></script>
 		<script src="game.js"></script>
 		<script src="view.js"></script>
 
@@ -217,7 +218,7 @@
 
 				view.preUpdate();
 				var switchState = view.getSwitchState();
-				game.update(switchState, view.getDeltaTime());
+				game.update(switchState, view.getElapsedTime(), view.getDeltaTime());
 				var lightState = game.getLightState();
 				var forceState = game.getForceState();
 				var forceFromSwitchState = game.getForceFromSwitchState();

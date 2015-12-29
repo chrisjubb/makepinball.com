@@ -295,6 +295,10 @@ Pin.View = Class.extend({
 		return this.deltaTime;
 	},
 
+	getElapsedTime: function() {
+		return this.clock.elapsedTime;
+	},
+
 	getCanvasContainer: function() {
 		return this.canvasContainer;
 	},
