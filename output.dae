@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2015-12-29T14:06:56</created>
-    <modified>2015-12-29T14:06:56</modified>
+    <created>2015-12-29T14:13:24</created>
+    <modified>2015-12-29T14:13:24</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -102,6 +102,9 @@
     <image id="circle_insert_png" name="circle_insert_png">
       <init_from>circle_insert.png</init_from>
     </image>
+    <image id="circle_insert_shoot_again_png" name="circle_insert_shoot_again_png">
+      <init_from>circle_insert_shoot_again.png</init_from>
+    </image>
     <image id="circle_insert_none_png" name="circle_insert_none_png">
       <init_from>circle_insert_none.png</init_from>
     </image>
@@ -125,6 +128,52 @@
     </image>
   </library_images>
   <library_effects>
+    <effect id="circle_insert_shoot_again-effect">
+      <profile_COMMON>
+        <newparam sid="circle_insert_shoot_again_png-surface">
+          <surface type="2D">
+            <init_from>circle_insert_shoot_again_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="circle_insert_shoot_again_png-sampler">
+          <sampler2D>
+            <source>circle_insert_shoot_again_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="circle_insert_png-surface">
+          <surface type="2D">
+            <init_from>circle_insert_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="circle_insert_png-sampler">
+          <sampler2D>
+            <source>circle_insert_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="circle_insert_shoot_again_png-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <specular>
+              <texture texture="circle_insert_png-sampler" texcoord="UVMap"/>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="invisble_001-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -1583,6 +1632,9 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="circle_insert_shoot_again-material" name="circle_insert_shoot_again">
+      <instance_effect url="#circle_insert_shoot_again-effect"/>
+    </material>
     <material id="invisble_001-material" name="invisble_001">
       <instance_effect url="#invisble_001-effect"/>
     </material>
@@ -1741,6 +1793,49 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Cylinder_037-mesh" name="Cylinder.037">
+      <mesh>
+        <source id="Cylinder_037-mesh-positions">
+          <float_array id="Cylinder_037-mesh-positions-array" count="96">0 1 0.007019042 0.1950903 0.9807853 0.007019042 0.3826835 0.9238795 0.007019042 0.5555703 0.8314696 0.007019042 0.7071068 0.7071068 0.007019042 0.8314697 0.5555702 0.007019042 0.9238795 0.3826834 0.007019042 0.9807853 0.1950903 0.007019042 1 0 0.007019042 0.9807853 -0.1950902 0.007019042 0.9238796 -0.3826833 0.007019042 0.8314697 -0.5555702 0.007019042 0.7071068 -0.7071068 0.007019042 0.5555702 -0.8314697 0.007019042 0.3826833 -0.9238796 0.007019042 0.1950901 -0.9807853 0.007019042 -3.25841e-7 -1 0.007019042 -0.1950907 -0.9807852 0.007019042 -0.3826839 -0.9238793 0.007019042 -0.5555707 -0.8314693 0.007019042 -0.7071073 -0.7071064 0.007019042 -0.83147 -0.5555697 0.007019042 -0.9238799 -0.3826827 0.007019042 -0.9807854 -0.1950894 0.007019042 -1 9.65599e-7 0.007019042 -0.9807851 0.1950913 0.007019042 -0.9238791 0.3826845 0.007019042 -0.8314689 0.5555713 0.007019042 -0.7071059 0.7071077 0.007019042 -0.5555691 0.8314704 0.007019042 -0.3826821 0.9238801 0.007019042 -0.1950888 0.9807856 0.007019042</float_array>
+          <technique_common>
+            <accessor source="#Cylinder_037-mesh-positions-array" count="32" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cylinder_037-mesh-normals">
+          <float_array id="Cylinder_037-mesh-normals-array" count="45">0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cylinder_037-mesh-normals-array" count="15" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cylinder_037-mesh-map-0">
+          <float_array id="Cylinder_037-mesh-map-0-array" count="180">0.3203034 0.08586734 0.9185941 0.3336873 0.07248383 0.6841581 0.6707741 0.9319775 0.584873 0.9580354 0.4955388 0.9668341 0.4955388 0.9668341 0.4062054 0.9580355 0.6707741 0.9319775 0.3203042 0.9319779 0.2411372 0.8896623 0.1717467 0.8327152 0.1717467 0.8327152 0.1147995 0.763325 0.07248383 0.6841581 0.07248383 0.6841581 0.04642593 0.598257 0.03762716 0.5089228 0.03762716 0.5089228 0.04642575 0.4195887 0.07248383 0.6841581 0.07248347 0.3336876 0.114799 0.2545206 0.3203034 0.08586734 0.1717461 0.1851302 0.2411364 0.128183 0.3203034 0.08586734 0.3203034 0.08586734 0.4062045 0.05980944 0.4955386 0.05101078 0.4955386 0.05101078 0.5848729 0.05980938 0.6707739 0.08586722 0.6707739 0.08586722 0.7499408 0.1281828 0.8193312 0.18513 0.8193312 0.18513 0.8762785 0.2545204 0.9185941 0.3336873 0.9185941 0.3336873 0.9446518 0.4195884 0.9534505 0.5089225 0.9534505 0.5089225 0.9446518 0.5982565 0.9185941 0.3336873 0.918594 0.6841576 0.8762785 0.7633244 0.8193312 0.8327148 0.8193312 0.8327148 0.7499409 0.8896619 0.6707741 0.9319775 0.6707741 0.9319775 0.4062054 0.9580355 0.3203042 0.9319779 0.3203042 0.9319779 0.1717467 0.8327152 0.6707741 0.9319775 0.07248383 0.6841581 0.04642575 0.4195887 0.07248347 0.3336876 0.114799 0.2545206 0.1717461 0.1851302 0.3203034 0.08586734 0.3203034 0.08586734 0.4955386 0.05101078 0.9185941 0.3336873 0.6707739 0.08586722 0.8193312 0.18513 0.9185941 0.3336873 0.9185941 0.3336873 0.9446518 0.5982565 0.918594 0.6841576 0.918594 0.6841576 0.8193312 0.8327148 0.9185941 0.3336873 0.6707741 0.9319775 0.1717467 0.8327152 0.07248383 0.6841581 0.07248383 0.6841581 0.07248347 0.3336876 0.3203034 0.08586734 0.4955386 0.05101078 0.6707739 0.08586722 0.9185941 0.3336873 0.9185941 0.3336873 0.8193312 0.8327148 0.6707741 0.9319775 0.6707741 0.9319775 0.07248383 0.6841581 0.9185941 0.3336873</float_array>
+          <technique_common>
+            <accessor source="#Cylinder_037-mesh-map-0-array" count="90" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cylinder_037-mesh-vertices">
+          <input semantic="POSITION" source="#Cylinder_037-mesh-positions"/>
+        </vertices>
+        <polylist material="circle_insert_shoot_again-material" count="30">
+          <input semantic="VERTEX" source="#Cylinder_037-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cylinder_037-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Cylinder_037-mesh-map-0" offset="2" set="0"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>18 0 0 10 0 1 26 0 2 2 1 3 1 1 4 0 1 5 0 2 6 31 2 7 2 2 8 30 3 9 29 3 10 28 3 11 28 4 12 27 4 13 26 4 14 26 5 15 25 5 16 24 5 17 24 6 18 23 6 19 26 6 20 22 0 21 21 0 22 18 0 23 20 0 24 19 0 25 18 0 26 18 0 27 17 0 28 16 0 29 16 0 30 15 0 31 14 0 32 14 0 33 13 0 34 12 0 35 12 0 36 11 0 37 10 0 38 10 0 39 9 0 40 8 0 41 8 0 42 7 0 43 10 0 44 6 7 45 5 7 46 4 7 47 4 8 48 3 8 49 2 8 50 2 0 51 31 0 52 30 0 53 30 0 54 28 0 55 2 0 56 26 9 57 23 9 58 22 9 59 21 0 60 20 0 61 18 0 62 18 0 63 16 0 64 10 0 65 14 0 66 12 0 67 10 0 68 10 10 69 7 10 70 6 10 71 6 11 72 4 11 73 10 11 74 2 12 75 28 12 76 26 12 77 26 13 78 22 13 79 18 13 80 16 0 81 14 0 82 10 0 83 10 14 84 4 14 85 2 14 86 2 0 87 26 0 88 10 0 89</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Cylinder_036-mesh" name="Cylinder.036">
       <mesh>
         <source id="Cylinder_036-mesh-positions">
@@ -6592,6 +6687,18 @@
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="LIGHT_040" name="LIGHT_040" type="NODE">
+        <matrix sid="transform">0.191 0 0 5.667502 0 0.191 0 -3.553449 0 0 0.191 1.87916e-8 0 0 0 1</matrix>
+        <instance_geometry url="#Cylinder_037-mesh" name="LIGHT_040">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="circle_insert_shoot_again-material" target="#circle_insert_shoot_again-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="SWITCH_005" name="SWITCH_005" type="NODE">
         <matrix sid="transform">0.2806315 0 0 7.344792 0 0.2806315 0 1.226886 0 0 0.1625886 0.1600476 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_036-mesh" name="SWITCH_005">
@@ -6640,7 +6747,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_035" name="LIGHT_035" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.638325 0 0.191 0 0.1025503 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.653793 0 0.191 0 0.1025503 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_035-mesh" name="LIGHT_035">
           <bind_material>
             <technique_common>
@@ -6652,7 +6759,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_034" name="LIGHT_034" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.903469 0 0.191 0 -0.3959203 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.918937 0 0.191 0 -0.3959203 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_034-mesh" name="LIGHT_034">
           <bind_material>
             <technique_common>
@@ -6664,7 +6771,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_033" name="LIGHT_033" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.35197 0 0.191 0 -0.3959203 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.367437 0 0.191 0 -0.3959203 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_033-mesh" name="LIGHT_033">
           <bind_material>
             <technique_common>
@@ -6676,7 +6783,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_032" name="LIGHT_032" type="NODE">
-        <matrix sid="transform">0.191 0 0 6.168613 0 0.191 0 -0.9049965 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 6.184081 0 0.191 0 -0.9049965 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_032-mesh" name="LIGHT_032">
           <bind_material>
             <technique_common>
@@ -6688,7 +6795,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_031" name="LIGHT_031" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.627719 0 0.191 0 -0.9049965 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.643187 0 0.191 0 -0.9049965 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_031-mesh" name="LIGHT_031">
           <bind_material>
             <technique_common>
@@ -6700,7 +6807,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_030" name="LIGHT_030" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.07622 0 0.191 0 -0.9049965 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.091688 0 0.191 0 -0.9049965 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_030-mesh" name="LIGHT_030">
           <bind_material>
             <technique_common>
@@ -6712,7 +6819,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_020" name="LIGHT_020" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.638325 0 0.191 0 -2.750398 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.653793 0 0.191 0 -2.750398 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_029-mesh" name="LIGHT_020">
           <bind_material>
             <technique_common>
@@ -6724,7 +6831,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_022" name="LIGHT_022" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.903469 0 0.191 0 -2.304956 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.918937 0 0.191 0 -2.304956 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_028-mesh" name="LIGHT_022">
           <bind_material>
             <technique_common>
@@ -6736,7 +6843,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_021" name="LIGHT_021" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.35197 0 0.191 0 -2.304956 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.367437 0 0.191 0 -2.304956 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_027-mesh" name="LIGHT_021">
           <bind_material>
             <technique_common>
@@ -6748,7 +6855,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_025" name="LIGHT_025" type="NODE">
-        <matrix sid="transform">0.191 0 0 6.168613 0 0.191 0 -1.87012 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 6.184081 0 0.191 0 -1.87012 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_026-mesh" name="LIGHT_025">
           <bind_material>
             <technique_common>
@@ -6760,7 +6867,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_024" name="LIGHT_024" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.627719 0 0.191 0 -1.87012 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.643187 0 0.191 0 -1.87012 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_025-mesh" name="LIGHT_024">
           <bind_material>
             <technique_common>
@@ -6772,7 +6879,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_023" name="LIGHT_023" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.07622 0 0.191 0 -1.87012 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.091688 0 0.191 0 -1.87012 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_024-mesh" name="LIGHT_023">
           <bind_material>
             <technique_common>
@@ -6784,7 +6891,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_029" name="LIGHT_029" type="NODE">
-        <matrix sid="transform">0.191 0 0 6.412546 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 6.428013 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_023-mesh" name="LIGHT_029">
           <bind_material>
             <technique_common>
@@ -6796,7 +6903,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_028" name="LIGHT_028" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.861046 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.876514 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_022-mesh" name="LIGHT_028">
           <bind_material>
             <technique_common>
@@ -6808,7 +6915,7 @@
         </instance_geometry>
       </node>
       <node id="LIGHT_027" name="LIGHT_027" type="NODE">
-        <matrix sid="transform">0.191 0 0 5.35197 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 5.367437 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_021-mesh" name="LIGHT_027">
           <bind_material>
             <technique_common>
@@ -6819,9 +6926,9 @@
           </bind_material>
         </instance_geometry>
       </node>
-      <node id="template_light_001" name="template_light_001" type="NODE">
+      <node id="template_light" name="template_light" type="NODE">
         <matrix sid="transform">0.191 0 0 0.3775039 0 0.191 0 -6.500071 0 0 0.191 1.87916e-8 0 0 0 1</matrix>
-        <instance_geometry url="#Cylinder_020-mesh" name="template_light_001"/>
+        <instance_geometry url="#Cylinder_020-mesh" name="template_light"/>
       </node>
       <node id="SWITCH_026" name="SWITCH_026" type="NODE">
         <matrix sid="transform">0.1407269 0 0 5.052439 0 0.1436737 0 3.496409 0 0 0.1892489 0.09275603 0 0 0 1</matrix>
@@ -7306,7 +7413,7 @@
         <instance_geometry url="#Cube_013-mesh" name="PV_top3"/>
       </node>
       <node id="LIGHT_026" name="LIGHT_026" type="NODE">
-        <matrix sid="transform">0.191 0 0 4.842894 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
+        <matrix sid="transform">0.191 0 0 4.858361 0 0.191 0 -1.414073 0 0 0.191 -4.91144e-8 0 0 0 1</matrix>
         <instance_geometry url="#Cylinder_010-mesh" name="LIGHT_026">
           <bind_material>
             <technique_common>

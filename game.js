@@ -87,6 +87,7 @@ Pin.Game = Class.extend({
 			var t = (i - 20.0) / (35.0 - 20.0);
 			this.lightState[i].pulse(t, 1.0 - (t * 0.01), 0.5 + (t * 0.4), 1.0, (t + 0.5));
 		}
+		this.lightState[40].flash(0.1, 0.1, 0.8,  1.0, 0.25);
 	},
 
 	update: function(switchState, delta) {
