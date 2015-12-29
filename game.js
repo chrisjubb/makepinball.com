@@ -50,7 +50,6 @@ Pin.Game = Class.extend({
 	targetBank3: undefined,
 
 	scoop0: undefined,
-	scoop1: undefined,
 
 	init: function() {
 		var self = this;
@@ -83,7 +82,11 @@ Pin.Game = Class.extend({
 		this.targetBank3.pusle(0.9,0.2,0.1, 1);
 
 		this.scoop0 = new Pin.Scoop(6);
-		this.scoop1 = new Pin.Scoop(7);
+
+		for(var i = 20; i <= 35; ++i) {
+			var t = (i - 20.0) / (35.0 - 20.0);
+			this.lightState[i].pulse(t, 1.0 - (t * 0.01), 0.5 + (t * 0.4), 1.0, (t + 0.5));
+		}
 	},
 
 	update: function(switchState, delta) {
@@ -110,10 +113,8 @@ Pin.Game = Class.extend({
 		});
 
 		this.scoop0.update(switchState);
-		this.scoop1.update(switchState);
 
 		this.deactivateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldDeactivate();
-		this.deactivateFromSwitchState[this.scoop1.getSwitchIndex()] = this.scoop1.shouldDeactivate();
 
 		// temporary logic for testing - releases after 1 second.
 		if(this.scoop0.shouldDeactivate()) {
@@ -130,7 +131,6 @@ Pin.Game = Class.extend({
 		// temporary logic for testing.
 
 		this.activateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldActivate();
-		this.activateFromSwitchState[this.scoop1.getSwitchIndex()] = this.scoop1.shouldActivate();
 	},
 
 	createTargetBankData: function(dataList, lightState) {
