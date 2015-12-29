@@ -13,6 +13,7 @@ Pin.Game = Class.extend({
 	forceFromSwitchState: [],
 	forceFromCenterAndSwitchState: [],
 	deactivateFromSwitchState: [],
+	activateFromSwitchState: [],
 
 	// l = light index
 	// s = switch index
@@ -113,6 +114,23 @@ Pin.Game = Class.extend({
 
 		this.deactivateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldDeactivate();
 		this.deactivateFromSwitchState[this.scoop1.getSwitchIndex()] = this.scoop1.shouldDeactivate();
+
+		// temporary logic for testing - releases after 1 second.
+		if(this.scoop0.shouldDeactivate()) {
+			var self = this;
+			setTimeout(function() {
+				self.wantsRelease = true;
+			}, 1000);
+		}
+
+		if(this.wantsRelease) {
+			this.scoop0.release();
+			this.wantsRelease = undefined;
+		}
+		// temporary logic for testing.
+
+		this.activateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldActivate();
+		this.activateFromSwitchState[this.scoop1.getSwitchIndex()] = this.scoop1.shouldActivate();
 	},
 
 	createTargetBankData: function(dataList, lightState) {
@@ -189,6 +207,9 @@ Pin.Game = Class.extend({
 
 	getDeactivateFromSwitchState: function() {
 		return this.deactivateFromSwitchState;
-	}
+	},
 
+	getActivateFromSwitchState: function() {
+		return this.activateFromSwitchState;
+	},
 });

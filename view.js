@@ -207,7 +207,8 @@ Pin.View = Class.extend({
 						forceState,
 						forceFromSwitchState,
 						forceFromCenterAndSwitchState,
-						deactivateFromSwitchState) {
+						deactivateFromSwitchState,
+						activateFromSwitchState) {
 		var self = this;
 		_.each(forceState, function(forceValue, forceId) {
 			if(forceValue) {
@@ -242,7 +243,20 @@ Pin.View = Class.extend({
 				var bodyData = self.switchActivatedByBodies[switchIndex];
 				if(bodyData) {
 					_.each(bodyData, function(bodyDataItem) {
+						// deactivate
 						bodyDataItem.body.setMassProps(0, new Ammo.btVector3(0,0,0));
+					});
+				}
+			}
+		});
+
+		_.each(activateFromSwitchState, function(activateValue, switchIndex) {
+			if(activateValue) {
+				var bodyData = self.switchActivatedByBodies[switchIndex];
+				if(bodyData) {
+					_.each(bodyData, function(bodyDataItem) {
+						// activate
+						bodyDataItem.body.setMassProps(physCfg.get("ballMass"), new Ammo.btVector3(0,0,0));
 					});
 				}
 			}

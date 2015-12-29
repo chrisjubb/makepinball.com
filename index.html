@@ -223,11 +223,13 @@
 				var forceFromSwitchState = game.getForceFromSwitchState();
 				var forceFromCenterAndSwitchState = game.getForceFromCenterAndSwitchState();
 				var deactivateFromSwitchState = game.getDeactivateFromSwitchState();
+				var activateFromSwitchState = game.getActivateFromSwitchState();
 				view.update(lightState,
 							forceState,
 							forceFromSwitchState,
 							forceFromCenterAndSwitchState,
-							deactivateFromSwitchState);
+							deactivateFromSwitchState,
+							activateFromSwitchState);
 				view.render();
 				stats.update();
 			}
