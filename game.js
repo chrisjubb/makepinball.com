@@ -98,6 +98,12 @@ Pin.Game = Class.extend({
 		// by pop bumpers
 		this.lightIndicator0 = new Pin.LightIndicator(this.lightState, 0.1, 1, 1,  1,  45, 56);
 		this.lightIndicatorTimer0 = 0.0;
+
+		// diamonds to scoop
+		for(var i = 60; i <= 62; ++i) {
+			var t = (i - 60.0) / (62.0 - 60.0);
+			this.lightState[i].pulse(t * 0.2, 1.0, t * 0.3, 1.0,  (t * 0.2) + 0.1);
+		}
 	},
 
 	update: function(switchState, elapsedTime, delta) {
