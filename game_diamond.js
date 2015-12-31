@@ -17,9 +17,11 @@ Game.Diamond = Class.extend({
 	},
 
 	setCurrentFlashing: function() {
-		var c = this.currentPulseColour;
-		this.lights[this.currentGoalIndex].reset();
-		this.lights[this.currentGoalIndex].pulse(c.r, c.g, c.b, c.a, 0.25);
+		if(this.currentGoalIndex != (this.lights.length - 1)) {
+			var c = this.currentPulseColour;
+			this.lights[this.currentGoalIndex].reset();
+			this.lights[this.currentGoalIndex].pulse(c.r, c.g, c.b, c.a, 0.25);
+		}
 	},
 
 	completedGoal: function(goalIndex) {
@@ -48,4 +50,8 @@ Game.Diamond = Class.extend({
 		this.goalsComplete = [];
 		this.setCurrentFlashing();
 	},
+
+	canCollect: function() {
+		return this.currentGoalIndex != 0;
+	}
 });
