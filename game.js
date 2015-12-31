@@ -98,7 +98,7 @@ Pin.Game = Class.extend({
 			{ colour: targetBankColour2 },
 			{ colour: targetBankColour3 }
 		];
-		var currentPulseColour = {r: 0.75, g: 0.75, b: 0.75, a: 1.0};
+		var currentPulseColour = {r: 0.5, g: 0.5, b: 0.5, a: 1.0};
 		this.centerDiamond = new Game.Diamond(this.lightState, 20, 35, currentPulseColour, centerDiamondData);
 
 		// shoot again
