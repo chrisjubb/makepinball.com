@@ -35,6 +35,7 @@ Game.Diamond = Class.extend({
 			}
 		});
 
+		// don't want to complete - stay on the last one
 		this.currentGoalIndex = Math.min(this.currentGoalIndex + 1, this.lights.length - 1);
 		this.setCurrentFlashing();
 	},

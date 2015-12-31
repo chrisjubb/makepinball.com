@@ -10,17 +10,21 @@ Pin.LightIndicator = Class.extend({
 		for(var i = startIndex; i <= endIndex; ++i) {
 			this.lights.push(lightState[i]);
 		}
-		this.onColour = { r: r, g: g, b: b, a:a };
+		this.onColour = { r: r, g: g, b: b, a: a };
 	},
 
 	increase: function() {
-		this.value = Math.min(this.value + 1, this.lights.length - 1);
+		this.value = Math.min(this.value + 1, this.lights.length);
 		this.updateDisplay();
 	},
 
 	setValue: function(value) {
-		this.value = Math.min(value, this.lights.length - 1);
+		this.value = Math.min(value, this.lights.length);
 		this.updateDisplay();
+	},
+
+	reset: function() {
+		this.setValue(0);
 	},
 
 	updateDisplay: function() {
@@ -33,5 +37,9 @@ Pin.LightIndicator = Class.extend({
 				light.reset();
 			}
 		});
+	},
+
+	isComplete: function() {
+		return this.value == (this.lights.length - 1);
 	}
 });
