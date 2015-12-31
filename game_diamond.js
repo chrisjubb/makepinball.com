@@ -29,7 +29,7 @@ Game.Diamond = Class.extend({
 		_.each(this.lights, function(light, lightIndex) {
 			light.reset();
 			var completedGoalIndex = self.goalsComplete[lightIndex];
-			if(completedGoalIndex) {
+			if(completedGoalIndex != undefined) {
 				var c = self.colourLookup[completedGoalIndex].colour;
 				light.pulse(c.r, c.g, c.b, c.a, 0.25);
 			}
