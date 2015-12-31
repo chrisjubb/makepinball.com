@@ -140,6 +140,8 @@ Pin.Game = Class.extend({
 			this.centerDiamond.completedGoal(this.targetBanks.length); // want banks + 1
 		}
 
+		this.centerDiamond.update(delta, elapsedTime);
+
 		for(var i = 60; i <= 62; ++i) {
 			if(this.centerDiamond.canCollect()) {
 				var t = (i - 60.0) / (62.0 - 60.0);
@@ -160,20 +162,12 @@ Pin.Game = Class.extend({
 
 		this.deactivateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldDeactivate();
 
-		// temporary logic for testing - releases after 1 second.
 		if(this.scoop0.shouldDeactivate()) {
-			var self = this;
-			this.centerDiamond.collect();
-			setTimeout(function() {
-				self.wantsRelease = true;
-			}, 1000);
+			this.centerDiamond.collect(elapsedTime);
 		}
-
-		if(this.wantsRelease) {
+		if(this.centerDiamond.isCollectComplete()) {
 			this.scoop0.release();
-			this.wantsRelease = undefined;
 		}
-		// temporary logic for testing.
 
 		this.activateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldActivate();
 	},
