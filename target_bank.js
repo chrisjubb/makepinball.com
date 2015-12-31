@@ -8,7 +8,8 @@ Pin.TargetBank = Class.extend({
 	enabledState: [],
 	state: undefined,
 	STATE_HITTING: 0,
-	STATE_FLASHING_COMPLETE: 1,
+	STATE_COMPLETE: 1,
+	STATE_FLASHING_COMPLETE: 2,
 
 	init: function(bankData) {
 		this.bankData = bankData;
@@ -73,16 +74,19 @@ Pin.TargetBank = Class.extend({
 					self.reset();
 				}, 750);
 
-				this.state = this.STATE_FLASHING_COMPLETE;
+				this.state = this.STATE_COMPLETE;
 			}
 		}
-
-		if(this.state == this.STATE_FLASHING_COMPLETE) {
+		else if(this.state == this.STATE_COMPLETE) {
+			// one frame
+			this.state = this.STATE_FLASHING_COMPLETE;
+		}
+		else if(this.state == this.STATE_FLASHING_COMPLETE) {
 		}
 	},
 
 	isComplete: function() {
-		return this.state == this.STATE_FLASHING_COMPLETE;
+		return this.state == this.STATE_COMPLETE;
 	},
 
 	reset: function() {
