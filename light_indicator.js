@@ -14,12 +14,12 @@ Pin.LightIndicator = Class.extend({
 	},
 
 	increase: function() {
-		this.value = Math.min(this.value + 1, this.lights.length);
+		this.value = Math.min(this.value + 1, this.lights.length - 1);
 		this.updateDisplay();
 	},
 
 	setValue: function(value) {
-		this.value = Math.min(value, this.lights.length);
+		this.value = Math.min(value, this.lights.length - 1);
 		this.updateDisplay();
 	},
 

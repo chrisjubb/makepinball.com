@@ -8,7 +8,7 @@ Pin.TargetBank = Class.extend({
 	enabledState: [],
 	state: undefined,
 	STATE_HITTING: 0,
-	STATE_FLASHING: 1,
+	STATE_FLASHING_COMPLETE: 1,
 
 	init: function(bankData) {
 		this.bankData = bankData;
@@ -16,14 +16,30 @@ Pin.TargetBank = Class.extend({
 	},
 
 	setLitColour: function(r, g, b, a) {
-		this.litColour = { r: r, g: g, b: b, a: a };
+		if(r instanceof Object) {
+			// should contain r,g,b,a
+			this.litColour = r;
+		}
+		else {
+			this.litColour = { r: r, g: g, b: b, a: a };
+		}
 	},
 
-	pusle: function(r, g, b, a) {
-		this.pulseColour = { r: r, g: g, b: b, a: a };
+	pulse: function(r, g, b, a) {
+		if(r instanceof Object) {
+			this.pulseColour = r;
+		}
+		else {
+			this.pulseColour = { r: r, g: g, b: b, a: a };
+		}
+
+		var self = this;
 		_.each(this.bankData, function(bankItem) {
 			bankItem.light.reset();
-			bankItem.light.pulse(r, g, b, a);
+			bankItem.light.pulse(	self.pulseColour.r,
+									self.pulseColour.g,
+									self.pulseColour.b,
+									self.pulseColour.a);
 		});
 	},
 
@@ -34,7 +50,7 @@ Pin.TargetBank = Class.extend({
 			_.each(this.bankData, function(bankItem) {
 				if(switchState[bankItem.switchIndex]) {
 					self.enabledState[bankItem.switchIndex] = true;
-					bankItem.light.set(self.litColour.r, self.litColour.g, self.litColour.b, 1);
+					bankItem.light.set(self.litColour.r, self.litColour.g, self.litColour.b, self.litColour.a);
 				}
 			});
 
@@ -57,12 +73,16 @@ Pin.TargetBank = Class.extend({
 					self.reset();
 				}, 750);
 
-				this.state = this.STATE_FLASHING;
+				this.state = this.STATE_FLASHING_COMPLETE;
 			}
 		}
 
-		if(this.state == this.STATE_FLASHING) {
+		if(this.state == this.STATE_FLASHING_COMPLETE) {
 		}
+	},
+
+	isComplete: function() {
+		return this.state == this.STATE_FLASHING_COMPLETE;
 	},
 
 	reset: function() {

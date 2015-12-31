@@ -44,10 +44,7 @@ Pin.Game = Class.extend({
 						{l: 17, s: 27},
 						{l: 18, s: 28},
 					 ],
-	targetBank0: undefined,
-	targetBank1: undefined,
-	targetBank2: undefined,
-	targetBank3: undefined,
+	targetBanks: [],
 
 	scoop0: undefined,
 
@@ -60,37 +57,49 @@ Pin.Game = Class.extend({
 			this.lightState.push(new Pin.Light());
 		}
 
-		this.targetBank0 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBankColour0 = { r: 1, g: 1, b: 0, a: 1 };
+		var targetBank0 = new Pin.TargetBank(this.createTargetBankData(
 																this.targetBankList0,
 																this.lightState));
-		this.targetBank0.setLitColour(1,1,0, 1);
-		this.targetBank0.pusle(1,1,0, 1);
+		targetBank0.setLitColour(targetBankColour0);
+		targetBank0.pulse(targetBankColour0);
+		this.targetBanks.push(targetBank0);
 
-		this.targetBank1 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBankColour1 = { r: 1, g: 0.6, b: 0, a: 1 };
+		var targetBank1 = new Pin.TargetBank(this.createTargetBankData(
 																this.targetBankList1,
 																this.lightState));
-		this.targetBank1.setLitColour(1,0.6,0, 1);
-		this.targetBank1.pusle(1,0.6,0, 1);
+		targetBank1.setLitColour(targetBankColour1);
+		targetBank1.pulse(targetBankColour1);
+		this.targetBanks.push(targetBank1);
 
-		this.targetBank2 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBankColour2 = { r: 0.4, g: 0.5, b: 1, a: 1 };
+		var targetBank2 = new Pin.TargetBank(this.createTargetBankData(
 																this.targetBankList2,
 																this.lightState));
-		this.targetBank2.setLitColour(0.4,0.5,1.0, 1);
-		this.targetBank2.pusle(0.4,0.5,1.0, 1);
+		targetBank2.setLitColour(targetBankColour2);
+		targetBank2.pulse(targetBankColour2);
+		this.targetBanks.push(targetBank2);
 
-		this.targetBank3 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBankColour3 = { r: 0.9, g: 0.2, b: 0.1, a: 1 };
+		var targetBank3 = new Pin.TargetBank(this.createTargetBankData(
 																this.targetBankList3,
 																this.lightState));
-		this.targetBank3.setLitColour(0.9,0.2,0.1, 1);
-		this.targetBank3.pusle(0.9,0.2,0.1, 1);
+		targetBank3.setLitColour(targetBankColour3);
+		targetBank3.pulse(targetBankColour3);
+		this.targetBanks.push(targetBank3);
 
 		this.scoop0 = new Pin.Scoop(6);
 
-		// center diamond
-		for(var i = 20; i <= 35; ++i) {
-			var t = (i - 20.0) / (35.0 - 20.0);
-			this.lightState[i].pulse(t, 1.0 - (t * 0.01), 0.5 + (t * 0.4), 1.0, (t + 0.5));
-		}
+		// center indicator diamond
+		var centerDiamondData = [
+			{ colour: targetBankColour0 },
+			{ colour: targetBankColour1 },
+			{ colour: targetBankColour2 },
+			{ colour: targetBankColour3 }
+		];
+		var currentPulseColour = {r: 1.0, g: 1.0, b: 1.0, a: 1.0};
+		this.centerDiamond = new Game.Diamond(this.lightState, 20, 35, currentPulseColour, centerDiamondData);
 
 		// shoot again
 		this.lightState[40].flash(0.1, 0.1, 0.8,  1.0, 0.25);
@@ -99,14 +108,11 @@ Pin.Game = Class.extend({
 		this.lightIndicator0 = new Pin.LightIndicator(this.lightState, 0.1, 1, 1,  1,  45, 56);
 		this.lightIndicatorTimer0 = 0.0;
 
-		// diamonds to scoop
-		for(var i = 60; i <= 62; ++i) {
-			var t = (i - 60.0) / (62.0 - 60.0);
-			this.lightState[i].pulse(t * 0.2, 1.0, t * 0.3, 1.0,  (t * 0.2) + 0.1);
-		}
+		// diamonds to scoop - 60,62
 	},
 
 	update: function(switchState, elapsedTime, delta) {
+		var self = this;
 		this.forceState[0] = switchState[this.SW_PLUNGER_BUTTON];
 
 		// we want these to fire based on which bodies are active in the switch area.
@@ -121,10 +127,12 @@ Pin.Game = Class.extend({
 		this.forceFromCenterAndSwitchState[5] = switchState[5];
 
 		// update target banks
-		this.targetBank0.update(switchState);
-		this.targetBank1.update(switchState);
-		this.targetBank2.update(switchState);
-		this.targetBank3.update(switchState);
+		_.each(this.targetBanks, function(targetBank, targetBankIndex) {
+			targetBank.update(switchState);
+			if(targetBank.isComplete()) {
+				self.centerDiamond.completedGoal(targetBankIndex);
+			}
+		});
 
 		_.each(this.lightState, function(lightData) {
 			lightData.update(delta);
@@ -137,6 +145,7 @@ Pin.Game = Class.extend({
 		// temporary logic for testing - releases after 1 second.
 		if(this.scoop0.shouldDeactivate()) {
 			var self = this;
+			this.centerDiamond.collect();
 			setTimeout(function() {
 				self.wantsRelease = true;
 			}, 1000);
