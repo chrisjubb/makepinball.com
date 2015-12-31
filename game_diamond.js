@@ -53,6 +53,7 @@ Game.Diamond = Class.extend({
 				this.currentGoalIndex = 0;
 				this.displayingGoalsComplete = _.clone(this.goalsComplete);
 				this.setLights(this.displayingGoalsComplete, true);
+				this.goalsComplete = [];
 				this.displayTimer = elapsedTime + 1.0;
 			}
 		}
