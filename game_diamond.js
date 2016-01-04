@@ -119,7 +119,7 @@ Game.Diamond = Class.extend({
 												group.entries,
 												usedPositionIndices);
 
-				group.entries = _.union(group.entries);
+				group.entries = _.sortBy(_.union(group.entries));
 				groups.push(group);
 			}
 		});

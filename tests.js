@@ -110,4 +110,8 @@ QUnit.test("diamond test", function(assert) {
 	assert.deepEqual(groups4[1].entries, [3], "one 3");
 	assert.deepEqual(groups4[2].entries, [5], "one 5");
 
+	var groups5 = diamond2.buildGroups([3,3,3,3,3, 3,3,3,3,3, 3,3,3,3,3, 3]);
+	assert.equal(groups5.length, 1, "just one group of 3");
+	assert.equal(groups5[0].goalIndex, 3, "should have one of 3 goal index");
+	assert.deepEqual(groups5[0].entries, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], "one 3");
 });
