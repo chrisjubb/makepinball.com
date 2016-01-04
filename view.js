@@ -919,13 +919,14 @@ Pin.View = Class.extend({
 		this.renderer.setSize(width, height);
 
 		// Resize renderTargets
-		this.ssaoPass.uniforms['size'].value.set( width, height );
+		this.ssaoPass.uniforms['size'].value.set(width, height);
 
 		var pixelRatio = this.renderer.getPixelRatio();
 		var newWidth  = Math.floor( width / pixelRatio ) || 1;
 		var newHeight = Math.floor( height / pixelRatio ) || 1;
 		this.depthRenderTarget.setSize( newWidth, newHeight );
 		this.effectComposer.setSize( newWidth, newHeight );
+		this.effectComposer.reset();
 	},
 
 	processFlipper: function(flipperBody, buttonDown, multiplier) {
