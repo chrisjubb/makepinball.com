@@ -62,6 +62,21 @@
 				height: 100%;
 				background-color: blue;
 			}
+
+			#debugSwitchContainer {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 80%;
+				height: 100%;
+				z-index: 100;
+			}
+
+			.debugSwitchButton {
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
 		</style>
 	</head>
 	<body>
@@ -80,16 +95,20 @@
 			<p>You can change physics parameters on the right and click 'UPDATE' to see the changes.</p>
 			<p>Uses <a href="http://threejs.org/">three.js</a>, <a href="https://github.com/kripken/ammo.js/">ammo.js</a> and <a href="http://www.blender.org/">Blender</a>.
 		</div>
-		<div id="canvasContainer"></div>
+		<div id="canvasContainer">
+		</div>
 		<div id="configContainer">
 			<div id="configButtons">
 				<div><button onclick="configHide();">Hide</button></div>
 				<div><button onclick="configOutputJson();">output json</button></div>
+				<div><button onclick="toggleSwitchButtons();">show switches</button></div>
 				<div><button onclick="configUpdate();">UPDATE</button></div>
 			</div>
 			<div id="configScrollContainer">
 				<div id="config"></div>
 			</div>
+		</div>
+		<div id="debugSwitchContainer">
 		</div>
 
 		<script src="lib/three.js"></script>
@@ -206,6 +225,24 @@
 			function configUpdate() {
 				physCfgView.updateValues();
 				view.initPhysics();
+			}
+
+			function debugSwitch(switchIndex) {
+				console.log(switchIndex);
+			}
+
+			function toggleSwitchButtons() {
+				var switchPositions = view.getSwitchPositionsScreen();
+				var container = $("#debugSwitchContainer");
+				container.empty();
+				_.each(switchPositions, function(switchData, switchIndex) {
+					if(switchData) {
+						var switchButton = $("<button class='debugSwitchButton' onclick='debugSwitch(" + switchIndex + ");'>" + switchIndex + "</button>");
+						container.append(switchButton);
+						switchButton.css("left", switchData.x - 10);
+						switchButton.css("top", switchData.y - 5);
+					}
+				});
 			}
 
 			function onWindowResize() {

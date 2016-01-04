@@ -929,6 +929,33 @@ Pin.View = Class.extend({
 		this.effectComposer.reset();
 	},
 
+	getSwitchPositionsScreen: function() {
+		// returns the positions of the switches in screen space as xy objects in an array
+		var container = getCanvasContainer();
+		var width = container.width();
+		var height = container.height();
+
+		var widthHalf = width / 2
+		var heightHalf = height / 2;
+
+		var output = [];
+		var self = this;
+		_.each(this.switchBodies, function(switchBody, switchIndex) {
+			if(switchBody) {
+				var position = switchBody.getWorldTransform().getOrigin();
+				var vector = Pin.Utils.convertToVector3(position);
+				vector.project(self.camera);
+
+				vector.x = ( vector.x * widthHalf ) + widthHalf;
+				vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+				output[switchIndex] = { x: vector.x, y: vector.y };
+			}
+		});
+
+		return output;
+	},
+
 	processFlipper: function(flipperBody, buttonDown, multiplier) {
 		var upImpulse =		this.physCfg.get("flipperUpTorque");
 		var downImpulse =	this.physCfg.get("flipperDownTorque");
