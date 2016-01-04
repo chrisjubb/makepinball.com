@@ -686,9 +686,9 @@ Pin.View = Class.extend({
 		original.visible = false;
 
 		original.updateMatrixWorld();
-		var forceValue = 50.0; // todo - need to specify a force here
+		var forceValue = 500.0; // todo - need to specify a force here
 		if(forceIndex == 0) {
-			forceValue = 400.0;
+			forceValue = 8000.0;
 		}
 
 		var forceQuat = original.quaternion;
@@ -976,7 +976,7 @@ Pin.View = Class.extend({
 				var forcePosition = self.forceData[forceId].position;
 
 				var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
-				if(d < 0.1) {
+				if(d < 1.0) {
 					self.activateForce(forceId, ballBody);
 				}
 			});
