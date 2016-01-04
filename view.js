@@ -525,8 +525,8 @@ Pin.View = Class.extend({
 	    var rot = new THREE.Quaternion();
 	    rot.setFromEuler(original.rotation);
 
-	    var shape = new Ammo.btSphereShape(original.scale.x * 0.1);
-	    shape.setMargin(0.04);
+	    var shape = new Ammo.btSphereShape(original.scale.x * 0.125);
+	    shape.setMargin(0.4);
 	    var transform = new Ammo.btTransform();
 	    transform.setIdentity();
 	    transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
