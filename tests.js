@@ -89,5 +89,16 @@ QUnit.test("diamond test", function(assert) {
 	assert.equal(groups2[0].entries.length, 2, "two 5s are connected");
 	assert.equal(groups2[1].entries.length, 1, "only one 6");
 	assert.equal(groups2[0].entries[0], 0, "should have 0 and 2");
-	assert.equal(groups2[0].entries[0], 2, "should have 0 and 2");
+	assert.equal(groups2[0].entries[1], 2, "should have 0 and 2");
+	assert.equal(groups2[1].entries[0], 1, "should have 1");
+
+	var groups3 = diamond2.buildGroups([3,4,3,4,3,4]); // can build independantly
+	assert.equal(groups3.length, 3, "group of 3, 4 and another 4");
+	assert.equal(groups3[0].goalIndex, 3, "should have one of 3 goal index and two of 4");
+	assert.equal(groups3[1].goalIndex, 4, "should have one of 3 goal index and two of 4");
+	assert.equal(groups3[2].goalIndex, 4, "should have one of 3 goal index and two of 4");
+	assert.deepEqual(groups3[0].entries, [0, 2, 4], "three 3s are connected");
+	assert.deepEqual(groups3[1].entries, [1, 3], "two 4s are connected");
+	assert.deepEqual(groups3[2].entries, [5], "two 4s are connected");
+
 });

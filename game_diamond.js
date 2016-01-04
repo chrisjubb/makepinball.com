@@ -112,21 +112,12 @@ Game.Diamond = Class.extend({
 			if(	goalIndex &&
 				usedPositionIndices[positionIndex] === undefined) {
 
-				// list of position indices that are part of this group (add ourself)
-				var group = {goalIndex: goalIndex, entries: [positionIndex]};
-				usedPositionIndices[positionIndex] = true;
-
-				// see if any of the connections has the same goalIndex
-				_.each(self.connections[positionIndex], function(connectionPositionIndex) {
-
-					if( goalsComplete[connectionPositionIndex] == goalIndex &&
-						usedPositionIndices[connectionPositionIndex] === undefined) {
-
-						group.entries.push(connectionPositionIndex);
-						usedPositionIndices[connectionPositionIndex] = true;
-					}
-
-				});
+				var group = {goalIndex: goalIndex, entries: []};
+				self.buildGroupGivenPosition(	goalsComplete,
+												goalIndex,
+												positionIndex,
+												group.entries,
+												usedPositionIndices);
 
 				group.entries = _.union(group.entries);
 				groups.push(group);
@@ -134,6 +125,33 @@ Game.Diamond = Class.extend({
 		});
 
 		return groups;
+	},
+
+	buildGroupGivenPosition: function(	goalsComplete,
+										goalIndex,
+										positionIndex,
+										entryArray, // inout
+										usedPositionIndices // inout
+									  ) {
+		// add ourself
+		entryArray.push(positionIndex);
+		usedPositionIndices[positionIndex] = true;
+
+		var self = this;
+		// see if any of the connections has the same goalIndex (do this recursively)
+		_.each(this.connections[positionIndex], function(connectionPositionIndex) {
+
+			if( goalsComplete[connectionPositionIndex] == goalIndex &&
+				usedPositionIndices[connectionPositionIndex] === undefined) {
+
+				self.buildGroupGivenPosition(	goalsComplete,
+												goalIndex,
+												connectionPositionIndex,
+												entryArray,
+												usedPositionIndices);
+			}
+
+		});
 	},
 
 	setLights: function(goalsState, fullOn) {
