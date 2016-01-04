@@ -104,17 +104,28 @@ Game.Diamond = Class.extend({
 	buildGroups: function(goalsComplete) {
 		// take the goalsComplete list and build a list of groups from it
 		var groups = [];
+		// if we have used this position to build a group
+		var usedPositionIndices = [];
 
 		var self = this;
 		_.each(goalsComplete, function(goalIndex, positionIndex) {
-			if(goalIndex) {
+			if(	goalIndex &&
+				usedPositionIndices[positionIndex] === undefined) {
+
 				// list of position indices that are part of this group (add ourself)
 				var group = {goalIndex: goalIndex, entries: [positionIndex]};
+				usedPositionIndices[positionIndex] = true;
+
 				// see if any of the connections has the same goalIndex
 				_.each(self.connections[positionIndex], function(connectionPositionIndex) {
-					if(goalsComplete[connectionPositionIndex] == goalIndex) {
+
+					if( goalsComplete[connectionPositionIndex] == goalIndex &&
+						usedPositionIndices[connectionPositionIndex] === undefined) {
+
 						group.entries.push(connectionPositionIndex);
+						usedPositionIndices[connectionPositionIndex] = true;
 					}
+
 				});
 
 				group.entries = _.union(group.entries);

@@ -88,4 +88,6 @@ QUnit.test("diamond test", function(assert) {
 	assert.equal(groups2[1].goalIndex, 4, "should have one of 3 goal index and one of 4");
 	assert.equal(groups2[0].entries.length, 2, "two 5s are connected");
 	assert.equal(groups2[1].entries.length, 1, "only one 6");
+	assert.equal(groups2[0].entries[0], 0, "should have 0 and 2");
+	assert.equal(groups2[0].entries[0], 2, "should have 0 and 2");
 });
