@@ -9,9 +9,42 @@ Game.Diamond = Class.extend({
 	displayingGoalsComplete: [], // when animating the collection, use this.
 	state: undefined,
 	displayTimer: 0.0,
+
+	// by light id:
+	//        15
+	//		13  14
+	//   10   11   12
+	// 6    7    8     9
+	//   3     4     5
+	//      1    2
+	//         0
+
+	// ok to have 1->2 and 2->1 (we check for already visited nodes)
+	// only have connections point upwards (eg. 1->3 but not 3->1)
+	connections: [
+		[1, 2], 			// 0
+		[2, 3, 4], 			// 1
+		[1, 4, 5], 			// 2
+		[4, 6, 7], 			// 3
+		[3, 5, 7, 8],		// 4
+		[4, 8, 9], 			// 5
+		[7, 10], 			// 6
+		[6, 8, 10 ,11], 	// 7
+		[7, 9, 11, 12],		// 8
+		[8, 12], 			// 9
+		[11, 13], 			// 10
+		[10, 12, 13, 14],	// 11
+		[11, 14], 			// 12
+		[14, 15], 			// 13
+		[13, 15], 			// 14
+		[], 				// 15
+	],
+
 	STATE_COLLECTING: 0,
-	STATE_DISPLAYING: 1,
-	STATE_DISPLAY_COMPLETE: 2,
+	STATE_DISPLAY_START: 1, // go from pulse to full on
+	STATE_DISPLAY_COLLECT_GROUP: 2, // run through a group,
+	STATE_DISPLAY_FADE_GROUP: 3, // fade out the group -> STATE_DISPLAY_COLLECT_GROUP
+	STATE_DISPLAY_COMPLETE: 4,
 
 	init: function(lightState, startIndex, endIndex, currentPulseColour, colourLookup) {
 		for(var i = startIndex; i <= endIndex; ++i) {
@@ -49,9 +82,10 @@ Game.Diamond = Class.extend({
 				this.state == this.STATE_DISPLAY_COMPLETE;
 			}
 			else {
-				this.state = this.STATE_DISPLAYING;
+				this.state = this.STATE_DISPLAY_START;
 				this.currentGoalIndex = 0;
 				this.displayingGoalsComplete = _.clone(this.goalsComplete);
+				this.goalGroups = this.buildGroups(this.displayingGoalsComplete);
 				this.setLights(this.displayingGoalsComplete, true);
 				this.goalsComplete = [];
 				this.displayTimer = elapsedTime + 1.0;
@@ -65,6 +99,30 @@ Game.Diamond = Class.extend({
 
 	isCollectComplete: function() {
 		return this.state == this.STATE_DISPLAY_COMPLETE;
+	},
+
+	buildGroups: function(goalsComplete) {
+		// take the goalsComplete list and build a list of groups from it
+		var groups = [];
+
+		var self = this;
+		_.each(goalsComplete, function(goalIndex, positionIndex) {
+			if(goalIndex) {
+				// list of position indices that are part of this group (add ourself)
+				var group = {goalIndex: goalIndex, entries: [positionIndex]};
+				// see if any of the connections has the same goalIndex
+				_.each(self.connections[positionIndex], function(connectionPositionIndex) {
+					if(goalsComplete[connectionPositionIndex] == goalIndex) {
+						group.entries.push(connectionPositionIndex);
+					}
+				});
+
+				group.entries = _.union(group.entries);
+				groups.push(group);
+			}
+		});
+
+		return groups;
 	},
 
 	setLights: function(goalsState, fullOn) {
@@ -85,7 +143,7 @@ Game.Diamond = Class.extend({
 	},
 
 	update: function(deltaTime, elapsedTime) {
-		if(this.state == this.STATE_DISPLAYING) {
+		if(this.state == this.STATE_DISPLAY_START) {
 			if(elapsedTime > this.displayTimer) {
 				this.state = this.STATE_DISPLAY_COMPLETE;
 			}

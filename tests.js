@@ -48,7 +48,7 @@ QUnit.test("diamond test", function(assert) {
 	assert.equal(diamond.displayingGoalsComplete.length, 1, "should have one");
 
 	doUpdate(diamond);
-	assert.equal(diamond.state, diamond.STATE_DISPLAYING, "should be displaying now");
+	assert.equal(diamond.state, diamond.STATE_DISPLAY_START, "should be displaying now");
 
 	doUpdate(diamond, 10.0);
 	assert.equal(diamond.state, diamond.STATE_DISPLAY_COMPLETE, "should be complete now");
@@ -63,4 +63,29 @@ QUnit.test("diamond test", function(assert) {
 
 	assert.ok(diamond.isCollectComplete() == false, "should be back to collecting");
 	assert.ok(diamond.canCollect() == false, "haven't completed any");
+
+	// group building:
+	var diamond1 = new Game.Diamond(lightState, 10, 25, currentPulseColour, centerDiamondData);
+	var groups0 = diamond1.buildGroups(diamond1.displayingGoalsComplete);
+	assert.equal(groups0.length, 0, "should have no groups");
+
+	diamond1.completedGoal(4);
+	diamond1.collect();
+	var groups1 = diamond1.buildGroups(diamond1.displayingGoalsComplete);
+	assert.equal(groups1.length, 1, "should just have one group");
+	assert.equal(groups1[0].goalIndex, 4, "should be goal index 4");
+	assert.equal(groups1[0].entries.length, 1, "should just have one entry");
+	assert.equal(groups1[0].entries[0], 0, "should just be the first index");
+
+	var diamond2 = new Game.Diamond(lightState, 10, 25, currentPulseColour, centerDiamondData);
+	diamond2.completedGoal(3);
+	diamond2.completedGoal(4);
+	diamond2.completedGoal(3);
+	diamond2.collect();
+	var groups2 = diamond2.buildGroups(diamond2.displayingGoalsComplete);
+	assert.equal(groups2.length, 2, "two groups");
+	assert.equal(groups2[0].goalIndex, 3, "should have one of 3 goal index and one of 4");
+	assert.equal(groups2[1].goalIndex, 4, "should have one of 3 goal index and one of 4");
+	assert.equal(groups2[0].entries.length, 2, "two 5s are connected");
+	assert.equal(groups2[1].entries.length, 1, "only one 6");
 });
