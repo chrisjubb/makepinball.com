@@ -55,5 +55,12 @@ QUnit.test("diamond test", function(assert) {
 	assert.ok(diamond.isCollectComplete(), "collect should be complete");
 	assert.ok(diamond.canCollect() == false, "haven't completed any");
 
-	// todo - do another collect now without any completed
+	diamond.collect();
+	assert.equal(diamond.state, diamond.STATE_DISPLAY_COMPLETE, "should go straight to complete");
+	assert.ok(diamond.isCollectComplete(), "collect should be complete");
+	assert.ok(diamond.canCollect() == false, "haven't completed any");
+	doUpdate(diamond);
+
+	assert.ok(diamond.isCollectComplete() == false, "should be back to collecting");
+	assert.ok(diamond.canCollect() == false, "haven't completed any");
 });
