@@ -29,9 +29,8 @@ Pin.View = Class.extend({
 	depthRenderTarget: undefined,
 	ssaoPass: undefined,
 	group: undefined,
-	depthScale: 1.0,
-	ssaoEnabled: false,
-	shadowsEnabled: true,
+	ssaoEnabled: true,
+	shadowsEnabled: false,
 
 	// physics state - could turn into a class
 	dynamicsWorld: undefined,
@@ -829,19 +828,20 @@ Pin.View = Class.extend({
 		this.scene.add(new THREE.AmbientLight(0x444444));
 
 		var directionalLight = new THREE.DirectionalLight(0x999999);
-		directionalLight.position.x = 7.5;
-		directionalLight.position.y = 5.9;
-		directionalLight.position.z = 4.2;
-		directionalLight.rotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), 0.0);
+		directionalLight.position.x = 40;
+		directionalLight.position.y = 30;
+		directionalLight.position.z = 40;
+		directionalLight.rotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(2, 40, 40));
 		directionalLight.castShadow = this.shadowsEnabled;
-		directionalLight.shadowDarkness = 0.6;
-		directionalLight.shadowCameraNear = 0.1;
-		directionalLight.shadowCameraFar = 15;
-		directionalLight.shadowCameraLeft = -15;
-		directionalLight.shadowCameraRight = 15;
-		directionalLight.shadowCameraTop = 15;
-		directionalLight.shadowCameraBottom = -15;
-		directionalLight.shadowBias = 0.002;
+		directionalLight.shadowDarkness = 1.0;
+		directionalLight.shadowCameraNear = 5.0;
+		directionalLight.shadowCameraFar = 50.0;
+		var size = 50;
+		directionalLight.shadowCameraLeft = -size;
+		directionalLight.shadowCameraRight = size;
+		directionalLight.shadowCameraTop = size;
+		directionalLight.shadowCameraBottom = -size;
+		directionalLight.shadowBias = 0.02;
 		this.scene.add(directionalLight);
 
 		this.renderer = new THREE.WebGLRenderer();
@@ -902,7 +902,7 @@ Pin.View = Class.extend({
 		this.ssaoPass.uniforms[ 'cameraFar' ].value = this.camera.far;
 		this.ssaoPass.uniforms[ 'onlyAO' ].value = false;
 		this.ssaoPass.uniforms[ 'aoClamp' ].value = 0.4;
-		this.ssaoPass.uniforms[ 'lumInfluence' ].value = 0.5;
+		this.ssaoPass.uniforms[ 'lumInfluence' ].value = 0.95;
 
 		// Add pass to effect composer
 		this.effectComposer = new THREE.EffectComposer(this.renderer);
