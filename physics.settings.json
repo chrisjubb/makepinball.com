@@ -1,6 +1,6 @@
 {
 	"tableAngle": -7,
-	"gravityForce": -40,
+	"gravityForce": -400,
 
 	"triangleMeshRestitution": 1.2,
 	"triangleMeshDampingLinear": 0.04,
@@ -40,6 +40,6 @@
 	"flipperHingeSoftness": 0.3,
 	"flipperHingeSpringyness": 0.1,
 	"flipperHingeRelaxationFactor": 3.0,
-	"flipperUpImpulse": 172,
-	"flipperDownImpulse": -80
+	"flipperUpTorque": 9000,
+	"flipperDownTorque": -8000
 }

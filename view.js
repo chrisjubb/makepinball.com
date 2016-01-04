@@ -929,8 +929,8 @@ Pin.View = Class.extend({
 	},
 
 	processFlipper: function(flipperBody, buttonDown, multiplier) {
-		var upImpulse =		this.physCfg.get("flipperUpImpulse");
-		var downImpulse =	this.physCfg.get("flipperDownImpulse");
+		var upImpulse =		this.physCfg.get("flipperUpTorque");
+		var downImpulse =	this.physCfg.get("flipperDownTorque");
 
 		var targetVelocity;
 
