@@ -194,6 +194,8 @@
 			var game = new Pin.Game();
 			var view = new Pin.View();
 
+			var debugSwitchButtonsShown = false;
+
 			view.setLightShader("light_vertex_shader", "light_fragment_shader");
 			view.setFlipperData(game.getFlipperData());
 			view.setInputMapping(game.getInputMapping());
@@ -235,14 +237,21 @@
 				var switchPositions = view.getSwitchPositionsScreen();
 				var container = $("#debugSwitchContainer");
 				container.empty();
-				_.each(switchPositions, function(switchData, switchIndex) {
-					if(switchData) {
-						var switchButton = $("<button class='debugSwitchButton' onclick='debugSwitch(" + switchIndex + ");'>" + switchIndex + "</button>");
-						container.append(switchButton);
-						switchButton.css("left", switchData.x - 10);
-						switchButton.css("top", switchData.y - 5);
-					}
-				});
+
+				if(!debugSwitchButtonsShown) {
+					_.each(switchPositions, function(switchData, switchIndex) {
+						if(switchData) {
+							var switchButton = $("<button class='debugSwitchButton' onclick='debugSwitch(" + switchIndex + ");'>" + switchIndex + "</button>");
+							container.append(switchButton);
+							switchButton.css("left", switchData.x - 10);
+							switchButton.css("top", switchData.y - 5);
+						}
+					});
+					debugSwitchButtonsShown = true;
+				}
+				else {
+					debugSwitchButtonsShown = false;
+				}
 			}
 
 			function onWindowResize() {
