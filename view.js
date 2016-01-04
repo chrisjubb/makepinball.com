@@ -526,7 +526,7 @@ Pin.View = Class.extend({
 	    var rot = new THREE.Quaternion();
 	    rot.setFromEuler(original.rotation);
 
-	    var shape = new Ammo.btSphereShape(0.135);
+	    var shape = new Ammo.btSphereShape(original.scale.x * 0.1);
 	    shape.setMargin(0.04);
 	    var transform = new Ammo.btTransform();
 	    transform.setIdentity();
@@ -815,10 +815,10 @@ Pin.View = Class.extend({
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera( 60, container.width() / container.height(), 0.1, 1000.0 );
-		this.camera.position.x = 5.6;
-		this.camera.position.y = 7.2;
-		this.camera.position.z = 2.6;
-		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, 0.5) );
+		this.camera.position.x = 10;
+		this.camera.position.y = 76;
+		this.camera.position.z = 16;
+		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, 2) );
 
 		// Add the COLLADA
 
