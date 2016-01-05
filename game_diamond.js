@@ -10,7 +10,8 @@ Game.Diamond = Class.extend({
 	goalGroups: [],
 	state: undefined,
 	displayTimer: 0.0,
-	displayGoalIndex: 0,
+	displayGoalIndex: 0, // which goal
+	displayGoalLightIndex: 0, // which index within the goal
 
 	// by light id:
 	//        15
@@ -92,6 +93,7 @@ Game.Diamond = Class.extend({
 				this.goalsComplete = [];
 				this.displayTimer = elapsedTime + 1.0;
 				this.displayGoalIndex = 0;
+				this.displayGoalLightIndex = 0;
 			}
 		}
 	},
@@ -174,9 +176,13 @@ Game.Diamond = Class.extend({
 		});
 	},
 
+	getCurrentGoal: function() {
+		return this.goalGroups[this.displayGoalIndex];
+	},
+
 	setGroupLights: function(callbackFunction) {
 		var self = this;
-		var goal = this.goalGroups[this.displayGoalIndex];
+		var goal = this.getCurrentGoal();
 		var c = this.colourLookup[goal.goalIndex].colour;
 		_.each(goal.entries, function(positionIndex, arrayIndex) {
 			var light = self.lights[positionIndex];
@@ -194,6 +200,18 @@ Game.Diamond = Class.extend({
 		});
 	},
 
+	displayNextGroupLight: function(elapsedTime) {
+		this.state = this.STATE_DISPLAY_COLLECT_GROUP;
+		this.displayTimer = elapsedTime + 0.25;
+
+		var self = this;
+		this.setGroupLights(function(light, arrayIndex, c) {
+			if(self.displayGoalLightIndex == arrayIndex) {
+				light.flash(c.r, c.g, c.b, c.a);
+			}
+		});
+	},
+
 	update: function(deltaTime, elapsedTime) {
 		if(this.state == this.STATE_DISPLAY_START) {
 			// delay at the start
@@ -203,17 +221,35 @@ Game.Diamond = Class.extend({
 		}
 		else if(this.state == this.STATE_DISPLAY_FLASH_GROUP) {
 			if(elapsedTime > this.displayTimer) {
-				this.state = this.STATE_DISPLAY_COLLECT_GROUP;
+				this.setGroupLights(function(light, arrayIndex, c) {
+					light.reset();
+					light.set(c.r, c.g, c.b, c.a);
+				});
+				this.displayNextGroupLight(elapsedTime);
 			}
 		}
 		else if(this.state == this.STATE_DISPLAY_COLLECT_GROUP) {
-			// temporary - will go through all and turn them off in order
-			this.setGroupLights(function(light, arrayIndex, c) {
-				light.reset();
-			});
+			if(elapsedTime > this.displayTimer) {
 
-			this.state = this.STATE_DISPLAY_FADE_GROUP;
-			this.displayTimer = elapsedTime + 0.5;
+				var self = this;
+				this.setGroupLights(function(light, arrayIndex, c) {
+					if(self.displayGoalLightIndex == arrayIndex) {
+						light.fadeOut(1.0);
+					}
+				});
+
+				this.displayGoalLightIndex++;
+
+				if(this.displayGoalLightIndex > this.getCurrentGoal().entries.length) {
+					// finished
+					this.state = this.STATE_DISPLAY_FADE_GROUP;
+					this.displayTimer = elapsedTime + 0.5;
+					this.displayGoalLightIndex = 0;
+				}
+				else {
+					this.displayNextGroupLight(elapsedTime);
+				}
+			}
 		}
 		else if(this.state == this.STATE_DISPLAY_FADE_GROUP) {
 			if(elapsedTime > this.displayTimer) {
