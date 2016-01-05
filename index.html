@@ -264,11 +264,19 @@
 						}
 					});
 					if(differences > 0) {
-						// console.log(differentSwitchState);
+						logSwitchChange(differentSwitchState);
 					}
 				}
 
 				oldSwitchState = _.clone(switchState);
+			}
+
+			function logSwitchChange(changedSwitches) {
+				_.each(changedSwitches, function(switchItem, switchIndex) {
+					if(switchItem !== undefined) {
+						console.log("Switch - " + switchIndex + ", state = " + switchItem);
+					}
+				});
 			}
 
 			function toggleSwitchButtons() {
