@@ -67,7 +67,7 @@ Pin.LightIndicator = Class.extend({
 					this.increase();
 					this.timer = elapsedTime + 0.25;
 
-					if(this.value == (this.lights.length - 1)) {
+					if(this.value == this.lights.length) {
 						this.state = this.STATE_COMPLETE;
 
 						_.each(this.lights, function(light) {
