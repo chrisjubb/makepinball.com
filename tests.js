@@ -50,19 +50,15 @@ QUnit.test("diamond test", function(assert) {
 	doUpdate(diamond);
 	assert.equal(diamond.state, diamond.STATE_DISPLAY_START, "should be displaying now");
 
-	doUpdate(diamond, 10.0);
-	assert.equal(diamond.state, diamond.STATE_DISPLAY_COMPLETE, "should be complete now");
-	assert.ok(diamond.isCollectComplete(), "collect should be complete");
-	assert.ok(diamond.canCollect() == false, "haven't completed any");
+	var diamond0 = new Game.Diamond(lightState, 10, 25, currentPulseColour, centerDiamondData);
+	diamond0.collect();
+	assert.equal(diamond0.state, diamond0.STATE_DISPLAY_COMPLETE, "should go straight to complete");
+	assert.ok(diamond0.isCollectComplete(), "collect should be complete");
+	assert.ok(diamond0.canCollect() == false, "haven't completed any");
+	doUpdate(diamond0);
 
-	diamond.collect();
-	assert.equal(diamond.state, diamond.STATE_DISPLAY_COMPLETE, "should go straight to complete");
-	assert.ok(diamond.isCollectComplete(), "collect should be complete");
-	assert.ok(diamond.canCollect() == false, "haven't completed any");
-	doUpdate(diamond);
-
-	assert.ok(diamond.isCollectComplete() == false, "should be back to collecting");
-	assert.ok(diamond.canCollect() == false, "haven't completed any");
+	assert.ok(diamond0.isCollectComplete() == false, "should be back to collecting");
+	assert.ok(diamond0.canCollect() == false, "haven't completed any");
 
 	// group building:
 	var diamond1 = new Game.Diamond(lightState, 10, 25, currentPulseColour, centerDiamondData);

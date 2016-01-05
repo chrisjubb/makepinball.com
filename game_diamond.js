@@ -7,8 +7,10 @@ Game.Diamond = Class.extend({
 	currentGoalIndex: 0,
 	goalsComplete: [],
 	displayingGoalsComplete: [], // when animating the collection, use this.
+	goalGroups: [],
 	state: undefined,
 	displayTimer: 0.0,
+	displayGoalIndex: 0,
 
 	// by light id:
 	//        15
@@ -79,7 +81,7 @@ Game.Diamond = Class.extend({
 	collect: function(elapsedTime) {
 		if(this.state == this.STATE_COLLECTING) {
 			if(this.currentGoalIndex == 0) {
-				this.state == this.STATE_DISPLAY_COMPLETE;
+				this.state = this.STATE_DISPLAY_COMPLETE;
 			}
 			else {
 				this.state = this.STATE_DISPLAY_START;
@@ -89,6 +91,7 @@ Game.Diamond = Class.extend({
 				this.setLights(this.displayingGoalsComplete, true);
 				this.goalsComplete = [];
 				this.displayTimer = elapsedTime + 1.0;
+				this.displayGoalIndex = 0;
 			}
 		}
 	},
@@ -109,7 +112,7 @@ Game.Diamond = Class.extend({
 
 		var self = this;
 		_.each(goalsComplete, function(goalIndex, positionIndex) {
-			if(	goalIndex &&
+			if(	goalIndex != undefined &&
 				usedPositionIndices[positionIndex] === undefined) {
 
 				var group = {goalIndex: goalIndex, entries: []};
@@ -171,10 +174,56 @@ Game.Diamond = Class.extend({
 		});
 	},
 
+	setGroupLights: function(callbackFunction) {
+		var self = this;
+		var goal = this.goalGroups[this.displayGoalIndex];
+		var c = this.colourLookup[goal.goalIndex].colour;
+		_.each(goal.entries, function(positionIndex, arrayIndex) {
+			var light = self.lights[positionIndex];
+			callbackFunction(light, arrayIndex, c);
+		});
+	},
+
+	displayNextGroup: function(elapsedTime) {
+		this.state = this.STATE_DISPLAY_FLASH_GROUP;
+		this.displayTimer = elapsedTime + 0.5;
+
+		this.setGroupLights(function(light, arrayIndex, c) {
+			light.reset();
+			light.flash(c.r, c.g, c.b, c.a);
+		});
+	},
+
 	update: function(deltaTime, elapsedTime) {
 		if(this.state == this.STATE_DISPLAY_START) {
+			// delay at the start
 			if(elapsedTime > this.displayTimer) {
-				this.state = this.STATE_DISPLAY_COMPLETE;
+				this.displayNextGroup(elapsedTime);
+			}
+		}
+		else if(this.state == this.STATE_DISPLAY_FLASH_GROUP) {
+			if(elapsedTime > this.displayTimer) {
+				this.state = this.STATE_DISPLAY_COLLECT_GROUP;
+			}
+		}
+		else if(this.state == this.STATE_DISPLAY_COLLECT_GROUP) {
+			// temporary - will go through all and turn them off in order
+			this.setGroupLights(function(light, arrayIndex, c) {
+				light.reset();
+			});
+
+			this.state = this.STATE_DISPLAY_FADE_GROUP;
+			this.displayTimer = elapsedTime + 0.5;
+		}
+		else if(this.state == this.STATE_DISPLAY_FADE_GROUP) {
+			if(elapsedTime > this.displayTimer) {
+				this.displayGoalIndex++;
+				if(this.displayGoalIndex == this.goalGroups.length) {
+					this.state = this.STATE_DISPLAY_COMPLETE;
+				}
+				else {
+					this.displayNextGroup(elapsedTime);
+				}
 			}
 		}
 		else if(this.state == this.STATE_DISPLAY_COMPLETE) {
@@ -183,6 +232,7 @@ Game.Diamond = Class.extend({
 				light.reset();
 			});
 			this.displayingGoalsComplete = [];
+			this.goalGroups = [];
 			this.setCurrentFlashing();
 			this.state = this.STATE_COLLECTING;
 		}
