@@ -45,7 +45,17 @@
 			}
 
 			#configScrollContainer {
-				height: 90%;
+				height: 70%;
+			}
+
+			#eventContainer {
+				width: 100%;
+				height: 20%;
+			}
+
+			#eventTextArea {
+				width: 90%;
+				height: 50%;
 			}
 
 			#config {
@@ -107,6 +117,13 @@
 			<div id="configScrollContainer">
 				<div id="config"></div>
 			</div>
+			<div id="eventContainer">
+				<textarea id="eventTextArea"></textarea>
+				<div>
+					<button onclick="clearEvents();">Clear</button>
+					<button onclick="replayEvents();">REPLAY</button>
+				</div>
+			</div>
 		</div>
 		<div id="debugSwitchContainer">
 		</div>
@@ -145,6 +162,8 @@
 		<script src="game_diamond.js"></script>
 		<script src="game.js"></script>
 		<script src="view.js"></script>
+		<script src="event.js"></script>
+		<script src="event_switch.js"></script>
 
 		<script id="light_vertex_shader" type="x-shader/x-vertex">
 			varying vec2 vUv;
@@ -198,6 +217,11 @@
 			var debugSwitches = [];
 			var oldSwitchState;
 			var differentSwitchState = [];
+			var eventOutput = $("#eventTextArea");
+			var events = [];
+			var replayingEvents = false;
+			var replayingEventsCounter = 0;
+			updateEvents();
 
 			view.setLightShader("light_vertex_shader", "light_fragment_shader");
 			view.setFlipperData(game.getFlipperData());
@@ -233,11 +257,11 @@
 			}
 
 			function debugSwitchDown(switchIndex) {
-				debugSwitches[switchIndex] = true;
+				debugSwitches[switchIndex] = 1;
 			}
 
 			function debugSwitchUp(switchIndex) {
-				debugSwitches[switchIndex] = false;
+				debugSwitches[switchIndex] = 0;
 			}
 
 			function updateDebugSwitchState(switchState) {
@@ -251,32 +275,60 @@
 			}
 
 			function updateGameSwitchEvents(switchState) {
-				if(oldSwitchState) {
-					var differences = 0;
-					_.each(switchState, function(switchItem, switchIndex) {
-						if(switchItem !== undefined &&
-							switchItem != oldSwitchState[switchIndex]) {
-							differentSwitchState[switchIndex] = switchItem;
-							differences++;
+				if(replayingEvents == false) {
+					// don't relog events if we're replaying
+					if(oldSwitchState) {
+						var differences = 0;
+						_.each(switchState, function(switchItem, switchIndex) {
+							if(switchItem !== undefined &&
+								switchItem != oldSwitchState[switchIndex]) {
+								differentSwitchState[switchIndex] = switchItem;
+								differences++;
+							}
+							else {
+								differentSwitchState[switchIndex] = undefined;
+							}
+						});
+						if(differences > 0) {
+							logSwitchChange(differentSwitchState);
 						}
-						else {
-							differentSwitchState[switchIndex] = undefined;
-						}
-					});
-					if(differences > 0) {
-						logSwitchChange(differentSwitchState);
 					}
-				}
 
-				oldSwitchState = _.clone(switchState);
+					oldSwitchState = _.clone(switchState);
+				}
 			}
 
 			function logSwitchChange(changedSwitches) {
 				_.each(changedSwitches, function(switchItem, switchIndex) {
 					if(switchItem !== undefined) {
-						console.log("Switch - " + switchIndex + ", state = " + switchItem);
+						events.push(new Pin.Event.Switch(view.getElapsedTime(), switchIndex, switchItem));
 					}
 				});
+				updateEvents();
+			}
+
+			function clearEvents() {
+				events = [];
+				updateEvents();
+			}
+
+			function replayEvents() {
+				replayingEvents = true;
+				replayingEventsCounter = 0;
+			}
+
+			function updateEvents() {
+				eventOutput.html(JSON.stringify(events));
+			}
+
+			function updateReplaying(switchState) {
+				if(replayingEvents) {
+					events[replayingEventsCounter].perform(debugSwitches);
+					replayingEventsCounter++;
+					if(replayingEventsCounter == events.length) {
+						replayingEvents = false;
+					}
+				}
 			}
 
 			function toggleSwitchButtons() {
@@ -317,6 +369,7 @@
 
 				view.preUpdate();
 				var switchState = view.getSwitchState();
+				updateReplaying(switchState);
 				switchState = updateDebugSwitchState(switchState);
 				updateGameSwitchEvents(switchState);
 				game.update(switchState, view.getElapsedTime(), view.getDeltaTime());
