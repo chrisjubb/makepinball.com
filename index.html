@@ -196,6 +196,8 @@
 
 			var debugSwitchButtonsShown = false;
 			var debugSwitches = [];
+			var oldSwitchState;
+			var differentSwitchState = [];
 
 			view.setLightShader("light_vertex_shader", "light_fragment_shader");
 			view.setFlipperData(game.getFlipperData());
@@ -241,11 +243,32 @@
 			function updateDebugSwitchState(switchState) {
 				_.each(debugSwitches, function(debugSwitch, debugSwitchIndex) {
 					if(debugSwitch) {
-						switchState[debugSwitchIndex] = true;
+						switchState[debugSwitchIndex] = 1;
 					}
 				});
 
 				return switchState;
+			}
+
+			function updateGameSwitchEvents(switchState) {
+				if(oldSwitchState) {
+					var differences = 0;
+					_.each(switchState, function(switchItem, switchIndex) {
+						if(switchItem !== undefined &&
+							switchItem != oldSwitchState[switchIndex]) {
+							differentSwitchState[switchIndex] = switchItem;
+							differences++;
+						}
+						else {
+							differentSwitchState[switchIndex] = undefined;
+						}
+					});
+					if(differences > 0) {
+						// console.log(differentSwitchState);
+					}
+				}
+
+				oldSwitchState = _.clone(switchState);
 			}
 
 			function toggleSwitchButtons() {
@@ -287,6 +310,7 @@
 				view.preUpdate();
 				var switchState = view.getSwitchState();
 				switchState = updateDebugSwitchState(switchState);
+				updateGameSwitchEvents(switchState);
 				game.update(switchState, view.getElapsedTime(), view.getDeltaTime());
 				var lightState = game.getLightState();
 				var forceState = game.getForceState();
