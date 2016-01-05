@@ -49,6 +49,15 @@ Game.Diamond = Class.extend({
 	STATE_DISPLAY_FADE_GROUP: 3, // fade out the group -> STATE_DISPLAY_COLLECT_GROUP
 	STATE_DISPLAY_COMPLETE: 4,
 
+	// all in seconds
+	TIME_AFTER_COLLECT: 1.0,
+	TIME_BETWEEN_GROUPS: 0.5,
+	TIME_FLASHING_GROUP: 0.5,
+	TIME_FLASHING_GROUP_DURATION: 0.1,
+	TIME_FLASHING_INDIVIDUAL_GROUP_LIGHT: 0.25,
+	TIME_FLASHING_INDIVIDUAL_GROUP_DURATION: 0.05,
+	TIME_GROUP_LIGHT_FADE_OUT: 1.0,
+
 	init: function(lightState, startIndex, endIndex, currentPulseColour, colourLookup) {
 		for(var i = startIndex; i <= endIndex; ++i) {
 			this.lights.push(lightState[i]);
@@ -91,7 +100,7 @@ Game.Diamond = Class.extend({
 				this.goalGroups = this.buildGroups(this.displayingGoalsComplete);
 				this.setLights(this.displayingGoalsComplete, true);
 				this.goalsComplete = [];
-				this.displayTimer = elapsedTime + 1.0;
+				this.displayTimer = elapsedTime + this.TIME_AFTER_COLLECT;
 				this.displayGoalIndex = 0;
 				this.displayGoalLightIndex = 0;
 			}
@@ -192,22 +201,22 @@ Game.Diamond = Class.extend({
 
 	displayNextGroup: function(elapsedTime) {
 		this.state = this.STATE_DISPLAY_FLASH_GROUP;
-		this.displayTimer = elapsedTime + 0.5;
+		this.displayTimer = elapsedTime + this.TIME_FLASHING_GROUP;
 
 		this.setGroupLights(function(light, arrayIndex, c) {
 			light.reset();
-			light.flash(c.r, c.g, c.b, c.a);
+			light.flash(c.r, c.g, c.b, c.a, this.TIME_FLASHING_GROUP_DURATION);
 		});
 	},
 
 	displayNextGroupLight: function(elapsedTime) {
 		this.state = this.STATE_DISPLAY_COLLECT_GROUP;
-		this.displayTimer = elapsedTime + 0.25;
+		this.displayTimer = elapsedTime + this.TIME_FLASHING_INDIVIDUAL_GROUP_LIGHT;
 
 		var self = this;
 		this.setGroupLights(function(light, arrayIndex, c) {
 			if(self.displayGoalLightIndex == arrayIndex) {
-				light.flash(c.r, c.g, c.b, c.a);
+				light.flash(c.r, c.g, c.b, c.a, this.TIME_FLASHING_INDIVIDUAL_GROUP_DURATION);
 			}
 		});
 	},
@@ -234,7 +243,7 @@ Game.Diamond = Class.extend({
 				var self = this;
 				this.setGroupLights(function(light, arrayIndex, c) {
 					if(self.displayGoalLightIndex == arrayIndex) {
-						light.fadeOut(1.0);
+						light.fadeOut(self.TIME_GROUP_LIGHT_FADE_OUT);
 					}
 				});
 
@@ -243,7 +252,7 @@ Game.Diamond = Class.extend({
 				if(this.displayGoalLightIndex > this.getCurrentGoal().entries.length) {
 					// finished
 					this.state = this.STATE_DISPLAY_FADE_GROUP;
-					this.displayTimer = elapsedTime + 0.5;
+					this.displayTimer = elapsedTime + this.TIME_BETWEEN_GROUPS;
 					this.displayGoalLightIndex = 0;
 				}
 				else {
