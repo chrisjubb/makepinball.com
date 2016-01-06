@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2016-01-06T11:24:41</created>
-    <modified>2016-01-06T11:24:41</modified>
+    <created>2016-01-06T11:45:15</created>
+    <modified>2016-01-06T11:45:15</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -7763,7 +7763,7 @@
         <vertices id="Cube_003-mesh-vertices">
           <input semantic="POSITION" source="#Cube_003-mesh-positions"/>
         </vertices>
-        <polylist material="invisble-material" count="40">
+        <polylist count="40">
           <input semantic="VERTEX" source="#Cube_003-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube_003-mesh-normals" offset="1"/>
           <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
@@ -9192,13 +9192,7 @@
       </node>
       <node id="skirt" name="skirt" type="NODE">
         <matrix sid="transform">10 0 0 2.777203 0 3.419833 0 -46.07147 0 0 0.26 3.962636 0 0 0 1</matrix>
-        <instance_geometry url="#Cube_003-mesh" name="skirt">
-          <bind_material>
-            <technique_common>
-              <instance_material symbol="invisble-material" target="#invisble-material"/>
-            </technique_common>
-          </bind_material>
-        </instance_geometry>
+        <instance_geometry url="#Cube_003-mesh" name="skirt"/>
       </node>
     </visual_scene>
   </library_visual_scenes>
