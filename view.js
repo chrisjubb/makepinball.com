@@ -707,7 +707,7 @@ Pin.View = Class.extend({
 		original.updateMatrixWorld();
 		var forceValue = 500.0; // todo - need to specify a force here
 		if(forceIndex == 0) {
-			forceValue = 8000.0;
+			forceValue = 6000.0;
 		}
 
 		var forceQuat = original.quaternion;
