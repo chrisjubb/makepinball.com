@@ -845,7 +845,7 @@ Pin.View = Class.extend({
 
 		// Lights
 
-		this.scene.add(new THREE.AmbientLight(0x444444));
+		this.scene.add(new THREE.AmbientLight(0x777777));
 
 		var directionalLight = new THREE.DirectionalLight(0x999999);
 		directionalLight.position.x = 40;
