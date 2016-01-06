@@ -40,7 +40,7 @@ Pin.LightIndicator = Class.extend({
 		var self = this;
 		_.each(this.lights, function(light, lightIndex) {
 			if(lightIndex < self.value) {
-				light.set(self.onColour.r, self.onColour.g, self.onColour.b, self.onColour.a);
+				light.pulse(self.onColour.r, self.onColour.g, self.onColour.b, self.onColour.a);
 			}
 			else {
 				light.reset();
