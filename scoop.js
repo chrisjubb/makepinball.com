@@ -51,7 +51,7 @@ Pin.Scoop = Class.extend({
 	},
 
 	release: function() {
-		if(this.state == this.STATE_INSIDE) {
+		if(this.state == this.STATE_INSIDE || this.state == this.STATE_HIT) {
 			this.state = this.STATE_RELEASE_START;
 		}
 	},
