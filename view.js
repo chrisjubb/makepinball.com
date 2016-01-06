@@ -261,6 +261,22 @@ Pin.View = Class.extend({
 			}
 		});
 
+		// this is very hardcoded for the demo - resets the ball position when we hit switch 1 (the ball trough)
+		if(this.switchActivatedByBodies[1]) {
+			var self = this;
+			_.each(this.switchActivatedByBodies[1], function(bodyDataItem) {
+				var body = bodyDataItem.body;
+				var ballIndex = -1;
+				_.each(self.ballBodies, function(ballBody, ballBodyIndex) {
+					if(ballBody.ptr == body.ptr) {
+						ballIndex = ballBodyIndex;
+					}
+				});
+				self.resetBallPosition(body, ballIndex);
+			});
+		}
+		// end of hardcodedness
+
 		_.each(this.flipperData, function(flipperData) {
 			self.processFlipper(self.flipperBodies[flipperData.flipperBodyIndex],
 								self.switchState[flipperData.switchIndex],
@@ -450,23 +466,27 @@ Pin.View = Class.extend({
 		this.resetBallPositions();
 	},
 
+	resetBallPosition: function(body, ballIndex) {
+		var transform = new Ammo.btTransform();
+		transform.setIdentity();
+		var startingData = this.ballStartingData[ballIndex];
+		var pos = startingData.position;
+		var mass = this.physCfg.get("ballMass");
+
+		// reset the visual part
+		startingData.child.position = startingData.position.clone();
+
+		transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+		body.setWorldTransform(transform);
+		body.setLinearVelocity(new Ammo.btVector3(0,0,0));
+		body.setAngularVelocity(new Ammo.btVector3(0,0,0));
+		body.setMassProps(mass, new Ammo.btVector3(0,0,0));
+	},
+
 	resetBallPositions: function() {
 		var self = this;
 		_.each(this.ballBodies, function(body, i) {
-			var transform = new Ammo.btTransform();
-			transform.setIdentity();
-			var startingData = self.ballStartingData[i];
-			var pos = startingData.position;
-			var mass = this.physCfg.get("ballMass");
-
-			// reset the visual part
-			startingData.child.position = startingData.position.clone();
-
-			transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
-			body.setWorldTransform(transform);
-			body.setLinearVelocity(new Ammo.btVector3(0,0,0));
-			body.setAngularVelocity(new Ammo.btVector3(0,0,0));
-			body.setMassProps(mass, new Ammo.btVector3(0,0,0));
+			self.resetBallPosition(body, i);
 		});
 	},
 
@@ -817,7 +837,7 @@ Pin.View = Class.extend({
 		this.camera.position.x = 10;
 		this.camera.position.y = 76;
 		this.camera.position.z = 16;
-		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, 2) );
+		this.camera.lookAt( new THREE.Vector3(this.camera.position.x, 0, 6) );
 
 		// Add the COLLADA
 
@@ -1004,7 +1024,7 @@ Pin.View = Class.extend({
 				var forcePosition = self.forceData[forceId].position;
 
 				var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
-				if(d < 1.0) {
+				if(d < 10.0) {
 					self.activateForce(forceId, ballBody);
 				}
 			});
