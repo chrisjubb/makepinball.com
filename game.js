@@ -15,6 +15,10 @@ Pin.Game = Class.extend({
 	deactivateFromSwitchState: [],
 	activateFromSwitchState: [],
 
+	soundManager: undefined,
+	// todo - use this for the target banks too
+	switchEventHandler: undefined,
+
 	// l = light index
 	// s = switch index
 	targetBankList0: [
@@ -55,6 +59,14 @@ Pin.Game = Class.extend({
 		for(var i = 0; i < this.numberOfLights; ++i) {
 			this.lightState.push(new Pin.Light());
 		}
+
+		this.soundManager = new Pin.SoundManager();
+		this.SOUND_HIT = this.soundManager.load("sounds/hit.mp3");
+
+		this.switchEventHandler = new Pin.SwitchEventHandler();
+		this.switchEventHandler.triggerOn([10, 11, 12, 13], this, function() {
+			self.soundManager.play(self.SOUND_HIT);
+		});
 
 		var targetBankColour0 = { r: 1, g: 1, b: 0, a: 1 };
 		var targetBank0 = new Pin.TargetBank(this.createTargetBankData(
@@ -127,6 +139,8 @@ Pin.Game = Class.extend({
 		// this can be used for pop bumpers.
 		this.forceFromCenterAndSwitchState[4] = switchState[4];
 		this.forceFromCenterAndSwitchState[5] = switchState[5];
+
+		this.switchEventHandler.update(switchState);
 
 		// update target banks
 		_.each(this.targetBanks, function(targetBank, targetBankIndex) {
