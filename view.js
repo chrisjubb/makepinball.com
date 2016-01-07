@@ -29,7 +29,7 @@ Pin.View = Class.extend({
 	depthRenderTarget: undefined,
 	ssaoPass: undefined,
 	group: undefined,
-	ssaoEnabled: true,
+	ssaoEnabled: false,
 	shadowsEnabled: false,
 
 	// physics state - could turn into a class
@@ -272,15 +272,16 @@ Pin.View = Class.extend({
 						ballIndex = ballBodyIndex;
 					}
 				});
-				self.resetBallPosition(body, ballIndex);
+				//self.resetBallPosition(body, ballIndex);
 			});
 		}
 		// end of hardcodedness
 
-		_.each(this.flipperData, function(flipperData) {
+		_.each(this.flipperData, function(flipperData, flipperIndex) {
 			self.processFlipper(self.flipperBodies[flipperData.flipperBodyIndex],
 								self.switchState[flipperData.switchIndex],
-								flipperData.directionMultiplier);
+								flipperData.directionMultiplier,
+								flipperIndex);
 		});
 
 		this.dynamicsWorld.stepSimulation(this.deltaTime, 2);
@@ -619,8 +620,7 @@ Pin.View = Class.extend({
 	    transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
 	    var mass = this.physCfg.get("flipperMass");
-	    var localInertia = new Ammo.btVector3(0, 0, 0);
-	    shape.calculateLocalInertia(mass, localInertia);
+	    var localInertia = new Ammo.btVector3(1,1,1);
 
 	    var motionState = new Ammo.btDefaultMotionState(transform);
 	    var rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
@@ -631,11 +631,10 @@ Pin.View = Class.extend({
 
 		var hingeTransform = new Ammo.btTransform();
 	    hingeTransform.setIdentity();
-	    hingeTransform.setOrigin(new Ammo.btVector3(0,0.0,0));
 	    var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-	    hingeQuaternion.setEulerZYX(this.physCfg.get("flipperHingeZ"),
-	    							this.physCfg.get("flipperHingeY"),
-	    							this.physCfg.get("flipperHingeX"));
+	    hingeQuaternion.setEulerZYX(Pin.Utils.radians(this.physCfg.get("flipperHingeZ")),
+	    							Pin.Utils.radians(this.physCfg.get("flipperHingeY")),
+	    							Pin.Utils.radians(this.physCfg.get("flipperHingeX")));
 	    hingeQuaternion.normalize();
 	    hingeTransform.setRotation(hingeQuaternion);
 
@@ -649,7 +648,7 @@ Pin.View = Class.extend({
 						this.physCfg.get("flipperHingeRelaxationFactor"));
 
 	    this.dynamicsWorld.addConstraint(hinge);
-	    this.addPhysicsCallback(original, body, transform, { rotation: [0, 1, 0], translation: [1,1,1] });
+	    this.addPhysicsCallback(original, body, transform);
 
 	    this.flipperConstraints.push(hinge);
 
@@ -976,18 +975,22 @@ Pin.View = Class.extend({
 		return output;
 	},
 
-	processFlipper: function(flipperBody, buttonDown, multiplier) {
+	flipperTest: [],
+
+	processFlipper: function(flipperBody, buttonDown, multiplier, flipperIndex) {
 		var upImpulse =		this.physCfg.get("flipperUpTorque");
 		var downImpulse =	this.physCfg.get("flipperDownTorque");
 
 		var targetVelocity;
 
 		var transform = flipperBody.getWorldTransform();
-		if(buttonDown) {
+		if(buttonDown && !this.flipperTest[flipperIndex]) {
 			targetVelocity = upImpulse;
+			this.flipperTest[flipperIndex] = true;
 		}
-		else {
+		else if(buttonDown == false && this.flipperTest[flipperIndex] == true) {
 			targetVelocity = downImpulse;
+			this.flipperTest[flipperIndex] = undefined;
 		}
 
 		if(targetVelocity) {

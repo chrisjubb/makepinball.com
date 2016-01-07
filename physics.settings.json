@@ -20,26 +20,26 @@
 
 	"flipperMass": 4.0,
 	"flipperRestitution": 1.0,
-	"flipperDampingLinear": 0.04,
-	"flipperDampingAngular": 0.1,
+	"flipperDampingLinear": 0.05,
+	"flipperDampingAngular": 0.05,
 	"flipperFriction": 0.1,
 
-	"flipperLimitsMin0": -30,
-	"flipperLimitsMax0": 40,
+	"flipperLimitsMin0": -20,
+	"flipperLimitsMax0": 30,
 
-	"flipperLimitsMin1": -40,
-	"flipperLimitsMax1": 30,
+	"flipperLimitsMin1": -30,
+	"flipperLimitsMax1": 20,
 
-	"flipperLimitsMin2": -25,
-	"flipperLimitsMax2": 68,
+	"flipperLimitsMin2": -10,
+	"flipperLimitsMax2": 55,
 
 	"flipperHingeX": 90.0,
 	"flipperHingeY": 180.0,
 	"flipperHingeZ": 0.0,
 
-	"flipperHingeSoftness": 0.3,
-	"flipperHingeSpringyness": 0.1,
-	"flipperHingeRelaxationFactor": 3.0,
-	"flipperUpTorque": 9000,
-	"flipperDownTorque": -8000
+	"flipperHingeSoftness": 1.0,
+	"flipperHingeSpringyness": 0.0,
+	"flipperHingeRelaxationFactor": 1.0,
+	"flipperUpTorque": 1300,
+	"flipperDownTorque": -550
 }
