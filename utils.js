@@ -3,6 +3,7 @@ var Pin = Pin || {};
 Pin.Utils = {
 	dpos: function(pos) {
 		if(pos) {
+			pos = this.convertToVector3(pos);
 			return "[ " + pos.x + ", " + pos.y + ", " + pos.z + " ]";
 		}
 		else {
