@@ -23,6 +23,11 @@ Pin.View = Class.extend({
 
 	physCfg: undefined,
 
+	flipperState: [],
+	flipperLimitsDeg: [],
+	FLIPPER_DOWN: 0,
+	FLIPPER_ACTIVATE: 1,
+
 	// effects
 	depthMaterial: undefined,
 	effectComposer: undefined,
@@ -601,6 +606,9 @@ Pin.View = Class.extend({
 	},
 
 	addFlipper: function(original, flipperIndex) {
+
+		this.flipperState[flipperIndex] = this.FLIPPER_DOWN;
+
 		var shape = new Ammo.btConvexHullShape();
 
 		var child = original.children[0]; // should be the first one
@@ -639,10 +647,14 @@ Pin.View = Class.extend({
 	    hingeTransform.setRotation(hingeQuaternion);
 
 	    var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
-	    var limitMin = this.physCfg.get("flipperLimitsMin" + flipperIndex);
-	    var limitMax = this.physCfg.get("flipperLimitsMax" + flipperIndex);
 
-		hinge.setLimit( Pin.Utils.radians(limitMin), Pin.Utils.radians(limitMax),
+	    var limitMin = Pin.Utils.radians(this.physCfg.get("flipperLimitsMin" + flipperIndex));
+	    var limitMax = Pin.Utils.radians(this.physCfg.get("flipperLimitsMax" + flipperIndex));
+
+	    this.flipperLimitsDeg[flipperIndex] = { min: Pin.Utils.degrees(limitMin),
+	    									 	max: Pin.Utils.degrees(limitMax) };
+
+		hinge.setLimit( limitMin, limitMax,
 						this.physCfg.get("flipperHingeSoftness"),
 						this.physCfg.get("flipperHingeSpringyness"),
 						this.physCfg.get("flipperHingeRelaxationFactor"));
@@ -975,8 +987,6 @@ Pin.View = Class.extend({
 		return output;
 	},
 
-	flipperTest: [],
-
 	processFlipper: function(flipperBody, buttonDown, multiplier, flipperIndex) {
 		var upImpulse =		this.physCfg.get("flipperUpTorque");
 		var downImpulse =	this.physCfg.get("flipperDownTorque");
@@ -984,13 +994,53 @@ Pin.View = Class.extend({
 		var targetVelocity;
 
 		var transform = flipperBody.getWorldTransform();
-		if(buttonDown && !this.flipperTest[flipperIndex]) {
-			targetVelocity = upImpulse;
-			this.flipperTest[flipperIndex] = true;
+		var rotation = transform.getRotation();
+		var angle = Pin.Utils.degrees(rotation.y());
+		var minAngle = this.flipperLimitsDeg[flipperIndex].min;
+		var maxAngle = this.flipperLimitsDeg[flipperIndex].max;
+		console.log(flipperIndex + " -> " + angle + "  [" + minAngle + ", " + maxAngle + "]");
+
+		if(minAngle > maxAngle) {
+			var minTemp = minAngle;
+			minAngle = maxAngle;
+			maxAngle = minTemp;
 		}
-		else if(buttonDown == false && this.flipperTest[flipperIndex] == true) {
-			targetVelocity = downImpulse;
-			this.flipperTest[flipperIndex] = undefined;
+
+		//       30
+		//      /
+		//     /
+		// 0  -----
+		//     \
+		//      \
+		//       -20
+
+		var nearAngleThreshold = 10;
+
+		// min now guarenteed to be less than max
+		if(this.flipperState[flipperIndex] == this.FLIPPER_DOWN) {
+			if(angle > (minAngle + nearAngleThreshold)) {
+				targetVelocity = downImpulse;
+			}
+			else {
+				targetVelocity = downImpulse * 0.75;
+			}
+
+			if(buttonDown) {
+				this.flipperState[flipperIndex] = this.FLIPPER_ACTIVATE;
+			}
+		}
+
+		if(this.flipperState[flipperIndex] == this.FLIPPER_ACTIVATE) {
+			if(angle < (maxAngle - nearAngleThreshold)) {
+				targetVelocity = upImpulse;
+			}
+			else {
+				targetVelocity = upImpulse * 0.7;
+			}
+
+			if(!buttonDown) {
+				this.flipperState[flipperIndex] = this.FLIPPER_DOWN;
+			}
 		}
 
 		if(targetVelocity) {

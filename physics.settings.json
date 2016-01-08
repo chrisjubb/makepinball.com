@@ -40,6 +40,6 @@
 	"flipperHingeSoftness": 1.0,
 	"flipperHingeSpringyness": 0.0,
 	"flipperHingeRelaxationFactor": 1.0,
-	"flipperUpTorque": 1300,
-	"flipperDownTorque": -550
+	"flipperUpTorque": 800,
+	"flipperDownTorque": -200
 }
