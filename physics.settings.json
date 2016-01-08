@@ -1,24 +1,24 @@
 {
 	"tableAngle": -7,
-	"gravityForce": -400,
+	"gravityForce": -150,
 
 	"triangleMeshRestitution": 1.2,
 	"triangleMeshDampingLinear": 0.04,
 	"triangleMeshDampingAngular": 0.1,
 	"triangleMeshFriction": 0.5,
 
-	"ballMass": 1.5,
-	"ballRestitution": 0.6,
-	"ballDampingLinear": 0.04,
-	"ballDampingAngular": 0.1,
-	"ballFriction": 0.5,
+	"ballMass": 1.0,
+	"ballRestitution": 0.1,
+	"ballDampingLinear": 0.01,
+	"ballDampingAngular": 1.0,
+	"ballFriction": 0.01,
 
-	"planeRestitution": 0.4,
+	"planeRestitution": 0.1,
 	"planeDampingLinear": 0.04,
 	"planeDampingAngular": 0.1,
-	"planeFriction": 0.02,
+	"planeFriction": 0.01,
 
-	"flipperMass": 4.0,
+	"flipperMass": 50.0,
 	"flipperRestitution": 1.0,
 	"flipperDampingLinear": 0.05,
 	"flipperDampingAngular": 0.05,
