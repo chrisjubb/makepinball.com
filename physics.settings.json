@@ -7,7 +7,7 @@
 	"triangleMeshDampingAngular": 0.1,
 	"triangleMeshFriction": 0.5,
 
-	"ballMass": 1.0,
+	"ballMass": 0.1,
 	"ballRestitution": 0.1,
 	"ballDampingLinear": 0.01,
 	"ballDampingAngular": 1.0,
@@ -18,11 +18,11 @@
 	"planeDampingAngular": 0.1,
 	"planeFriction": 0.01,
 
-	"flipperMass": 50.0,
-	"flipperRestitution": 1.0,
+	"flipperMass": 0.9,
+	"flipperRestitution": 0.001,
 	"flipperDampingLinear": 0.05,
 	"flipperDampingAngular": 0.05,
-	"flipperFriction": 0.1,
+	"flipperFriction": 0.001,
 
 	"flipperLimitsMin0": -20,
 	"flipperLimitsMax0": 30,
