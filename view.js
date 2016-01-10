@@ -659,7 +659,7 @@ Pin.View = Class.extend({
 						this.physCfg.get("flipperHingeSpringyness"),
 						this.physCfg.get("flipperHingeRelaxationFactor"));
 
-	    this.dynamicsWorld.addConstraint(hinge);
+	    this.dynamicsWorld.addConstraint(hinge, true);
 	    this.addPhysicsCallback(original, body, transform);
 
 	    this.flipperConstraints.push(hinge);
