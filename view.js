@@ -998,14 +998,16 @@ Pin.View = Class.extend({
 		var angle = Pin.Utils.degrees(rotation.y());
 		var minAngle = this.flipperLimitsDeg[flipperIndex].min;
 		var maxAngle = this.flipperLimitsDeg[flipperIndex].max;
-		console.log(flipperIndex + " -> " + angle + "  [" + minAngle + ", " + maxAngle + "]");
+		//console.log(flipperIndex + " -> " + angle + "  [" + minAngle + ", " + maxAngle + "]");
 
-		if(minAngle > maxAngle) {
-			var minTemp = minAngle;
-			minAngle = maxAngle;
-			maxAngle = minTemp;
+		if(multiplier < 0) {
+			var maxTemp = maxAngle;
+			maxAngle = minAngle * multiplier;
+			minAngle = maxTemp * multiplier;
+			angle *= multiplier;
 		}
 
+		// (-20, 30)
 		//       30
 		//      /
 		//     /
@@ -1013,8 +1015,19 @@ Pin.View = Class.extend({
 		//     \
 		//      \
 		//       -20
+		//
+		//
+		// (-30, 20)   -> 30, -20 (after multiplied)
+		//       20
+		//      /
+		//     /
+		// 0  -----
+		//     \
+		//      \
+		//       -30
 
-		var nearAngleThreshold = 10;
+
+		var nearAngleThreshold = 16;
 
 		// min now guarenteed to be less than max
 		if(this.flipperState[flipperIndex] == this.FLIPPER_DOWN) {
