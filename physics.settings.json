@@ -30,7 +30,7 @@
 	"flipperLimitsMin1": -30,
 	"flipperLimitsMax1": 20,
 
-	"flipperLimitsMin2": -10,
+	"flipperLimitsMin2": 0,
 	"flipperLimitsMax2": 55,
 
 	"flipperHingeX": 90.0,
