@@ -277,7 +277,7 @@ Pin.View = Class.extend({
 						ballIndex = ballBodyIndex;
 					}
 				});
-				//self.resetBallPosition(body, ballIndex);
+				self.resetBallPosition(body, ballIndex);
 			});
 		}
 		// end of hardcodedness
