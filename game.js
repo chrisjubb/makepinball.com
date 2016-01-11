@@ -16,7 +16,10 @@ Pin.Game = Class.extend({
 	activateFromSwitchState: [],
 
 	soundManager: undefined,
+	soundMusic: undefined, // keep track of the music instance
 	soundsToLoad: [
+		{ name: "SOUND_MUSIC",			filename: "music.mp3" },
+
 		{ name: "SOUND_BANK0_HIT",		filename: "bank0hit.mp3" },
 		{ name: "SOUND_BANK0_COMPLETE", filename: "bank0complete.mp3" },
 
@@ -184,6 +187,14 @@ Pin.Game = Class.extend({
 		this.switchEventHandler.triggerOn([this.SW_LEFT_FLIPPER, this.SW_RIGHT_FLIPPER], this, function() {
 			self.soundManager.play(self.SOUND_FLIPPER);
 		});
+
+		this.soundManager.play(this.SOUND_MUSIC, function(instance) {
+			// store for later
+			self.soundMusic = instance;
+
+			self.soundMusic.volume = 0.4;
+			self.soundMusic.loop = -1;
+		});
 	},
 
 	update: function(switchState, elapsedTime, delta) {
@@ -250,6 +261,7 @@ Pin.Game = Class.extend({
 
 		if(this.scoop0.shouldDeactivate()) {
 			this.centerDiamond.collect(elapsedTime);
+			this.soundMusic.stop();
 			this.soundManager.play(this.SOUND_SCOOP_START);
 			this.soundManager.play(this.SOUND_SOLENOID1);
 		}
@@ -258,6 +270,7 @@ Pin.Game = Class.extend({
 		}
 		if(this.centerDiamond.isCollectComplete()) {
 			this.scoop0.release();
+			this.soundMusic.play();
 			this.soundManager.play(this.SOUND_SCOOP_COMPLETE);
 		}
 
