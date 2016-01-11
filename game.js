@@ -16,6 +16,33 @@ Pin.Game = Class.extend({
 	activateFromSwitchState: [],
 
 	soundManager: undefined,
+	soundsToLoad: [
+		{ name: "SOUND_BANK0_HIT",		filename: "bank0hit.mp3" },
+		{ name: "SOUND_BANK0_COMPLETE", filename: "bank0complete.mp3" },
+
+		{ name: "SOUND_BANK1_HIT",		filename: "bank1hit.mp3" },
+		{ name: "SOUND_BANK1_COMPLETE", filename: "bank1complete.mp3" },
+
+		{ name: "SOUND_BANK2_HIT",		filename: "bank2hit.mp3" },
+		{ name: "SOUND_BANK2_COMPLETE", filename: "bank2complete.mp3" },
+
+		{ name: "SOUND_BANK3_HIT",		filename: "bank3hit.mp3" },
+		{ name: "SOUND_BANK3_COMPLETE", filename: "bank3complete.mp3" },
+
+		{ name: "SOUND_FLIPPER",		filename: "flipper.mp3" },
+		{ name: "SOUND_PLUNGE",			filename: "plunge.mp3" },
+
+		{ name: "SOUND_POP_BUMPER_COMPLETE", filename: "pop_bumper_complete.mp3" },
+		{ name: "SOUND_POP_BUMPER_HIT",	filename: "pop_bumper_hit.mp3" },
+
+		{ name: "SOUND_SCOOP_COMPLETE",	filename: "scoop_complete.mp3" },
+		{ name: "SOUND_SCOOP_PROGRESS",	filename: "scoop_progress.mp3" },
+
+		{ name: "SOUND_SOLENOID_LOUD",	filename: "solenoid_loud.mp3" },
+		{ name: "SOUND_SOLENOID0",		filename: "solenoid0.mp3" },
+		{ name: "SOUND_SOLENOID1",		filename: "solenoid0.mp3" }
+	],
+
 	// todo - use this for the target banks too
 	switchEventHandler: undefined,
 
@@ -61,18 +88,12 @@ Pin.Game = Class.extend({
 		}
 
 		this.soundManager = new Pin.SoundManager();
-		this.SOUND_BANK0_HIT = this.soundManager.load("sounds/bank0hit.mp3");
-		this.SOUND_BANK0_COMPLETE = this.soundManager.load("sounds/bank0complete.mp3");
+
+		_.each(this.soundsToLoad, function(soundData) {
+			self[soundData.name] = self.soundManager.load("sounds/" + soundData.filename);
+		});
 
 		this.switchEventHandler = new Pin.SwitchEventHandler();
-		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList0), this,
-		function() {
-			self.soundManager.play(self.SOUND_HIT);
-		});
-
-		this.switchEventHandler.triggerOn([this.SW_PLUNGER_BUTTON], this, function() {
-			self.forceState[0] = 1;
-		});
 
 		var targetBankColour0 = { r: 1, g: 1, b: 0, a: 1 };
 		var targetBank0 = new Pin.TargetBank(this.createTargetBankData(
@@ -129,6 +150,19 @@ Pin.Game = Class.extend({
 		];
 		var currentPulseColour = {r: 0.7, g: 0.7, b: 0.7, a: 1.0};
 		this.centerDiamond = new Game.Diamond(this.lightState, 20, 35, currentPulseColour, centerDiamondData);
+
+
+		// setup events
+		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList0), this,
+		function() {
+			self.soundManager.play(self.SOUND_BANK0_HIT);
+		});
+
+		this.switchEventHandler.triggerOn([this.SW_PLUNGER_BUTTON], this, function() {
+			self.forceState[0] = 1;
+			self.soundManager.play(self.SOUND_PLUNGE);
+			self.soundManager.play(self.SOUND_SOLENOID_LOUD);
+		});
 	},
 
 	update: function(switchState, elapsedTime, delta) {
