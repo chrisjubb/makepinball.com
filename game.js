@@ -153,9 +153,20 @@ Pin.Game = Class.extend({
 
 
 		// setup events
-		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList0), this,
-		function() {
+		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList0), this, function() {
 			self.soundManager.play(self.SOUND_BANK0_HIT);
+		});
+
+		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList1), this, function() {
+			self.soundManager.play(self.SOUND_BANK1_HIT);
+		});
+
+		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList2), this, function() {
+			self.soundManager.play(self.SOUND_BANK2_HIT);
+		});
+
+		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList3), this, function() {
+			self.soundManager.play(self.SOUND_BANK3_HIT);
 		});
 
 		this.switchEventHandler.triggerOn([this.SW_PLUNGER_BUTTON], this, function() {
@@ -188,6 +199,7 @@ Pin.Game = Class.extend({
 		_.each(this.targetBanks, function(targetBank, targetBankIndex) {
 			targetBank.update(switchState);
 			if(targetBank.isComplete()) {
+				self.soundManager.play(self["SOUND_BANK" + targetBankIndex + "_COMPLETE"]);
 				self.centerDiamond.completedGoal(targetBankIndex);
 			}
 		});
