@@ -68,7 +68,7 @@
 				position: absolute;
 				left: 0;
 				top: 0;
-				width: 80%;
+				width: 100%;
 				height: 100%;
 				background-color: blue;
 			}
@@ -90,24 +90,15 @@
 		</style>
 	</head>
 	<body>
-		<div id="info">
-			makepinball.com <a href="https://github.com/chrisjubb/">github</a>
-		</div>
 		<div id="instructions">
-			<p>This is a work in progress.</p>
-			<p>Feel free to contribute on <a href="https://github.com/chrisjubb/makepinball.com/">github</a></p>
-
 			<p>Left Flipper = 'A'</p>
 			<p>Right Flipper = 'L'</p>
 			<p>Plunger = 'F'</p>
 			<p>Reset balls = 'R'</p>
-
-			<p>You can change physics parameters on the right and click 'UPDATE' to see the changes.</p>
-			<p>Uses <a href="http://threejs.org/">three.js</a>, <a href="https://github.com/kripken/ammo.js/">ammo.js</a> and <a href="http://www.blender.org/">Blender</a>.
 		</div>
 		<div id="canvasContainer">
 		</div>
-		<div id="configContainer">
+		<div id="configContainer" style="display:none;">
 			<div id="configButtons">
 				<div><button onclick="configHide();">Hide</button></div>
 				<div><button onclick="configOutputJson();">output json</button></div>
