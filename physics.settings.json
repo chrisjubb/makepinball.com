@@ -19,7 +19,7 @@
 	"planeFriction": 0.01,
 
 	"flipperMass": 0.9,
-	"flipperRestitution": 0.001,
+	"flipperRestitution": 5.0,
 	"flipperDampingLinear": 0.05,
 	"flipperDampingAngular": 0.05,
 	"flipperFriction": 0.001,
