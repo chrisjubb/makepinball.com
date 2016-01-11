@@ -35,8 +35,9 @@ Pin.Game = Class.extend({
 		{ name: "SOUND_POP_BUMPER_COMPLETE", filename: "pop_bumper_complete.mp3" },
 		{ name: "SOUND_POP_BUMPER_HIT",	filename: "pop_bumper_hit.mp3" },
 
-		{ name: "SOUND_SCOOP_COMPLETE",	filename: "scoop_complete.mp3" },
+		{ name: "SOUND_SCOOP_START",	filename: "scoop_start.mp3" },
 		{ name: "SOUND_SCOOP_PROGRESS",	filename: "scoop_progress.mp3" },
+		{ name: "SOUND_SCOOP_COMPLETE",	filename: "scoop_complete.mp3" },
 
 		{ name: "SOUND_SOLENOID_LOUD",	filename: "solenoid_loud.mp3" },
 		{ name: "SOUND_SOLENOID0",		filename: "solenoid0.mp3" },
@@ -249,9 +250,15 @@ Pin.Game = Class.extend({
 
 		if(this.scoop0.shouldDeactivate()) {
 			this.centerDiamond.collect(elapsedTime);
+			this.soundManager.play(this.SOUND_SCOOP_START);
+			this.soundManager.play(this.SOUND_SOLENOID1);
+		}
+		if(this.centerDiamond.isCollectProgress()) {
+			this.soundManager.play(this.SOUND_SCOOP_PROGRESS);
 		}
 		if(this.centerDiamond.isCollectComplete()) {
 			this.scoop0.release();
+			this.soundManager.play(this.SOUND_SCOOP_COMPLETE);
 		}
 
 		this.activateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldActivate();

@@ -45,9 +45,10 @@ Game.Diamond = Class.extend({
 
 	STATE_COLLECTING: 0,
 	STATE_DISPLAY_START: 1, // go from pulse to full on
-	STATE_DISPLAY_COLLECT_GROUP: 2, // run through a group,
-	STATE_DISPLAY_FADE_GROUP: 3, // fade out the group -> STATE_DISPLAY_COLLECT_GROUP
-	STATE_DISPLAY_COMPLETE: 4,
+	STATE_DISPLAY_COLLECT_GROUP_START: 2, // one frame
+	STATE_DISPLAY_COLLECT_GROUP: 3, // run through a group,
+	STATE_DISPLAY_FADE_GROUP: 4, // fade out the group -> STATE_DISPLAY_COLLECT_GROUP
+	STATE_DISPLAY_COMPLETE: 5,
 
 	// all in seconds
 	TIME_AFTER_COLLECT: 1.0,
@@ -113,6 +114,10 @@ Game.Diamond = Class.extend({
 
 	isCollectComplete: function() {
 		return this.state == this.STATE_DISPLAY_COMPLETE;
+	},
+
+	isCollectProgress: function() {
+		return this.state == this.STATE_DISPLAY_COLLECT_GROUP_START;
 	},
 
 	buildGroups: function(goalsComplete) {
@@ -210,7 +215,7 @@ Game.Diamond = Class.extend({
 	},
 
 	displayNextGroupLight: function(elapsedTime) {
-		this.state = this.STATE_DISPLAY_COLLECT_GROUP;
+		this.state = this.STATE_DISPLAY_COLLECT_GROUP_START;
 		this.displayTimer = elapsedTime + this.TIME_FLASHING_INDIVIDUAL_GROUP_LIGHT;
 
 		var self = this;
@@ -236,6 +241,9 @@ Game.Diamond = Class.extend({
 				});
 				this.displayNextGroupLight(elapsedTime);
 			}
+		}
+		else if(this.state == this.STATE_DISPLAY_COLLECT_GROUP_START) {
+			this.state = this.STATE_DISPLAY_COLLECT_GROUP;
 		}
 		else if(this.state == this.STATE_DISPLAY_COLLECT_GROUP) {
 			if(elapsedTime > this.displayTimer) {
