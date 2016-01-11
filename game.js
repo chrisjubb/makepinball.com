@@ -68,6 +68,10 @@ Pin.Game = Class.extend({
 			self.soundManager.play(self.SOUND_HIT);
 		});
 
+		this.switchEventHandler.triggerOn([this.SW_PLUNGER_BUTTON], this, function() {
+			self.forceState[0] = 1;
+		});
+
 		var targetBankColour0 = { r: 1, g: 1, b: 0, a: 1 };
 		var targetBank0 = new Pin.TargetBank(this.createTargetBankData(
 																this.targetBankList0,
@@ -127,7 +131,9 @@ Pin.Game = Class.extend({
 
 	update: function(switchState, elapsedTime, delta) {
 		var self = this;
-		this.forceState[0] = switchState[this.SW_PLUNGER_BUTTON];
+
+		// this will get set to 1 in the switchEventHandler update if it needs to
+		this.forceState[0] = 0;
 
 		// we want these to fire based on which bodies are active in the switch area.
 		// this can be used for slingshots.
