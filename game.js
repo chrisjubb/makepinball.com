@@ -170,6 +170,9 @@ Pin.Game = Class.extend({
 			self.soundManager.play(self.SOUND_BANK3_HIT);
 		});
 
+		this.switchEventHandler.triggerOn([2, 3], this, function() {
+			self.soundManager.play(self.SOUND_SOLENOID1);
+		});
 
 		this.switchEventHandler.triggerOn([this.SW_PLUNGER_BUTTON], this, function() {
 			self.forceState[0] = 1;
