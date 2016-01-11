@@ -25,6 +25,9 @@ Pin.LightIndicator = Class.extend({
 
 	increase: function() {
 		this.value = Math.min(this.value + 1, this.lights.length);
+		_.each(this.lights, function(light) {
+			light.reset();
+		});
 		this.updateDisplay();
 	},
 
@@ -61,6 +64,7 @@ Pin.LightIndicator = Class.extend({
 	update: function(switchState, deltaTime, elapsedTime) {
 		if(this.state == this.STATE_HITTING) {
 			var isHit = false;
+			this.updateDisplay();
 			_.each(this.validSwitches, function(validSwitch) {
 				if(switchState[validSwitch]) {
 					isHit = true;

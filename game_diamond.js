@@ -120,6 +120,17 @@ Game.Diamond = Class.extend({
 		return this.state == this.STATE_DISPLAY_COLLECT_GROUP_START;
 	},
 
+	currentLightColour: function() {
+		if(this.state == this.STATE_DISPLAY_FLASH_GROUP) {
+			var goal = this.getCurrentGoal();
+			var c = this.colourLookup[goal.goalIndex].colour;
+			return c;
+		}
+		else {
+			return undefined;
+		}
+	},
+
 	buildGroups: function(goalsComplete) {
 		// take the goalsComplete list and build a list of groups from it
 		var groups = [];

@@ -15,6 +15,10 @@ Pin.Game = Class.extend({
 	deactivateFromSwitchState: [],
 	activateFromSwitchState: [],
 
+	state: undefined,
+	STATE_MAIN: 1,
+	STATE_COLLECTING_DIAMOND: 2,
+
 	soundManager: undefined,
 	soundMusic: undefined, // keep track of the music instance
 	soundsToLoad: [
@@ -85,11 +89,17 @@ Pin.Game = Class.extend({
 
 	lightIndicator0: undefined,
 
+	centerDiamond: undefined,
+	diamondLightIndexStart: 20,
+	diamondLightIndexEnd: 35,
+
 	init: function() {
 		var self = this;
 		for(var i = 0; i < this.numberOfLights; ++i) {
 			this.lightState.push(new Pin.Light());
 		}
+
+		this.state = this.STATE_MAIN;
 
 		this.soundManager = new Pin.SoundManager();
 
@@ -133,9 +143,6 @@ Pin.Game = Class.extend({
 
 		this.scoop0 = new Pin.Scoop(6);
 
-		// shoot again
-		this.lightState[40].flash(0.1, 0.1, 0.8,  1.0, 0.25);
-
 		// by pop bumpers
 		var lightIndicatorColour0 = {r: 0.1, g: 1, b: 1, a: 1};
 		var LightIndicatorSwitches = [4, 5];
@@ -154,7 +161,11 @@ Pin.Game = Class.extend({
 			{ colour: lightIndicatorColour0 }
 		];
 		var currentPulseColour = {r: 0.7, g: 0.7, b: 0.7, a: 1.0};
-		this.centerDiamond = new Game.Diamond(this.lightState, 20, 35, currentPulseColour, centerDiamondData);
+		this.centerDiamond = new Game.Diamond(	this.lightState,
+												this.diamondLightIndexStart,
+												this.diamondLightIndexEnd,
+												currentPulseColour,
+												centerDiamondData);
 
 
 		// setup events
@@ -216,42 +227,57 @@ Pin.Game = Class.extend({
 
 		this.switchEventHandler.update(switchState);
 
-		// update target banks
-		_.each(this.targetBanks, function(targetBank, targetBankIndex) {
-			targetBank.update(switchState);
-			if(targetBank.isComplete()) {
-				self.soundManager.play(self["SOUND_BANK" + targetBankIndex + "_COMPLETE"]);
-				self.centerDiamond.completedGoal(targetBankIndex);
+
+
+		if(this.state == this.STATE_MAIN) {
+			// update target banks
+			_.each(this.targetBanks, function(targetBank, targetBankIndex) {
+				targetBank.update(switchState);
+				if(targetBank.isComplete()) {
+					self.soundManager.play(self["SOUND_BANK" + targetBankIndex + "_COMPLETE"]);
+					self.centerDiamond.completedGoal(targetBankIndex);
+				}
+			});
+
+			if(this.lightIndicator0.isComplete()) {
+				this.centerDiamond.completedGoal(this.targetBanks.length); // want banks + 1
+				this.soundManager.play(this.SOUND_POP_BUMPER_HIT);
+				this.soundManager.play(this.SOUND_POP_BUMPER_COMPLETE);
+				this.soundManager.play(this.SOUND_SOLENOID0);
 			}
-		});
 
-		if(this.lightIndicator0.isComplete()) {
-			this.centerDiamond.completedGoal(this.targetBanks.length); // want banks + 1
-			this.soundManager.play(this.SOUND_POP_BUMPER_HIT);
-			this.soundManager.play(this.SOUND_POP_BUMPER_COMPLETE);
-			this.soundManager.play(this.SOUND_SOLENOID0);
+			if(this.lightIndicator0.isHit()) {
+				this.soundManager.play(this.SOUND_POP_BUMPER_HIT);
+				this.soundManager.play(this.SOUND_SOLENOID0);
+			}
+
+			this.lightIndicator0.update(switchState, delta, elapsedTime);
+
+				// show that can collect
+			for(var i = 60; i <= 62; ++i) {
+				if(this.centerDiamond.canCollect()) {
+					var t = (i - 60.0) / (62.0 - 60.0);
+					this.lightState[i].pulse(t * 0.2, 1.0, t * 0.3, 1.0,  (t * 0.2) + 0.1);
+				}
+				else {
+					this.lightState[i].reset();
+				}
+			}
 		}
-
-		if(this.lightIndicator0.isHit()) {
-			this.soundManager.play(this.SOUND_POP_BUMPER_HIT);
-			this.soundManager.play(this.SOUND_SOLENOID0);
+		else if(this.state == this.STATE_COLLECTING_DIAMOND) {
+			var currentLight = this.centerDiamond.currentLightColour();
+			if(currentLight) {
+				this.allLightsExceptDiamond(function(light, lightIndex) {
+					light.reset();
+					light.set(currentLight.r, currentLight.g, currentLight.b, currentLight.a);
+					light.fadeOut(5.0);
+				});
+			}
 		}
 
 		this.centerDiamond.update(delta, elapsedTime);
 
-		for(var i = 60; i <= 62; ++i) {
-			if(this.centerDiamond.canCollect()) {
-				var t = (i - 60.0) / (62.0 - 60.0);
-				this.lightState[i].pulse(t * 0.2, 1.0, t * 0.3, 1.0,  (t * 0.2) + 0.1);
-			}
-			else {
-				this.lightState[i].reset();
-			}
-		}
-
 		this.scoop0.update(switchState);
-
-		this.lightIndicator0.update(switchState, delta, elapsedTime);
 
 		_.each(this.lightState, function(lightData) {
 			lightData.update(delta);
@@ -264,6 +290,13 @@ Pin.Game = Class.extend({
 			this.soundMusic.stop();
 			this.soundManager.play(this.SOUND_SCOOP_START);
 			this.soundManager.play(this.SOUND_SOLENOID1);
+			this.state = this.STATE_COLLECTING_DIAMOND;
+
+			this.allLightsExceptDiamond(function(light, lightIndex) {
+				light.reset();
+				light.set(1,1,1,1);
+				light.fadeOut(2.0);
+			});
 		}
 		if(this.centerDiamond.isCollectProgress()) {
 			this.soundManager.play(this.SOUND_SCOOP_PROGRESS);
@@ -272,6 +305,7 @@ Pin.Game = Class.extend({
 			this.scoop0.release();
 			this.soundMusic.play();
 			this.soundManager.play(this.SOUND_SCOOP_COMPLETE);
+			this.state = this.STATE_MAIN;
 		}
 
 		this.activateFromSwitchState[this.scoop0.getSwitchIndex()] = this.scoop0.shouldActivate();
@@ -298,6 +332,15 @@ Pin.Game = Class.extend({
 		return {	flipperBodyIndex: flipperBodyIndex,
 					switchIndex: switchIndex,
 					directionMultiplier: directionMultiplier };
+	},
+
+	allLightsExceptDiamond: function(callback) {
+		var self = this;
+		_.each(this.lightState, function(light, lightIndex) {
+			if(lightIndex < self.diamondLightIndexStart || lightIndex > self.diamondLightIndexEnd) {
+				callback(light, lightIndex);
+			}
+		});
 	},
 
 	getFlipperData: function() {

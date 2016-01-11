@@ -48,10 +48,16 @@ Pin.TargetBank = Class.extend({
 		var self = this;
 
 		if(this.state == this.STATE_HITTING) {
+			var c = self.pulseColour;
 			_.each(this.bankData, function(bankItem) {
-				if(switchState[bankItem.switchIndex]) {
+				if( switchState[bankItem.switchIndex] ||
+					self.enabledState[bankItem.switchIndex]) {
+
 					self.enabledState[bankItem.switchIndex] = true;
 					bankItem.light.set(self.litColour.r, self.litColour.g, self.litColour.b, self.litColour.a);
+				}
+				else if(!self.enabledState[bankItem.switchIndex]) {
+					bankItem.light.pulse(c.r, c.g, c.b, c.a);
 				}
 			});
 
