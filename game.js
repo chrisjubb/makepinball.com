@@ -174,6 +174,10 @@ Pin.Game = Class.extend({
 			self.soundManager.play(self.SOUND_PLUNGE);
 			self.soundManager.play(self.SOUND_SOLENOID_LOUD);
 		});
+
+		this.switchEventHandler.triggerOn([this.SW_LEFT_FLIPPER, this.SW_RIGHT_FLIPPER], this, function() {
+			self.soundManager.play(self.SOUND_FLIPPER);
+		});
 	},
 
 	update: function(switchState, elapsedTime, delta) {
