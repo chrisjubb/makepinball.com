@@ -61,10 +61,12 @@ Pin.Game = Class.extend({
 		}
 
 		this.soundManager = new Pin.SoundManager();
-		this.SOUND_HIT = this.soundManager.load("sounds/hit.mp3");
+		this.SOUND_BANK0_HIT = this.soundManager.load("sounds/bank0hit.mp3");
+		this.SOUND_BANK0_COMPLETE = this.soundManager.load("sounds/bank0complete.mp3");
 
 		this.switchEventHandler = new Pin.SwitchEventHandler();
-		this.switchEventHandler.triggerOn([10, 11, 12, 13], this, function() {
+		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList0), this,
+		function() {
 			self.soundManager.play(self.SOUND_HIT);
 		});
 
@@ -199,6 +201,14 @@ Pin.Game = Class.extend({
 		});
 
 		return targetBankData;
+	},
+
+	getTargetBankSwitchArray: function(dataList) {
+		var output = [];
+		_.each(dataList, function(item) {
+			output.push(item.s);
+		});
+		return output;
 	},
 
 	constructFlipperData: function(flipperBodyIndex, switchIndex, directionMultiplier) {
