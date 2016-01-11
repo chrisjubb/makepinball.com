@@ -28,6 +28,9 @@ Pin.View = Class.extend({
 	FLIPPER_DOWN: 0,
 	FLIPPER_ACTIVATE: 1,
 
+	// todo - remove hardcoded behaviour for demo
+	resetingBallToStartTimer: -1.0,
+
 	// effects
 	depthMaterial: undefined,
 	effectComposer: undefined,
@@ -214,6 +217,7 @@ Pin.View = Class.extend({
 						deactivateFromSwitchState,
 						activateFromSwitchState) {
 		var self = this;
+		var elapsedTime = this.getElapsedTime();
 		_.each(forceState, function(forceValue, forceId) {
 			if(forceValue) {
 				self.activateForceOnBall(forceId);
@@ -267,7 +271,7 @@ Pin.View = Class.extend({
 		});
 
 		// this is very hardcoded for the demo - resets the ball position when we hit switch 1 (the ball trough)
-		if(this.switchActivatedByBodies[1]) {
+		if(this.switchActivatedByBodies[1] && elapsedTime > this.resetingBallToStartTimer) {
 			var self = this;
 			_.each(this.switchActivatedByBodies[1], function(bodyDataItem) {
 				var body = bodyDataItem.body;
@@ -279,6 +283,7 @@ Pin.View = Class.extend({
 				});
 				self.resetBallPosition(body, ballIndex);
 			});
+			this.resetingBallToStartTimer = elapsedTime + 1.0;
 		}
 		// end of hardcodedness
 
