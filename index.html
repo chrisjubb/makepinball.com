@@ -358,6 +358,12 @@
 
 			window.addEventListener('resize', onWindowResize, false);
 
+			window.addEventListener( 'keyup', function(evt) {
+				if(evt.keyCode == 83) { // S
+					toggleSwitchButtons();
+				}
+			}, false );
+
 			function animate() {
 				requestAnimationFrame(animate);
 
