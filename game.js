@@ -134,12 +134,13 @@ Pin.Game = Class.extend({
 
 		// by pop bumpers
 		var lightIndicatorColour0 = {r: 0.1, g: 1, b: 1, a: 1};
+		var LightIndicatorSwitches = [4, 5];
 		this.lightIndicator0 = new Pin.LightIndicator(this.lightState, 	lightIndicatorColour0.r,
 																		lightIndicatorColour0.g,
 																		lightIndicatorColour0.b,
 																		lightIndicatorColour0.a,
 																		45, 56,
-																		[4, 5]);
+																		LightIndicatorSwitches);
 		// center indicator diamond
 		var centerDiamondData = [
 			{ colour: targetBankColour0 },
@@ -168,6 +169,7 @@ Pin.Game = Class.extend({
 		this.switchEventHandler.triggerOn(this.getTargetBankSwitchArray(this.targetBankList3), this, function() {
 			self.soundManager.play(self.SOUND_BANK3_HIT);
 		});
+
 
 		this.switchEventHandler.triggerOn([this.SW_PLUNGER_BUTTON], this, function() {
 			self.forceState[0] = 1;
@@ -210,6 +212,14 @@ Pin.Game = Class.extend({
 
 		if(this.lightIndicator0.isComplete()) {
 			this.centerDiamond.completedGoal(this.targetBanks.length); // want banks + 1
+			this.soundManager.play(this.SOUND_POP_BUMPER_HIT);
+			this.soundManager.play(this.SOUND_POP_BUMPER_COMPLETE);
+			this.soundManager.play(this.SOUND_SOLENOID0);
+		}
+
+		if(this.lightIndicator0.isHit()) {
+			this.soundManager.play(this.SOUND_POP_BUMPER_HIT);
+			this.soundManager.play(this.SOUND_SOLENOID0);
 		}
 
 		this.centerDiamond.update(delta, elapsedTime);
