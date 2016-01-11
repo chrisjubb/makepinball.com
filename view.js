@@ -289,7 +289,7 @@ Pin.View = Class.extend({
 								flipperIndex);
 		});
 
-		this.dynamicsWorld.stepSimulation(this.deltaTime, 2);
+		this.dynamicsWorld.stepSimulation(this.deltaTime, 10);
 		_.each(this.physicsMeshCallbacks, function(callback) {
 			callback();
 		});
@@ -716,9 +716,9 @@ Pin.View = Class.extend({
 		original.visible = false;
 
 		original.updateMatrixWorld();
-		var forceValue = 50.0; // todo - need to specify a force here
+		var forceValue = 40.0; // todo - need to specify a force here
 		if(forceIndex == 0) {
-			forceValue = 600.0;
+			forceValue = 200.0;
 		}
 
 		var forceQuat = original.quaternion;
