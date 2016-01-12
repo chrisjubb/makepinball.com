@@ -686,7 +686,7 @@ Pin.View = Class.extend({
 		// need to do this a better way really
 		if(geometry.faces.length == 12) {
 			// assume box
-	    	shape = new Ammo.btBoxShape(new Ammo.btVector3(original.scale.x * 0.5, original.scale.y * 0.5, original.scale.z * 0.5));
+	    	shape = new Ammo.btBoxShape(new Ammo.btVector3(original.scale.x, original.scale.y, original.scale.z));
 	    }
 	    else {
 	    	// assume cylinder

@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.76.0 commit date:2015-11-03, commit time:10:56, hash:f337fea</authoring_tool>
     </contributor>
-    <created>2016-01-11T13:38:42</created>
-    <modified>2016-01-11T13:38:42</modified>
+    <created>2016-01-12T09:03:11</created>
+    <modified>2016-01-12T09:03:11</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -8660,7 +8660,7 @@
         </instance_geometry>
       </node>
       <node id="SWITCH_003" name="SWITCH_003" type="NODE">
-        <matrix sid="transform">0.8260424 2.315998 0 15.60036 -0.2990395 6.397526 0 -22.80542 0 0 1.514653 1.407509 0 0 0 1</matrix>
+        <matrix sid="transform">0.3761129 1.361584 0 15.60036 -0.1361584 3.761129 0 -22.80542 0 0 1.514653 1.407509 0 0 0 1</matrix>
         <instance_geometry url="#Cube_007-mesh" name="SWITCH_003">
           <bind_material>
             <technique_common>
@@ -8670,7 +8670,7 @@
         </instance_geometry>
       </node>
       <node id="SWITCH_002" name="SWITCH_002" type="NODE">
-        <matrix sid="transform">0.8260438 -2.315972 0 -10.03957 0.2990362 6.397536 0 -22.83241 0 0 1.514653 1.407509 0 0 0 1</matrix>
+        <matrix sid="transform">0.3761134 -1.361568 0 -10.03957 0.1361568 3.761134 0 -22.83241 0 0 1.514653 1.407509 0 0 0 1</matrix>
         <instance_geometry url="#Cube_004-mesh" name="SWITCH_002">
           <bind_material>
             <technique_common>
@@ -8742,7 +8742,7 @@
         </instance_geometry>
       </node>
       <node id="BALL_0" name="BALL_0" type="NODE">
-        <matrix sid="transform">10 0 0 34.91472 0 10 0 -41.27122 0 0 10 1.856168 0 0 0 1</matrix>
+        <matrix sid="transform">10 0 0 34.91472 0 10 0 -44.50055 0 0 10 1.856168 0 0 0 1</matrix>
         <instance_geometry url="#Sphere_000-mesh" name="BALL_0">
           <bind_material>
             <technique_common>
