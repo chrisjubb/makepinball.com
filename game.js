@@ -355,7 +355,7 @@ Pin.Game = Class.extend({
 		return [
 			{ keyCode: 65, switchIndex: this.SW_LEFT_FLIPPER },		// 'A'
 			{ keyCode: 76, switchIndex: this.SW_RIGHT_FLIPPER },	// 'L'
-			{ keyCode: 70, switchIndex: this.SW_PLUNGER_BUTTON },	// 'F'
+			{ keyCode: 32, switchIndex: this.SW_PLUNGER_BUTTON },	// 'Space'
 		];
 	},
 
