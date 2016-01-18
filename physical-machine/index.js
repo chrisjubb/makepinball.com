@@ -7,5 +7,15 @@ board.on("ready", function() {
 	console.log("Ready!");
 
 	var led = new five.Led(13);
-	led.blink(500);
+	var on_counter = 0;
+
+	this.loop(16, function() {
+		++on_counter;
+		if(on_counter > 50) {
+			led.toggle();
+			on_counter = 0;
+		}
+
+		// console.log("frame");
+	});
 });
