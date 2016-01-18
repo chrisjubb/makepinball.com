@@ -1,0 +1,15 @@
+{
+  "name": "physical-machine",
+  "version": "1.0.0",
+  "description": "makepinball.com real machine",
+  "main": "index.js",
+  "repository": "git@github.com:chrisjubb/makepinball.com.git",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Jubb <chrisjubb@gmail.com>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "johnny-five": "^0.9.18"
+  }
+}
