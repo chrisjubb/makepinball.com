@@ -1,6 +1,7 @@
-var Pin = Pin || {};
 
-Pin.Game = Class.extend({
+define(["jclass", "underscore"], function(JClass, _) {
+
+return JClass.extend({
 
 	// special ids - don't want this colliding
 	SW_LEFT_FLIPPER: 	100,
@@ -408,3 +409,5 @@ Pin.Game = Class.extend({
 		return this.activateFromSwitchState;
 	},
 });
+
+}); // define

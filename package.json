@@ -10,6 +10,7 @@
   "author": "Chris Jubb <chrisjubb@gmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "johnny-five": "^0.9.18"
+    "johnny-five": "^0.9.18",
+    "requirejs": "^2.1.22"
   }
 }
