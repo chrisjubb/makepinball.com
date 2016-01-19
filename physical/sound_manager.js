@@ -15,7 +15,7 @@ return JClass.extend({
 	},
 
 	play: function(soundId, callback) {
-		console.log("wants to play soundId");
+		console.log("wants to play " + soundId);
 	}
 });
 
