@@ -34,13 +34,24 @@ function(five, Game) {
 		console.log("Board is ready!");
 
 		var ledLookup = [];
+		var switchLookup = [];
 		_.each(game.targetBankList3, function(targetBankData, i) {
 			var ledIndex = 13 - i;
-			console.log("light state index = " + targetBankData.l + " -> " + ledIndex);
+			var switchIndex = 4 - i;
+			console.log("light state index = " + targetBankData.l + " -> " + ledIndex + ", switch = " + targetBankData.s + " -> " + switchIndex);
 			ledLookup[targetBankData.l] = new five.Led(ledIndex);
+			switchLookup[targetBankData.s] = new five.Switch(switchIndex);
 		});
 
 		this.loop(frameInterval, function() {
+
+			_.each(switchLookup, function(switchData, switchDataIndex) {
+				if(switchData) {
+					switchState[switchDataIndex] = switchData.isClosed;
+					// console.log("[" + switchDataIndex + "] = " + switchState[switchDataIndex]);
+				}
+			});
+
 			game.update(switchState, elapsedTime, deltaTime);
 			var lightState = game.getLightState();
 
