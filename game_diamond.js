@@ -1,6 +1,6 @@
-var Game = Game || {};
+define(["jclass", "underscore"], function(JClass, _) {
 
-Game.Diamond = Class.extend({
+return JClass.extend({
 
 	lights: [],
 	colourLookup: undefined, // array of bank index -> colour r,g,b,a
@@ -302,3 +302,5 @@ Game.Diamond = Class.extend({
 		}
 	}
 });
+
+}); // require

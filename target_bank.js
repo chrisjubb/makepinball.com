@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass", "underscore"], function(JClass, _) {
 
-Pin.TargetBank = Class.extend({
+return JClass.extend({
 
 	bankData: undefined,
 	litColour: 	 { r: 1.0, g: 1.0, b: 1.0, a: 1.0 },
@@ -106,3 +106,5 @@ Pin.TargetBank = Class.extend({
 		this.state = this.STATE_HITTING;
 	}
 });
+
+}); // require

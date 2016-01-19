@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass"], function(JClass) {
 
-Pin.Scoop = Class.extend({
+return JClass.extend({
 
 	switchIndex: undefined,
 	state: undefined,
@@ -64,3 +64,5 @@ Pin.Scoop = Class.extend({
 		return this.state == this.STATE_RELEASE_START;
 	}
 });
+
+}); // require

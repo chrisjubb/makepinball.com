@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass", "underscore"], function(JClass, _) {
 
-Pin.SwitchEventHandler = Class.extend({
+return JClass.extend({
 
 	// when comes on and then only activated again once the switch is deactivated
 	triggerOnList: [],
@@ -40,3 +40,5 @@ Pin.SwitchEventHandler = Class.extend({
 		});
 	}
 });
+
+}); // require

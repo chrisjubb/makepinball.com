@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass"], function(JClass) {
 
-Pin.Light = Class.extend({
+return JClass.extend({
 
 	_r: 1.0,
 	_g: 1.0,
@@ -177,3 +177,5 @@ Pin.Light = Class.extend({
 		}
 	}
 });
+
+}); // require

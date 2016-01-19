@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass", "underscore"], function(JClass, _) {
 
-Pin.LightIndicator = Class.extend({
+return JClass.extend({
 
 	value: 0,
 	onColour: undefined,
@@ -107,3 +107,5 @@ Pin.LightIndicator = Class.extend({
 		}
 	}
 });
+
+}); // require

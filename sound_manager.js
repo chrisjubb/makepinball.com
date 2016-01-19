@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass"], function(JClass) {
 
-Pin.SoundManager = Class.extend({
+return JClass.extend({
 	soundId: 0,
 	soundsLoaded: [],
 	playWhenLoaded: [], // callback
@@ -39,3 +39,5 @@ Pin.SoundManager = Class.extend({
 		}
 	}
 });
+
+}); // require

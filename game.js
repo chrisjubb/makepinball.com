@@ -1,5 +1,5 @@
-
-define(["jclass", "underscore"], function(JClass, _) {
+define(["jclass", "underscore", "light", "sound_manager", "switch_event_handler", "target_bank", "scoop", "light_indicator", "game_diamond"],
+function(JClass, _, Light, SoundManager, SwitchEventHandler, TargetBank, Scoop, LightIndicator, GameDiamond) {
 
 return JClass.extend({
 
@@ -97,21 +97,21 @@ return JClass.extend({
 	init: function() {
 		var self = this;
 		for(var i = 0; i < this.numberOfLights; ++i) {
-			this.lightState.push(new Pin.Light());
+			this.lightState.push(new Light());
 		}
 
 		this.state = this.STATE_MAIN;
 
-		this.soundManager = new Pin.SoundManager();
+		this.soundManager = new SoundManager();
 
 		_.each(this.soundsToLoad, function(soundData) {
 			self[soundData.name] = self.soundManager.load("sounds/" + soundData.filename);
 		});
 
-		this.switchEventHandler = new Pin.SwitchEventHandler();
+		this.switchEventHandler = new SwitchEventHandler();
 
 		var targetBankColour0 = { r: 1, g: 1, b: 0, a: 1 };
-		var targetBank0 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBank0 = new TargetBank(this.createTargetBankData(
 																this.targetBankList0,
 																this.lightState));
 		targetBank0.setLitColour(targetBankColour0);
@@ -119,7 +119,7 @@ return JClass.extend({
 		this.targetBanks.push(targetBank0);
 
 		var targetBankColour1 = { r: 1, g: 0.6, b: 0, a: 1 };
-		var targetBank1 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBank1 = new TargetBank(this.createTargetBankData(
 																this.targetBankList1,
 																this.lightState));
 		targetBank1.setLitColour(targetBankColour1);
@@ -127,7 +127,7 @@ return JClass.extend({
 		this.targetBanks.push(targetBank1);
 
 		var targetBankColour2 = { r: 0.4, g: 0.5, b: 1, a: 1 };
-		var targetBank2 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBank2 = new TargetBank(this.createTargetBankData(
 																this.targetBankList2,
 																this.lightState));
 		targetBank2.setLitColour(targetBankColour2);
@@ -135,24 +135,24 @@ return JClass.extend({
 		this.targetBanks.push(targetBank2);
 
 		var targetBankColour3 = { r: 0.9, g: 0.2, b: 0.1, a: 1 };
-		var targetBank3 = new Pin.TargetBank(this.createTargetBankData(
+		var targetBank3 = new TargetBank(this.createTargetBankData(
 																this.targetBankList3,
 																this.lightState));
 		targetBank3.setLitColour(targetBankColour3);
 		targetBank3.pulse(targetBankColour3);
 		this.targetBanks.push(targetBank3);
 
-		this.scoop0 = new Pin.Scoop(6);
+		this.scoop0 = new Scoop(6);
 
 		// by pop bumpers
 		var lightIndicatorColour0 = {r: 0.1, g: 1, b: 1, a: 1};
 		var LightIndicatorSwitches = [4, 5];
-		this.lightIndicator0 = new Pin.LightIndicator(this.lightState, 	lightIndicatorColour0.r,
-																		lightIndicatorColour0.g,
-																		lightIndicatorColour0.b,
-																		lightIndicatorColour0.a,
-																		45, 56,
-																		LightIndicatorSwitches);
+		this.lightIndicator0 = new LightIndicator(this.lightState, 	lightIndicatorColour0.r,
+																	lightIndicatorColour0.g,
+																	lightIndicatorColour0.b,
+																	lightIndicatorColour0.a,
+																	45, 56,
+																	LightIndicatorSwitches);
 		// center indicator diamond
 		var centerDiamondData = [
 			{ colour: targetBankColour0 },
@@ -162,7 +162,7 @@ return JClass.extend({
 			{ colour: lightIndicatorColour0 }
 		];
 		var currentPulseColour = {r: 0.7, g: 0.7, b: 0.7, a: 1.0};
-		this.centerDiamond = new Game.Diamond(	this.lightState,
+		this.centerDiamond = new GameDiamond(	this.lightState,
 												this.diamondLightIndexStart,
 												this.diamondLightIndexEnd,
 												currentPulseColour,
