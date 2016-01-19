@@ -33,20 +33,29 @@ function(five, Game) {
 	board.on("ready", function() {
 		console.log("Board is ready!");
 
-		var led = new five.Led(13);
+		var ledLookup = [];
+		_.each(game.targetBankList3, function(targetBankData, i) {
+			var ledIndex = 13 - i;
+			console.log("light state index = " + targetBankData.l + " -> " + ledIndex);
+			ledLookup[targetBankData.l] = new five.Led(ledIndex);
+		});
 
 		this.loop(frameInterval, function() {
 			game.update(switchState, elapsedTime, deltaTime);
 			var lightState = game.getLightState();
 
-			// console.log(elapsedTime + " - " + lightState[16].isLit());
+			_.each(ledLookup, function(led, lightStateIndex) {
+				if(led) {
+					if(lightState[lightStateIndex].isLit()) {
+						led.on();
+					}
+					else {
+						led.off();
+					}
+				}
+			});
 
-			if(lightState[16].isLit()) {
-				led.on();
-			}
-			else {
-				led.off();
-			}
+			// console.log(elapsedTime + " - " + lightState[16].isLit());
 
 			elapsedTime += deltaTime;
 		});
