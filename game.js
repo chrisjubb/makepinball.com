@@ -200,13 +200,13 @@ return JClass.extend({
 			self.soundManager.play(self.SOUND_FLIPPER);
 		});
 
-		this.soundManager.play(this.SOUND_MUSIC, function(instance) {
+		/*this.soundManager.play(this.SOUND_MUSIC, function(instance) {
 			// store for later
 			self.soundMusic = instance;
 
 			self.soundMusic.volume = 0.4;
 			self.soundMusic.loop = -1;
-		});
+		});*/
 	},
 
 	update: function(switchState, elapsedTime, delta) {

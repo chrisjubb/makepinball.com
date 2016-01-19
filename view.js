@@ -845,7 +845,7 @@ return JClass.extend({
 
 	initScene: function() {
 
-		var container = getCanvasContainer();
+		var container = this.getCanvasContainer();
 
 		this.scene = new THREE.Scene();
 
@@ -947,7 +947,7 @@ return JClass.extend({
 	},
 
 	onResize: function() {
-		var container = getCanvasContainer();
+		var container = this.getCanvasContainer();
 		var width = container.width();
 		var height = container.height();
 		this.camera.aspect = width / height;
@@ -967,7 +967,7 @@ return JClass.extend({
 
 	getSwitchPositionsScreen: function() {
 		// returns the positions of the switches in screen space as xy objects in an array
-		var container = getCanvasContainer();
+		var container = this.getCanvasContainer();
 		var width = container.width();
 		var height = container.height();
 

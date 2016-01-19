@@ -1,7 +1,6 @@
-var Pin = Pin || {};
-Pin.Event = Pin.Event || {};
+define(["jclass"], function(JClass) {
 
-Pin.Event.AbstractEvent = Class.extend({
+return JClass.extend({
 	elapsedTime: undefined,
 
 	init: function(elapsedTime) {
@@ -12,3 +11,5 @@ Pin.Event.AbstractEvent = Class.extend({
 		console.error("Override me");
 	}
 });
+
+}); // require

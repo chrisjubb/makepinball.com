@@ -1,11 +1,13 @@
 requirejs.config({
 	paths: {
-		jquery: "lib/jquery",
+		jquery: 	"lib/jquery",
 		underscore: "lib/underscore",
-		backbone: "lib/backbone",
-		jclass: "lib/jclass",
+		backbone: 	"lib/backbone",
+		jclass: 	"lib/jclass",
 
-		config: "config/config"
+		config_model: 			"config/config_model",
+		config_view: 			"config/config_view",
+		config_view_element: 	"config/config_view_element"
 	},
 
 	shim: {
@@ -22,14 +24,15 @@ requirejs.config({
     }
 });
 
-require(["jquery", "underscore", "backbone", "config", "game", "view"],
-function($, _, Backbone, Config, Game, View) {
+require(["underscore", "backbone", "config_model", "config_view", "game", "view", "event_switch"],
+function(_, Backbone, ConfigModel, ConfigView, Game, View, EventSwitch) {
 
 	console.log("jquery = " + $);
 	console.log("underscore = " + _);
 	console.log("Backbone = " + Backbone);
 
-	console.log("Config = " + Config);
+	Backbone.$ = $;
+
 	console.log("Game = " + Game);
 	console.log("View = " + View);
 
@@ -63,7 +66,7 @@ function($, _, Backbone, Config, Game, View) {
 	}
 
 	// physics config
-	var physCfg = new Config().load("physics.config.json", "physics.settings.json");
+	var physCfg = new ConfigModel().load("physics.config.json", "physics.settings.json");
 	var physCfgView = new ConfigView({ model: physCfg });
 	$("#config").html(physCfgView.render().el);
 
@@ -128,7 +131,7 @@ function($, _, Backbone, Config, Game, View) {
 	function logSwitchChange(changedSwitches) {
 		_.each(changedSwitches, function(switchItem, switchIndex) {
 			if(switchItem !== undefined) {
-				events.push(new Pin.Event.Switch(view.getElapsedTime(), switchIndex, switchItem));
+				events.push(new EventSwitch(view.getElapsedTime(), switchIndex, switchItem));
 			}
 		});
 		updateEvents();

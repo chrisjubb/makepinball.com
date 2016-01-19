@@ -1,7 +1,6 @@
-var Pin = Pin || {};
-Pin.Event = Pin.Event || {};
+define(["abstract_event"], function(AbstractEvent) {
 
-Pin.Event.Switch = Pin.Event.AbstractEvent.extend({
+return AbstractEvent.extend({
 	index: undefined,
 	state: undefined,
 
@@ -16,3 +15,5 @@ Pin.Event.Switch = Pin.Event.AbstractEvent.extend({
 		return switchState;
 	}
 });
+
+}); // require
