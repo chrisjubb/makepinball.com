@@ -25,22 +25,28 @@ function(five, Game) {
 	var game = new Game();
 	var board = new five.Board();
 
-	// The board's pins will not be accessible until
-	// the board has reported that it is ready
+	var switchState = [];
+	var elapsedTime = 0;
+	var frameInterval = 16;
+	var deltaTime = 1.0 / frameInterval;
+
 	board.on("ready", function() {
 		console.log("Board is ready!");
 
 		var led = new five.Led(13);
 		var on_counter = 0;
 
-		this.loop(16, function() {
+		this.loop(frameInterval, function() {
 			++on_counter;
 			if(on_counter > 50) {
 				led.toggle();
 				on_counter = 0;
 			}
 
-			// console.log("frame");
+			game.update(switchState, elapsedTime, deltaTime);
+			var lightState = game.getLightState();
+
+			elapsedTime += deltaTime;
 		});
 	});
 
