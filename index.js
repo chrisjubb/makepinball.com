@@ -36,8 +36,8 @@ function(five, Game) {
 		var ledLookup = [];
 		var switchLookup = [];
 		_.each(game.targetBankList3, function(targetBankData, i) {
-			var ledIndex = 13 - i;
-			var switchIndex = 4 - i;
+			var ledIndex = 5 + i;
+			var switchIndex = 2 + i;
 			console.log("light state index = " + targetBankData.l + " -> " + ledIndex + ", switch = " + targetBankData.s + " -> " + switchIndex);
 			ledLookup[targetBankData.l] = new five.Led(ledIndex);
 			switchLookup[targetBankData.s] = new five.Switch(switchIndex);
