@@ -1,6 +1,6 @@
-var Pin = Pin || {};
+define(["jclass", "underscore", "utils", "utils_view"], function(JClass, _, Utils, UtilsView) {
 
-Pin.View = Class.extend({
+return JClass.extend({
 	clock: undefined,
 	deltaTime: undefined,
 
@@ -351,12 +351,12 @@ Pin.View = Class.extend({
 
 	    var gravityVector = new THREE.Vector3(0, 1, 0);
 	    var gravityRotation = new THREE.Quaternion();
-	    gravityRotation.setFromEuler(new THREE.Euler(Pin.Utils.radians(tableAngle), 0, 0));
+	    gravityRotation.setFromEuler(new THREE.Euler(Utils.radians(tableAngle), 0, 0));
 	    gravityVector = gravityVector.applyQuaternion(gravityRotation);
 	    gravityVector.normalize();
 	    gravityVector.multiplyScalar(gravityForce);
 
-	    console.log("tableAngle = " + tableAngle + ", vector = " + Pin.Utils.dpos(gravityVector));
+	    console.log("tableAngle = " + tableAngle + ", vector = " + UtilsView.dpos(gravityVector));
 
 	    this.dynamicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 	    this.dynamicsWorld.setGravity(new Ammo.btVector3(gravityVector.x,
@@ -443,7 +443,7 @@ Pin.View = Class.extend({
 		});
 
 		_.each(balls, function(child) {
-			console.log("[!] Adding ball (" + child.name + ") - " + Pin.Utils.dpos(child.position));
+			console.log("[!] Adding ball (" + child.name + ") - " + UtilsView.dpos(child.position));
 			var ballBody = self.addBall(child);
 			self.ballBodies.push(ballBody);
 			self.ballStartingData.push({ position: child.position.clone(), child: child });
@@ -645,19 +645,19 @@ Pin.View = Class.extend({
 		var hingeTransform = new Ammo.btTransform();
 	    hingeTransform.setIdentity();
 	    var hingeQuaternion = new Ammo.btQuaternion(0,0,0,1);
-	    hingeQuaternion.setEulerZYX(Pin.Utils.radians(this.physCfg.get("flipperHingeZ")),
-	    							Pin.Utils.radians(this.physCfg.get("flipperHingeY")),
-	    							Pin.Utils.radians(this.physCfg.get("flipperHingeX")));
+	    hingeQuaternion.setEulerZYX(Utils.radians(this.physCfg.get("flipperHingeZ")),
+	    							Utils.radians(this.physCfg.get("flipperHingeY")),
+	    							Utils.radians(this.physCfg.get("flipperHingeX")));
 	    hingeQuaternion.normalize();
 	    hingeTransform.setRotation(hingeQuaternion);
 
 	    var hinge = new Ammo.btHingeConstraint(body, hingeTransform, true);
 
-	    var limitMin = Pin.Utils.radians(this.physCfg.get("flipperLimitsMin" + flipperIndex));
-	    var limitMax = Pin.Utils.radians(this.physCfg.get("flipperLimitsMax" + flipperIndex));
+	    var limitMin = Utils.radians(this.physCfg.get("flipperLimitsMin" + flipperIndex));
+	    var limitMax = Utils.radians(this.physCfg.get("flipperLimitsMax" + flipperIndex));
 
-	    this.flipperLimitsDeg[flipperIndex] = { min: Pin.Utils.degrees(limitMin),
-	    									 	max: Pin.Utils.degrees(limitMax) };
+	    this.flipperLimitsDeg[flipperIndex] = { min: Utils.degrees(limitMin),
+	    									 	max: Utils.degrees(limitMax) };
 
 		hinge.setLimit( limitMin, limitMax,
 						this.physCfg.get("flipperHingeSoftness"),
@@ -731,7 +731,7 @@ Pin.View = Class.extend({
 		forceVector = forceVector.applyQuaternion(forceQuat);
 		forceVector = forceVector.multiplyScalar(forceValue);
 
-		//console.log(Pin.Utils.dpos(original.position) + " - " + Pin.Utils.dpos(forceVector));
+		//console.log(UtilsView.dpos(original.position) + " - " + UtilsView.dpos(forceVector));
 
 		var forceData = {
 			position: original.position,
@@ -808,7 +808,7 @@ Pin.View = Class.extend({
 			var forceVector = force.forceVector;
 
 			var offsetVector = position.clone();
-		    offsetVector.add(Pin.Utils.convertToVector3(forceVector));
+		    offsetVector.add(UtilsView.convertToVector3(forceVector));
 
 		    var geometry = new THREE.Geometry();
 		    geometry.vertices.push(position.clone());
@@ -820,9 +820,9 @@ Pin.View = Class.extend({
 		_.each(this.switchBodies, function(switchBody, switchIndex) {
 			if(switchBody) {
 				var switchVector = self.switchOrientationVectors[switchIndex];
-				var switchPosition = Pin.Utils.convertToVector3(switchBody.getWorldTransform().getOrigin());
+				var switchPosition = UtilsView.convertToVector3(switchBody.getWorldTransform().getOrigin());
 
-				var switchVectorBig = Pin.Utils.convertToVector3(switchVector).multiplyScalar(2);
+				var switchVectorBig = UtilsView.convertToVector3(switchVector).multiplyScalar(2);
 				var switchPositionEnd = switchPosition.clone().add(switchVectorBig);
 
 				var geometry = new THREE.Geometry();
@@ -979,7 +979,7 @@ Pin.View = Class.extend({
 		_.each(this.switchBodies, function(switchBody, switchIndex) {
 			if(switchBody) {
 				var position = switchBody.getWorldTransform().getOrigin();
-				var vector = Pin.Utils.convertToVector3(position);
+				var vector = UtilsView.convertToVector3(position);
 				vector.project(self.camera);
 
 				vector.x = ( vector.x * widthHalf ) + widthHalf;
@@ -1000,7 +1000,7 @@ Pin.View = Class.extend({
 
 		var transform = flipperBody.getWorldTransform();
 		var rotation = transform.getRotation();
-		var angle = Pin.Utils.degrees(rotation.y());
+		var angle = Utils.degrees(rotation.y());
 		var minAngle = this.flipperLimitsDeg[flipperIndex].min;
 		var maxAngle = this.flipperLimitsDeg[flipperIndex].max;
 		//console.log(flipperIndex + " -> " + angle + "  [" + minAngle + ", " + maxAngle + "]");
@@ -1071,7 +1071,7 @@ Pin.View = Class.extend({
 		if(associatedForce) {
 			if(applyFromCenterToBody) {
 				// Want to apply it from the center of the force -> the ballBody.
-				var ballBodyPosition = Pin.Utils.convertToVector3(ballBody.getWorldTransform().getOrigin());
+				var ballBodyPosition = UtilsView.convertToVector3(ballBody.getWorldTransform().getOrigin());
 				var newForceVector = ballBodyPosition.sub(associatedForce.position);
 				newForceVector.normalize();
 				newForceVector.multiplyScalar(associatedForce.force);
@@ -1094,7 +1094,7 @@ Pin.View = Class.extend({
 				var ballPosition = ballBody.getWorldTransform().getOrigin();
 				var forcePosition = self.forceData[forceId].position;
 
-				var d = Pin.Utils.distanceSq(ballPosition, forcePosition);
+				var d = UtilsView.distanceSq(ballPosition, forcePosition);
 				if(d < 10.0) {
 					self.activateForce(forceId, ballBody);
 				}
@@ -1121,3 +1121,4 @@ Pin.View = Class.extend({
 	}
 });
 
+}); // require
