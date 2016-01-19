@@ -33,8 +33,6 @@ function(_, Backbone, ConfigModel, ConfigView, Game, View, EventSwitch) {
 	if(!Detector.webgl) Detector.addGetWebGLMessage();
 
 	var game = new Game();
-	console.log(game.SW_LEFT_FLIPPER); // testing
-
 	var view = new View();
 
 	var debugSwitchButtonsShown = false;
