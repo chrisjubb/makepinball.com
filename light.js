@@ -1,4 +1,4 @@
-define(["jclass"], function(JClass) {
+define(["jclass", "utils"], function(JClass, Utils) {
 
 return JClass.extend({
 
@@ -150,11 +150,11 @@ return JClass.extend({
 			}
 		}
 		else if(this.fadeState == this.FADE_PULSE) {
-			var sinPulseTimer = Pin.Utils.sin01(this.pulseTimer);
-			this._r = Pin.Utils.lerp(this._destination_r, this._off_r, sinPulseTimer);
-			this._g = Pin.Utils.lerp(this._destination_g, this._off_g, sinPulseTimer);
-			this._b = Pin.Utils.lerp(this._destination_b, this._off_b, sinPulseTimer);
-			this._a = Pin.Utils.lerp(this._destination_a, this._off_a, sinPulseTimer);
+			var sinPulseTimer = Utils.sin01(this.pulseTimer);
+			this._r = Utils.lerp(this._destination_r, this._off_r, sinPulseTimer);
+			this._g = Utils.lerp(this._destination_g, this._off_g, sinPulseTimer);
+			this._b = Utils.lerp(this._destination_b, this._off_b, sinPulseTimer);
+			this._a = Utils.lerp(this._destination_a, this._off_a, sinPulseTimer);
 
 			this.pulseTimer += delta * this.fadeSpeed;
 		}
