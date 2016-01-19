@@ -27,14 +27,8 @@ requirejs.config({
 require(["underscore", "backbone", "config_model", "config_view", "game", "view", "event_switch"],
 function(_, Backbone, ConfigModel, ConfigView, Game, View, EventSwitch) {
 
-	console.log("jquery = " + $);
-	console.log("underscore = " + _);
-	console.log("Backbone = " + Backbone);
-
+	// Hmm - requirejs doesn't seem to load this properly.
 	Backbone.$ = $;
-
-	console.log("Game = " + Game);
-	console.log("View = " + View);
 
 	if(!Detector.webgl) Detector.addGetWebGLMessage();
 
