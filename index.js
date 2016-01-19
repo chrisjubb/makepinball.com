@@ -28,23 +28,26 @@ function(five, Game) {
 	var switchState = [];
 	var elapsedTime = 0;
 	var frameInterval = 16;
-	var deltaTime = 1.0 / frameInterval;
+	var deltaTime = frameInterval / 1000.0;
 
 	board.on("ready", function() {
 		console.log("Board is ready!");
 
 		var led = new five.Led(13);
-		var on_counter = 0;
 
 		this.loop(frameInterval, function() {
-			++on_counter;
-			if(on_counter > 50) {
-				led.toggle();
-				on_counter = 0;
-			}
-
 			game.update(switchState, elapsedTime, deltaTime);
 			var lightState = game.getLightState();
+
+			var lightValue = lightState[40]._g;
+			// console.log(elapsedTime + " - " + lightValue);
+
+			if(lightValue >= 1.0) {
+				led.on();
+			}
+			else {
+				led.off();
+			}
 
 			elapsedTime += deltaTime;
 		});

@@ -200,6 +200,8 @@ return JClass.extend({
 			self.soundManager.play(self.SOUND_FLIPPER);
 		});
 
+		this.lightState[40].flash(0,1.0,0, 1.0, 1.0);
+
 		/*this.soundManager.play(this.SOUND_MUSIC, function(instance) {
 			// store for later
 			self.soundMusic = instance;
