@@ -150,7 +150,7 @@ return JClass.extend({
 			}
 		}
 		else if(this.fadeState == this.FADE_PULSE) {
-			var sinPulseTimer = Utils.sin01(this.pulseTimer);
+			var sinPulseTimer = this.calculatePulse();
 			this._r = Utils.lerp(this._destination_r, this._off_r, sinPulseTimer);
 			this._g = Utils.lerp(this._destination_g, this._off_g, sinPulseTimer);
 			this._b = Utils.lerp(this._destination_b, this._off_b, sinPulseTimer);
@@ -159,9 +159,7 @@ return JClass.extend({
 			this.pulseTimer += delta * this.fadeSpeed;
 		}
 		else if(this.fadeState == this.FLASH) {
-			var timerInt = Math.floor(this.flashTimer);
-			var timerFrac = this.flashTimer - timerInt;
-			if(timerFrac < 0.5) {
+			if(this.isLit()) {
 				this._r = this._destination_r;
 				this._g = this._destination_g;
 				this._b = this._destination_b;
@@ -174,6 +172,21 @@ return JClass.extend({
 				this._a = this._off_a;
 			}
 			this.flashTimer += delta * this.flashSpeed;
+		}
+	},
+
+	calculatePulse: function() {
+		return Utils.sin01(this.pulseTimer);
+	},
+
+	isLit: function() {
+		if(this.fadeState == this.FLASH) {
+			var timerInt = Math.floor(this.flashTimer);
+			var timerFrac = this.flashTimer - timerInt;
+			return timerFrac < 0.5;
+		}
+		else if(this.fadeState == this.FADE_PULSE) {
+			return this.calculatePulse() > 0.5;
 		}
 	}
 });

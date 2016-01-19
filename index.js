@@ -39,10 +39,9 @@ function(five, Game) {
 			game.update(switchState, elapsedTime, deltaTime);
 			var lightState = game.getLightState();
 
-			var lightValue = lightState[40]._g;
-			// console.log(elapsedTime + " - " + lightValue);
+			// console.log(elapsedTime + " - " + lightState[16].isLit());
 
-			if(lightValue >= 1.0) {
+			if(lightState[16].isLit()) {
 				led.on();
 			}
 			else {
