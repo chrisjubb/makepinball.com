@@ -5,7 +5,8 @@ requirejs.config({
 
     paths: {
 		underscore: "lib/underscore",
-		jclass: "lib/jclass"
+		jclass: 	"lib/jclass",
+		sound_manager: "physical/sound_manager"
 	},
 
 	shim: {
@@ -21,33 +22,26 @@ requirejs.config({
 requirejs(["johnny-five", "game"],
 function(five, Game) {
 
-	//console.log(five);
-	console.log(Game);
-
 	var game = new Game();
+	var board = new five.Board();
 
-	//var board = new five.Board();
+	// The board's pins will not be accessible until
+	// the board has reported that it is ready
+	board.on("ready", function() {
+		console.log("Board is ready!");
 
-});
+		var led = new five.Led(13);
+		var on_counter = 0;
 
-/*
-// The board's pins will not be accessible until
-// the board has reported that it is ready
-board.on("ready", function() {
-	console.log("Ready!");
+		this.loop(16, function() {
+			++on_counter;
+			if(on_counter > 50) {
+				led.toggle();
+				on_counter = 0;
+			}
 
-	var led = new five.Led(13);
-	var on_counter = 0;
-
-	this.loop(16, function() {
-		++on_counter;
-		if(on_counter > 50) {
-			led.toggle();
-			on_counter = 0;
-		}
-
-		// console.log("frame");
+			// console.log("frame");
+		});
 	});
-});
 
-*/
+});
