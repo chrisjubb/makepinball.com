@@ -202,13 +202,13 @@ return JClass.extend({
 
 		this.lightState[40].flash(0,1.0,0, 1.0, 1.0);
 
-		/*this.soundManager.play(this.SOUND_MUSIC, function(instance) {
+		this.soundManager.play(this.SOUND_MUSIC, function(instance) {
 			// store for later
 			self.soundMusic = instance;
 
 			self.soundMusic.volume = 0.4;
 			self.soundMusic.loop = -1;
-		});*/
+		});
 	},
 
 	update: function(switchState, elapsedTime, delta) {
